@@ -1,4 +1,4 @@
-package com.woody.cat.holic.presentation.gallery
+package com.woody.cat.holic.presentation.main.gallery
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

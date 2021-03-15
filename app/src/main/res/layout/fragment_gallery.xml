@@ -2,12 +2,17 @@
 <layout>
 
     <data>
+
         <variable
             name="viewModel"
-            type="com.woody.cat.holic.presentation.gallery.GalleryViewModel" />
+            type="com.woody.cat.holic.presentation.main.gallery.GalleryViewModel" />
+
+        <variable
+            name="activityViewModel"
+            type="com.woody.cat.holic.presentation.main.MainViewModel" />
     </data>
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
@@ -21,5 +26,18 @@
             app:spanCount="3"
             tools:listitem="@layout/item_main_photo" />
 
-    </LinearLayout>
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_main_upload"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="25dp"
+            android:layout_marginBottom="25dp"
+            android:backgroundTint="@color/black"
+            android:tint="@color/white"
+            android:onClick="@{() -> activityViewModel.onClickUploadFab()}"
+            android:src="@android:drawable/ic_menu_upload"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

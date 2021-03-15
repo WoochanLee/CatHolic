@@ -1,4 +1,4 @@
-package com.woody.cat.holic.interactors
+package com.woody.cat.holic.usecase
 
 import com.woody.cat.holic.data.PhotoRepository
 

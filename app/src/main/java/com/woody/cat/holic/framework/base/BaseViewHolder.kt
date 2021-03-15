@@ -11,9 +11,9 @@ class BaseViewHolder<M : Any>(
 ): RecyclerView.ViewHolder(binding.root) {
     lateinit var model: M
 
-    fun bind(itemViewModel: M) {
-        this.model = itemViewModel
-        binding.setVariable(BR.model, model)
+    fun bind(model: M) {
+        this.model = model
+        binding.setVariable(BR.model, this.model)
         binding.lifecycleOwner = lifecycleOwner
         binding.executePendingBindings()
     }

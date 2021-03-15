@@ -1,7 +1,10 @@
 package com.woody.cat.holic.data
 
-class PhotoRepository(private val dataSource: PhotoDataSource) {
-    suspend fun uploadPhoto(fileName: String, fileUri: String) = dataSource.uploadPhoto(fileName, fileUri)
+import com.woody.cat.holic.domain.Photo
 
-    suspend fun getPhotos() = dataSource.getPhotos()
+interface PhotoRepository {
+
+    suspend fun uploadPhoto(fileUri: String, onProgress: (Int) -> Unit): Photo
+
+    suspend fun getPhotos(): List<Photo>
 }

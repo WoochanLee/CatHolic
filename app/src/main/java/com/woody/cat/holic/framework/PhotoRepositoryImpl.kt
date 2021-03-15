@@ -3,30 +3,42 @@ package com.woody.cat.holic.framework
 import android.net.Uri
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ListResult
-import com.google.firebase.storage.StorageReference
-import com.woody.cat.holic.data.PhotoDataSource
+import com.woody.cat.holic.data.PhotoRepository
 import com.woody.cat.holic.domain.Photo
+import com.woody.cat.holic.framework.base.CatHolicLogger
 import kotlinx.coroutines.*
-import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 
-class FirebaseStoragePhotoDataSource : PhotoDataSource {
+class PhotoRepositoryImpl : PhotoRepository {
+
+    companion object {
+        const val STORAGE_PATH = "cat"
+    }
 
     private val storageRef = FirebaseStorage.getInstance().reference
 
     // https://stackoverflow.com/a/48562175/9797457
-    override suspend fun uploadPhoto(fileName: String, fileUri: String) {
-        val dataDeferred = CompletableDeferred<Unit>()
+    override suspend fun uploadPhoto(fileUri: String, onProgress: (Int) -> Unit): Photo {
+        val dataDeferred = CompletableDeferred<Photo>()
 
-        val catsRef = storageRef.child("cat/${fileName}")
+        val catsRef = storageRef.child("${STORAGE_PATH}/${(0..Int.MAX_VALUE).random()}")
         catsRef.putFile(Uri.parse(fileUri))
+            .addOnProgressListener { snapshot ->
+                val progress: Int = (100.0 * snapshot.bytesTransferred / snapshot.totalByteCount).toInt()
+                onProgress(progress)
+                println("upload progress : $progress")
+            }
             .addOnSuccessListener {
-                println("success to upload")
-                dataDeferred.complete(Unit)
+                CatHolicLogger.log("success to upload")
+                catsRef.downloadUrl.addOnSuccessListener {
+                    dataDeferred.complete(Photo(it.toString()))
+                }.addOnFailureListener {
+                    CatHolicLogger.log("fail to get download url")
+                    throw it
+                }
             }
             .addOnFailureListener {
-                println("fail to upload")
-                dataDeferred.complete(Unit)
+                CatHolicLogger.log("fail to upload")
+                throw it
             }
 
         return dataDeferred.await()
