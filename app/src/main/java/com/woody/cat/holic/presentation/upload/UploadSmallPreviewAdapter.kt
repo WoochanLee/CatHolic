@@ -13,16 +13,14 @@ import com.woody.cat.holic.framework.base.BaseViewHolder
 class UploadSmallPreviewAdapter(
     private val lifecycleOwner: LifecycleOwner,
     private val viewModel: UploadViewModel
-) :
-    RecyclerView.Adapter<BaseViewHolder<String>>() {
+) : RecyclerView.Adapter<BaseViewHolder<String, UploadViewModel>>() {
 
     companion object {
         const val VIEW_TYPE_UPLOAD = 0
         const val VIEW_TYPE_IMAGE = 1
     }
 
-    private var data = listOf<String>()
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<String> {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<String, UploadViewModel> {
 
         val binding = when (viewType) {
             VIEW_TYPE_UPLOAD -> {
@@ -48,14 +46,14 @@ class UploadSmallPreviewAdapter(
         return BaseViewHolder(binding, lifecycleOwner)
     }
 
-    override fun onBindViewHolder(holder: BaseViewHolder<String>, position: Int) {
+    override fun onBindViewHolder(holder: BaseViewHolder<String, UploadViewModel>, position: Int) {
         if (position != 0) {
-            holder.bind(data[position - 1])
+            holder.bind(position - 1, viewModel.previewData[position - 1], viewModel)
         }
     }
 
     override fun getItemCount(): Int {
-        return data.size + 1
+        return viewModel.previewData.size + 1
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -64,10 +62,5 @@ class UploadSmallPreviewAdapter(
         } else {
             VIEW_TYPE_IMAGE
         }
-    }
-
-    fun refreshData(data: List<String>) {
-        this.data = data
-        notifyDataSetChanged()
     }
 }

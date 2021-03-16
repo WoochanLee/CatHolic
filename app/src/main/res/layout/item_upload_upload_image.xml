@@ -20,7 +20,8 @@
         <androidx.cardview.widget.CardView
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:onClick="@{() -> viewModel.onClickSelectImage()}"
+            android:foreground="?android:selectableItemBackground"
+            android:onClick="@{() -> viewModel.onClickSelectImageButton()}"
             app:cardCornerRadius="10dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -31,8 +32,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/white"
-                android:padding="10dp"
-                android:src="@android:drawable/ic_input_add"
+                android:padding="15dp"
+                android:src="@drawable/ic_plus"
                 app:tint="@color/black" />
         </androidx.cardview.widget.CardView>
 

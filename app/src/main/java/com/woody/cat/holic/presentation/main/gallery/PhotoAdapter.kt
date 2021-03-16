@@ -10,14 +10,17 @@ import com.woody.cat.holic.databinding.ItemMainPhotoBinding
 import com.woody.cat.holic.domain.Photo
 import com.woody.cat.holic.framework.base.BaseViewHolder
 
-class PhotoAdapter(private val lifecycleOwner: LifecycleOwner) : RecyclerView.Adapter<BaseViewHolder<Photo>>() {
+class PhotoAdapter(
+    private val lifecycleOwner: LifecycleOwner,
+    private val viewModel: GalleryViewModel
+) : RecyclerView.Adapter<BaseViewHolder<Photo, GalleryViewModel>>() {
 
     private var data = listOf<Photo>()
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): BaseViewHolder<Photo> {
+    ): BaseViewHolder<Photo, GalleryViewModel> {
         val binding = DataBindingUtil.inflate<ItemMainPhotoBinding>(
             LayoutInflater.from(parent.context),
             R.layout.item_main_photo,
@@ -28,8 +31,8 @@ class PhotoAdapter(private val lifecycleOwner: LifecycleOwner) : RecyclerView.Ad
         return BaseViewHolder(binding, lifecycleOwner)
     }
 
-    override fun onBindViewHolder(holder: BaseViewHolder<Photo>, position: Int) {
-        holder.bind(data[position])
+    override fun onBindViewHolder(holder: BaseViewHolder<Photo, GalleryViewModel>, position: Int) {
+        holder.bind(position, data[position], viewModel)
     }
 
     override fun getItemCount(): Int {

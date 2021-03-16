@@ -23,7 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-            app:spanCount="3"
+            app:spanCount="2"
             tools:listitem="@layout/item_main_photo" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -32,12 +32,13 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="25dp"
             android:layout_marginBottom="25dp"
-            android:backgroundTint="@color/black"
-            android:tint="@color/white"
             android:onClick="@{() -> activityViewModel.onClickUploadFab()}"
-            android:src="@android:drawable/ic_menu_upload"
+            android:src="@drawable/ic_upload"
+            app:backgroundTint="@color/black"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:rippleColor="@color/white"
+            app:tint="@color/white" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
