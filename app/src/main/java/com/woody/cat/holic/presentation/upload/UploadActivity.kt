@@ -3,13 +3,13 @@ package com.woody.cat.holic.presentation.upload
 import android.graphics.Color
 import android.os.Bundle
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
 import com.woody.cat.holic.R
 import com.woody.cat.holic.databinding.ActivityUploadBinding
-import com.woody.cat.holic.presentation.upload.dialog.UploadImageDialog
 import com.yanzhenjie.album.Album
 import com.yanzhenjie.album.api.widget.Widget
 
@@ -63,6 +63,26 @@ class UploadActivity : AppCompatActivity() {
                         removeTargetPreviewPage(it)
                     })
 
+                    eventUpdatePostingButtonEnableStatus.observe(this@UploadActivity, {
+                        updatePostingButtonEnableStatus()
+                    })
+
+                    eventShowPostingSuccessToast.observe(this@UploadActivity, {
+                        Toast.makeText(
+                            this@UploadActivity,
+                            R.string.success_to_posting,
+                            Toast.LENGTH_LONG
+                        ).show()
+                    })
+
+                    eventShowPostingErrorToast.observe(this@UploadActivity, {
+                        Toast.makeText(
+                            this@UploadActivity,
+                            R.string.fail_to_posting,
+                            Toast.LENGTH_LONG
+                        ).show()
+                    })
+
                     eventCancel.observe(this@UploadActivity, {
                         onBackPressed()
                     })
@@ -86,7 +106,7 @@ class UploadActivity : AppCompatActivity() {
             adapter = uploadBigPreviewAdapter
             registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
                 override fun onPageSelected(position: Int) {
-                    uploadBigPreviewAdapter.checkAndChangeArrowButtonStatus(position)
+                    uploadBigPreviewAdapter.changeArrowButtonStatus(position)
                 }
             })
         }
@@ -125,7 +145,7 @@ class UploadActivity : AppCompatActivity() {
                     return@breaker
                 }
 
-                viewModel.refreshPreviewData(checkedList.map { it.path })
+                viewModel.addPreviewData(checkedList.map { it.path })
                 refreshAdapterStatus()
                 // startUploadImages(checkedList.map { it.path })
             }
@@ -144,19 +164,11 @@ class UploadActivity : AppCompatActivity() {
     private fun refreshAdapterStatus() {
         uploadSmallPreviewAdapter.notifyDataSetChanged()
         uploadBigPreviewAdapter.notifyDataSetChanged()
-        uploadBigPreviewAdapter.checkAndChangeArrowButtonStatus(binding.vpUploadBig.currentItem)
-    }
-
-    private fun startUploadImages(fileList: List<String>) {
-        UploadImageDialog().apply {
-            arguments = Bundle().apply {
-                putStringArrayList(UploadImageDialog.KEY_FILE_LIST, ArrayList(fileList))
-            }
-        }.show(supportFragmentManager, UploadImageDialog.TAG)
+        uploadBigPreviewAdapter.changeArrowButtonStatus(binding.vpUploadBig.currentItem)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId) {
+        when (item.itemId) {
             android.R.id.home -> {
                 onBackPressed()
                 return true

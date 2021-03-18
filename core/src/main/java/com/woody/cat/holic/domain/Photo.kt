@@ -1,5 +1,6 @@
 package com.woody.cat.holic.domain
 
 data class Photo(
-    val imageUrl: String?
+    val userId: String,
+    val imageUrl: String
 )

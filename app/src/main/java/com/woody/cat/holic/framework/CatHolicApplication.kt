@@ -12,14 +12,15 @@ class CatHolicApplication : Application() {
         lateinit var application: CatHolicApplication
     }
 
-    val photoRepository by lazy { PhotoRepositoryImpl() }
-    val postingRepository by lazy { PostingRepositoryImpl() }
+    val photoRepository by lazy { PhotoRepositoryImpl(FirebaseUserManager) }
+    val postingRepository by lazy { PostingRepositoryImpl(FirebaseUserManager) }
 
     override fun onCreate() {
         super.onCreate()
 
         application = this
         initLibraryAlbum()
+        initGoogleUserManager()
     }
 
     private fun initLibraryAlbum() {
@@ -29,5 +30,9 @@ class CatHolicApplication : Application() {
                 .setLocale(Locale.KOREAN)
                 .build()
         )
+    }
+
+    private fun initGoogleUserManager() {
+        FirebaseUserManager.init(this)
     }
 }

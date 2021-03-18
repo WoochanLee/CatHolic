@@ -9,12 +9,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.woody.cat.holic.R
 import com.woody.cat.holic.databinding.FragmentGalleryBinding
-import com.woody.cat.holic.presentation.main.MainViewModel
 
 class GalleryFragment : Fragment() {
 
     lateinit var viewModel: GalleryViewModel
-    lateinit var activityViewModel: MainViewModel
+    //lateinit var activityViewModel: MainViewModel
     lateinit var binding: FragmentGalleryBinding
 
     private val photoAdapter: PhotoAdapter by lazy {
@@ -36,8 +35,8 @@ class GalleryFragment : Fragment() {
         }.root
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         viewModel =
             ViewModelProvider(this, GalleryViewModelFactory()).get(GalleryViewModel::class.java)
@@ -49,11 +48,11 @@ class GalleryFragment : Fragment() {
                     initPhotos()
                 }
 
-        activity?.let {
+        /*activity?.let {
             activityViewModel =
                 ViewModelProvider(it, GalleryViewModelFactory()).get(MainViewModel::class.java)
-            binding.activityViewModel = activityViewModel
-        }
+            binding.viewModel = activityViewModel
+        }*/
 
         binding.rvMainGallery.adapter = photoAdapter
     }
