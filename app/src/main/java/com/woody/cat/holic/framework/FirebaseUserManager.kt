@@ -15,6 +15,7 @@ import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.woody.cat.holic.R
+import com.woody.cat.holic.domain.User
 import com.woody.cat.holic.framework.base.CatHolicLogger
 
 object FirebaseUserManager {
@@ -78,11 +79,13 @@ object FirebaseUserManager {
     }
 
     fun isSignedIn(): Boolean {
-        return getCurrentUserId() != null
+        return getCurrentUser() != null
     }
 
-    fun getCurrentUserId(): String? {
-        return firebaseAuth.currentUser?.providerData?.find { it.providerId == USER_PROVIDER }?.uid
+    fun getCurrentUser(): User? {
+        return firebaseAuth.currentUser?.providerData
+            ?.find { it.providerId == USER_PROVIDER }
+            ?.run { User(uid, displayName ?: "", photoUrl?.toString() ?: "") }
     }
 
     fun signOut(activity: Activity) {

@@ -142,7 +142,7 @@ class UploadActivity : AppCompatActivity() {
 
     private fun makeCustomAlbumWidget(): Widget {
         return Widget.newDarkBuilder(this)
-            .title("Select Cats")
+            .title("SELECT CATS")
             .statusBarColor(Color.BLACK)
             .toolBarColor(Color.BLACK)
             .navigationBarColor(Color.BLACK)

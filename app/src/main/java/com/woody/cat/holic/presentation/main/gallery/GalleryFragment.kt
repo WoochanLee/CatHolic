@@ -16,8 +16,8 @@ class GalleryFragment : Fragment() {
     //lateinit var activityViewModel: MainViewModel
     lateinit var binding: FragmentGalleryBinding
 
-    private val photoAdapter: PhotoAdapter by lazy {
-        PhotoAdapter(this, viewModel)
+    private val galleryAdapter: GalleryAdapter by lazy {
+        GalleryAdapter(this, viewModel)
     }
 
     override fun onCreateView(
@@ -42,10 +42,10 @@ class GalleryFragment : Fragment() {
             ViewModelProvider(this, GalleryViewModelFactory()).get(GalleryViewModel::class.java)
                 .apply {
                     binding.viewModel = this
-                    photosLiveData.observe(this@GalleryFragment, { list ->
-                        photoAdapter.refreshData(list.map { it })
+                    postingsLiveData.observe(this@GalleryFragment, { list ->
+                        galleryAdapter.refreshData(list.map { it })
                     })
-                    initPhotos()
+                    initPostings()
                 }
 
         /*activity?.let {
@@ -54,6 +54,6 @@ class GalleryFragment : Fragment() {
             binding.viewModel = activityViewModel
         }*/
 
-        binding.rvMainGallery.adapter = photoAdapter
+        binding.rvMainGallery.adapter = galleryAdapter
     }
 }

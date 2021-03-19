@@ -29,10 +29,9 @@ class PhotoRepositoryImpl(private val firebaseUserManager: FirebaseUserManager) 
     ): Resource<Photo> {
         val dataDeferred = CompletableDeferred<Resource<Photo>>()
 
-        val userId =
-            firebaseUserManager.getCurrentUserId() ?: return Resource.Error(NotSignedInException())
+        val user = firebaseUserManager.getCurrentUser() ?: return Resource.Error(NotSignedInException())
 
-        val catsRef = storageRef.child(makeUploadFilePath(file))
+        val catsRef = storageRef.child(makeUploadFilePath(file, user.userId))
         val task = catsRef.putFile(Uri.fromFile(file))
             .addOnProgressListener { snapshot ->
                 val progress = (100f * snapshot.bytesTransferred / snapshot.totalByteCount).toInt()
@@ -43,7 +42,7 @@ class PhotoRepositoryImpl(private val firebaseUserManager: FirebaseUserManager) 
                 CatHolicLogger.log("success to upload")
                 catsRef.downloadUrl.addOnSuccessListener {
                     CatHolicLogger.log("success to get download url")
-                    dataDeferred.complete(Resource.Success(Photo(userId, it.toString())))
+                    dataDeferred.complete(Resource.Success(Photo(user, it.toString())))
                 }.addOnFailureListener {
                     CatHolicLogger.log("fail to get download url")
                     dataDeferred.complete(Resource.Error(it))
@@ -62,8 +61,7 @@ class PhotoRepositoryImpl(private val firebaseUserManager: FirebaseUserManager) 
         }
     }
 
-    private fun makeUploadFilePath(file: File): String {
-        val userId = firebaseUserManager.getCurrentUserId()
+    private fun makeUploadFilePath(file: File, userId: String): String {
         return "${STORAGE_PATH}/${userId}/${(0..Long.MAX_VALUE).random()}.${getFileExtension(file.name)}"
     }
 

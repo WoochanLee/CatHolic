@@ -2,10 +2,11 @@ package com.woody.cat.holic.framework.net
 
 import com.google.firebase.firestore.ServerTimestamp
 import com.woody.cat.holic.domain.Posting
+import com.woody.cat.holic.domain.User
 import java.util.*
 
 data class PostingDto(
-    val userId: String? = null,
+    val user: UserDto? = null,
     val downloadUrl: String? = null,
     val stared: Int = 0,
     val reported: Int = 0,
@@ -15,11 +16,18 @@ data class PostingDto(
 
     @ServerTimestamp
     val updated: Date? = null
-)
+) {
+
+    data class UserDto(
+        val userId: String = "",
+        val displayName: String = "",
+        val userPhotoUrl: String? = null,
+    )
+}
 
 fun Posting.mapToPostingDto(): PostingDto {
     return PostingDto(
-        userId = userId,
+        user = user.mapToUserDto(),
         downloadUrl = downloadUrl,
         stared = stared,
         reported = reported,
@@ -28,13 +36,29 @@ fun Posting.mapToPostingDto(): PostingDto {
     )
 }
 
+fun User.mapToUserDto(): PostingDto.UserDto {
+    return PostingDto.UserDto(
+        userId = userId,
+        displayName = displayName,
+        userPhotoUrl = userPhotoUrl
+    )
+}
+
 fun PostingDto.mapToPosting(): Posting {
     return Posting(
-        userId = userId ?: "",
+        user = user?.mapToUser() ?: User("", ""),
         downloadUrl = downloadUrl ?: "",
         stared = stared,
         reported = reported,
         created = created.toString(),
         updated = updated.toString()
+    )
+}
+
+fun PostingDto.UserDto.mapToUser(): User {
+    return User(
+        userId = userId,
+        displayName = displayName,
+        userPhotoUrl = userPhotoUrl
     )
 }

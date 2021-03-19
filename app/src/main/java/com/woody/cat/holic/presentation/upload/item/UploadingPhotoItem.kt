@@ -5,6 +5,7 @@ import kotlinx.coroutines.Job
 
 data class UploadingPhotoItem(
     val userId: String? = null,
+
     val imageUri: String,
     var imageDownloadUrl: String = "",
     var currentProgress: MutableLiveData<Int> = MutableLiveData(0),

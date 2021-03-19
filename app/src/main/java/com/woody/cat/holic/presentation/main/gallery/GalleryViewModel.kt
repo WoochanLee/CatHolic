@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.woody.cat.holic.data.PostingOrder
 import com.woody.cat.holic.domain.Photo
-import com.woody.cat.holic.framework.FirebaseUserManager
+import com.woody.cat.holic.domain.Posting
 import com.woody.cat.holic.framework.base.BaseViewModel
 import com.woody.cat.holic.framework.base.handleNetworkResult
 import com.woody.cat.holic.usecase.GetNextPostings
@@ -19,21 +19,19 @@ class GalleryViewModel(private val getNextPostings: GetNextPostings) : BaseViewM
         const val POSTING_PAGE_SIZE = 10
     }
 
-    private val _photosLiveData = MutableLiveData<List<Photo>>()
-    val photosLiveData: LiveData<List<Photo>> get() = _photosLiveData
+    private val _postingsLiveData = MutableLiveData<List<Posting>>()
+    val postingsLiveData: LiveData<List<Posting>> get() = _postingsLiveData
 
-    fun initPhotos() {
+    fun initPostings() {
         //TODO: OrderBy
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 val result = getNextPostings(POSTING_PAGE_SIZE, PostingOrder.CREATED)
 
                 handleNetworkResult(result, onSuccess = { postingList ->
-                    _photosLiveData.postValue(postingList.map {
-                        Photo(it.userId, it.downloadUrl)
-                    })
+                    _postingsLiveData.postValue(postingList)
                 }, onError = {
-                    it.printStackTrace()
+                    //TODO: handle network error
                 })
             }
         }

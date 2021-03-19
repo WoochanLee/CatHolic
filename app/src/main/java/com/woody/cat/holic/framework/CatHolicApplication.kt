@@ -13,7 +13,7 @@ class CatHolicApplication : Application() {
     }
 
     val photoRepository by lazy { PhotoRepositoryImpl(FirebaseUserManager) }
-    val postingRepository by lazy { PostingRepositoryImpl(FirebaseUserManager) }
+    val postingRepository by lazy { PostingRepositoryImpl() }
 
     override fun onCreate() {
         super.onCreate()

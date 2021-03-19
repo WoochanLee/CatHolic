@@ -13,7 +13,7 @@ import com.woody.cat.holic.framework.net.mapToPostingDto
 import kotlinx.coroutines.CompletableDeferred
 
 
-class PostingRepositoryImpl(private val firebaseUserManager: FirebaseUserManager) : PostingRepository {
+class PostingRepositoryImpl() : PostingRepository {
 
     companion object {
         const val COLLECTION_PATH = "cat"

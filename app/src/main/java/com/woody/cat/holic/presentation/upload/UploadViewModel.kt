@@ -106,9 +106,9 @@ class UploadViewModel(
 
     fun onClickUploadPosting() {
 
-        val userId = firebaseUserManager.getCurrentUserId()
+        val user = firebaseUserManager.getCurrentUser()
 
-        if (userId == null) {
+        if (user == null) {
             handleNotSignedInUser()
             return
         }
@@ -120,7 +120,7 @@ class UploadViewModel(
                     ?.filter { it.imageDownloadUrl.isNotEmpty() }
                     ?.map {
                         Posting(
-                            userId,
+                            user,
                             it.imageDownloadUrl
                         )
                     }
