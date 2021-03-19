@@ -67,20 +67,8 @@ class UploadActivity : AppCompatActivity() {
                         updatePostingButtonEnableStatus()
                     })
 
-                    eventShowPostingSuccessToast.observe(this@UploadActivity, {
-                        Toast.makeText(
-                            this@UploadActivity,
-                            R.string.success_to_posting,
-                            Toast.LENGTH_LONG
-                        ).show()
-                    })
-
-                    eventShowPostingErrorToast.observe(this@UploadActivity, {
-                        Toast.makeText(
-                            this@UploadActivity,
-                            R.string.fail_to_posting,
-                            Toast.LENGTH_LONG
-                        ).show()
+                    eventShowToast.observe(this@UploadActivity, {
+                        Toast.makeText(this@UploadActivity, it, Toast.LENGTH_LONG).show()
                     })
 
                     eventCancel.observe(this@UploadActivity, {

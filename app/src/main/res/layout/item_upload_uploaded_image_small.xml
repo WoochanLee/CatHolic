@@ -13,7 +13,7 @@
 
         <variable
             name="model"
-            type="com.woody.cat.holic.presentation.upload.item.UploadingPhoto" />
+            type="com.woody.cat.holic.presentation.upload.item.UploadingPhotoItem" />
 
         <import type="com.woody.cat.holic.presentation.upload.item.UploadStatus" />
 

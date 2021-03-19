@@ -23,6 +23,6 @@
             android:scaleType="centerCrop"
             app:layout_constraintTop_toTopOf="parent"
             app:imageUrl="@{model.imageUrl}"
-            tools:src="@mipmap/ic_launcher" />
+            tools:background="@color/gray" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

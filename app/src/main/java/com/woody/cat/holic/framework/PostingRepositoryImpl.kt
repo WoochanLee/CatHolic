@@ -63,7 +63,7 @@ class PostingRepositoryImpl(private val firebaseUserManager: FirebaseUserManager
                 }
 
                 val postingList = querySnapshot.documents
-                    .map { it.toObject(PostingDto::class.java)!! }
+                    .mapNotNull { it.toObject(PostingDto::class.java) }
                     .map { it.mapToPosting() }
 
                 dataDeferred.complete(Resource.Success(postingList))

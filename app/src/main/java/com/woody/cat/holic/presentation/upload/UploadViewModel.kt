@@ -3,12 +3,14 @@ package com.woody.cat.holic.presentation.upload
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.woody.cat.holic.R
 import com.woody.cat.holic.domain.Posting
 import com.woody.cat.holic.framework.FirebaseUserManager
 import com.woody.cat.holic.framework.base.BaseViewModel
 import com.woody.cat.holic.framework.base.handleNetworkResult
+import com.woody.cat.holic.framework.net.common.NotSignedInException
 import com.woody.cat.holic.presentation.upload.item.UploadStatus
-import com.woody.cat.holic.presentation.upload.item.UploadingPhoto
+import com.woody.cat.holic.presentation.upload.item.UploadingPhotoItem
 import com.woody.cat.holic.usecase.AddPosting
 import com.woody.cat.holic.usecase.UploadPhoto
 import kotlinx.coroutines.*
@@ -38,11 +40,8 @@ class UploadViewModel(
     private val _eventCancel = MutableLiveData<Unit>()
     val eventCancel: LiveData<Unit> get() = _eventCancel
 
-    private val _eventShowPostingSuccessToast = MutableLiveData<Unit>()
-    val eventShowPostingSuccessToast: LiveData<Unit> get() = _eventShowPostingSuccessToast
-
-    private val _eventShowPostingErrorToast = MutableLiveData<Unit>()
-    val eventShowPostingErrorToast: LiveData<Unit> get() = _eventShowPostingErrorToast
+    private val _eventShowPostingToast = MutableLiveData<Int>()
+    val eventShowToast: LiveData<Int> get() = _eventShowPostingToast
 
     private val _isLeftArrowButtonVisible = MutableLiveData(false)
     val isLeftArrowButtonVisible: LiveData<Boolean> get() = _isLeftArrowButtonVisible
@@ -56,13 +55,13 @@ class UploadViewModel(
     private val _isUploadPostingButtonEnabled = MutableLiveData(false)
     val isUploadPostingButtonEnabled: LiveData<Boolean> get() = _isUploadPostingButtonEnabled
 
-    private val _previewData = MutableLiveData<MutableList<UploadingPhoto>>(mutableListOf())
-    val previewData: LiveData<MutableList<UploadingPhoto>> get() = _previewData
+    private val _previewData = MutableLiveData<MutableList<UploadingPhotoItem>>(mutableListOf())
+    val previewData: LiveData<MutableList<UploadingPhotoItem>> get() = _previewData
 
     fun addPreviewData(data: List<String>) {
-        _previewData.value = data.map { UploadingPhoto(imageUri = it) }
+        _previewData.value = data.map { UploadingPhotoItem(imageUri = it) }
             .toMutableList()
-            .apply { addAll(_previewData.value!!) }
+            .apply { addAll(_previewData.value ?: emptyList()) }
 
         uploadPhotos()
         _eventUpdatePostingButtonEnableStatus.postValue(Unit)
@@ -106,24 +105,37 @@ class UploadViewModel(
     }
 
     fun onClickUploadPosting() {
+
+        val userId = firebaseUserManager.getCurrentUserId()
+
+        if (userId == null) {
+            handleNotSignedInUser()
+            return
+        }
+
         //TODO: Loading Progress
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                val result = addPosting(previewData.value
-                    ?.filter { it.imageDownloadUrl != null }
+                val uploadPostingItemList = previewData.value
+                    ?.filter { it.imageDownloadUrl.isNotEmpty() }
                     ?.map {
                         Posting(
-                            firebaseUserManager.getCurrentUserId(),
-                            it.imageDownloadUrl!!
+                            userId,
+                            it.imageDownloadUrl
                         )
                     }
-                    ?: listOf())
+                    ?: listOf()
+
+                val result = addPosting(uploadPostingItemList)
 
                 handleNetworkResult(result, onSuccess = {
-                    _eventShowPostingSuccessToast.postValue(Unit)
+                    _eventShowPostingToast.postValue(R.string.success_to_posting)
                     _eventCancel.postValue(Unit)
                 }, onError = {
-                    _eventShowPostingErrorToast.postValue(Unit)
+                    when (it) {
+                        is NotSignedInException -> handleNotSignedInUser()
+                        else -> _eventShowPostingToast.postValue(R.string.fail_to_posting)
+                    }
                 })
             }
         }
@@ -159,27 +171,34 @@ class UploadViewModel(
         _isUploadPostingButtonEnabled.postValue(true)
     }
 
-    private fun uploadSinglePhoto(uploadingPhoto: UploadingPhoto): Job {
+    private fun uploadSinglePhoto(uploadingPhotoItem: UploadingPhotoItem): Job {
         return viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                uploadingPhoto.uploadStatus.postValue(UploadStatus.UPLOADING)
+                uploadingPhotoItem.uploadStatus.postValue(UploadStatus.UPLOADING)
 
-                val result = uploadPhoto(File(uploadingPhoto.imageUri)) { progress ->
-                    uploadingPhoto.currentProgress.postValue(progress)
+                val result = uploadPhoto(File(uploadingPhotoItem.imageUri)) { progress ->
+                    uploadingPhotoItem.currentProgress.postValue(progress)
                 }
 
                 handleNetworkResult(result, onSuccess = {
-                    uploadingPhoto.apply {
+                    uploadingPhotoItem.apply {
                         imageDownloadUrl = it.imageUrl
                         uploadStatus.postValue(UploadStatus.COMPLETE)
                     }
                     _eventUpdatePostingButtonEnableStatus.postValue(Unit)
                 }, onError = {
-                    uploadingPhoto.uploadStatus.postValue(UploadStatus.FAIL)
-                    it.printStackTrace()
+                    when (it) {
+                        is NotSignedInException -> handleNotSignedInUser()
+                        else -> uploadingPhotoItem.uploadStatus.postValue(UploadStatus.FAIL)
+                    }
                 })
             }
         }
+    }
+
+    private fun handleNotSignedInUser() {
+        _eventShowPostingToast.postValue(R.string.need_to_sign_in)
+        _eventCancel.postValue(Unit)
     }
 
     override fun onCleared() {

@@ -12,14 +12,17 @@ import com.woody.cat.holic.R
 import com.woody.cat.holic.databinding.ActivityMainBinding
 import com.woody.cat.holic.presentation.main.gallery.GalleryFragment
 import com.woody.cat.holic.presentation.main.like.LikeFragment
+import com.woody.cat.holic.presentation.main.user.UserFragment
 import com.woody.cat.holic.presentation.upload.UploadActivity
+import java.lang.reflect.Type
 
 class MainActivity : AppCompatActivity() {
 
-    lateinit var binding: ActivityMainBinding
-    lateinit var viewModel: MainViewModel
-    val galleryFragment = GalleryFragment()
-    val likeFragment = LikeFragment()
+    private lateinit var binding: ActivityMainBinding
+    private lateinit var viewModel: MainViewModel
+    private val galleryFragment = GalleryFragment()
+    private val likeFragment = LikeFragment()
+    private val userFragment = UserFragment()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,32 +46,34 @@ class MainActivity : AppCompatActivity() {
 
     private fun initMainTab() {
         binding.tlMain.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-            override fun onTabReselected(tab: TabLayout.Tab?) = Unit
-            override fun onTabUnselected(tab: TabLayout.Tab?) {
-                tab?.icon = when (tab?.position) {
-                    0 -> ContextCompat.getDrawable(
-                        this@MainActivity,
-                        R.drawable.ic_cloud_data_empty
-                    )
-                    else -> ContextCompat.getDrawable(this@MainActivity, R.drawable.ic_heart_empty)
+            override fun onTabReselected(tab: TabLayout.Tab) = Unit
+            override fun onTabUnselected(tab: TabLayout.Tab) {
+                val iconId = when (MainTab.tabFromPosition(tab.position)) {
+                    MainTab.TAB_GALLERY -> R.drawable.ic_cloud_data_empty
+                    MainTab.TAB_LIKE -> R.drawable.ic_heart_empty
+                    MainTab.TAB_USER -> R.drawable.ic_user_empty
                 }
+
+                tab.icon = ContextCompat.getDrawable(this@MainActivity, iconId)
             }
 
-            override fun onTabSelected(tab: TabLayout.Tab?) {
-                when (tab?.position) {
-                    0 -> {
-                        tab.icon = ContextCompat.getDrawable(
-                            this@MainActivity,
-                            R.drawable.ic_cloud_data_fill
-                        )
+            override fun onTabSelected(tab: TabLayout.Tab) {
+                val iconId = when (MainTab.tabFromPosition(tab.position)) {
+                    MainTab.TAB_GALLERY -> {
                         replaceFragment(galleryFragment)
+                        R.drawable.ic_cloud_data_fill
                     }
-                    else -> {
-                        tab?.icon =
-                            ContextCompat.getDrawable(this@MainActivity, R.drawable.ic_heart_fill)
+                    MainTab.TAB_LIKE -> {
                         replaceFragment(likeFragment)
+                        R.drawable.ic_heart_fill
+                    }
+                    MainTab.TAB_USER -> {
+                        replaceFragment(userFragment)
+                        R.drawable.ic_user_fill
                     }
                 }
+
+                tab.icon = ContextCompat.getDrawable(this@MainActivity, iconId)
             }
         })
     }

@@ -7,6 +7,7 @@ import com.woody.cat.holic.data.common.Resource
 import com.woody.cat.holic.domain.Photo
 import com.woody.cat.holic.framework.base.CatHolicLogger
 import com.woody.cat.holic.framework.base.getFileExtension
+import com.woody.cat.holic.framework.net.common.NotSignedInException
 import kotlinx.coroutines.CompletableDeferred
 import java.io.File
 
@@ -22,29 +23,27 @@ class PhotoRepositoryImpl(private val firebaseUserManager: FirebaseUserManager) 
         maxUploadRetryTimeMillis = MAX_RETRY_TIME_MILLIS
     }.reference
 
-    // https://stackoverflow.com/a/48562175/9797457
     override suspend fun uploadPhoto(
         file: File,
         onProgress: (Int) -> Unit
     ): Resource<Photo> {
         val dataDeferred = CompletableDeferred<Resource<Photo>>()
 
+        val userId =
+            firebaseUserManager.getCurrentUserId() ?: return Resource.Error(NotSignedInException())
+
         val catsRef = storageRef.child(makeUploadFilePath(file))
         val task = catsRef.putFile(Uri.fromFile(file))
             .addOnProgressListener { snapshot ->
-                val progress: Int =
-                    (100f * snapshot.bytesTransferred / snapshot.totalByteCount).toInt()
+                val progress = (100f * snapshot.bytesTransferred / snapshot.totalByteCount).toInt()
                 onProgress(progress)
-                println("upload progress : $progress")
+                CatHolicLogger.log("upload progress : $progress")
             }
             .addOnSuccessListener {
                 CatHolicLogger.log("success to upload")
                 catsRef.downloadUrl.addOnSuccessListener {
-                    dataDeferred.complete(
-                        Resource.Success(
-                            Photo(firebaseUserManager.getCurrentUserId(), it.toString())
-                        )
-                    )
+                    CatHolicLogger.log("success to get download url")
+                    dataDeferred.complete(Resource.Success(Photo(userId, it.toString())))
                 }.addOnFailureListener {
                     CatHolicLogger.log("fail to get download url")
                     dataDeferred.complete(Resource.Error(it))

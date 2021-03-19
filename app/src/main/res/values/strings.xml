@@ -2,5 +2,7 @@
     <string name="app_name">CatHolic</string>
 
     <string name="success_to_posting">Upload Success!</string>
-    <string name="fail_to_posting">Upload Fail! Please try again.</string>
+    <string name="fail_to_posting">Upload Fail! Please try again</string>
+    <string name="need_to_sign_in">Please Sign In First</string>
+    <string name="order_by">Order By</string>
 </resources>

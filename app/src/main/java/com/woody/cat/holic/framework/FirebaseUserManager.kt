@@ -78,11 +78,11 @@ object FirebaseUserManager {
     }
 
     fun isSignedIn(): Boolean {
-        return !(firebaseAuth.currentUser == null || firebaseAuth.currentUser?.providerData?.size == 0)
+        return getCurrentUserId() != null
     }
 
-    fun getCurrentUserId(): String {
-        return firebaseAuth.currentUser?.providerData?.find { it.providerId == USER_PROVIDER }?.uid!!
+    fun getCurrentUserId(): String? {
+        return firebaseAuth.currentUser?.providerData?.find { it.providerId == USER_PROVIDER }?.uid
     }
 
     fun signOut(activity: Activity) {

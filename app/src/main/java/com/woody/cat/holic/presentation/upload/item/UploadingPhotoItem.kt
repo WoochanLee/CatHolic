@@ -3,10 +3,10 @@ package com.woody.cat.holic.presentation.upload.item
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.Job
 
-data class UploadingPhoto(
+data class UploadingPhotoItem(
     val userId: String? = null,
     val imageUri: String,
-    var imageDownloadUrl: String? = null,
+    var imageDownloadUrl: String = "",
     var currentProgress: MutableLiveData<Int> = MutableLiveData(0),
     val uploadStatus: MutableLiveData<UploadStatus> = MutableLiveData(UploadStatus.UPLOADING),
     var uploadingJob: Job? = null

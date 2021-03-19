@@ -8,14 +8,17 @@ import androidx.recyclerview.widget.RecyclerView
 import com.woody.cat.holic.R
 import com.woody.cat.holic.databinding.ItemUploadUploadedImageBigBinding
 import com.woody.cat.holic.framework.base.BaseViewHolder
-import com.woody.cat.holic.presentation.upload.item.UploadingPhoto
+import com.woody.cat.holic.presentation.upload.item.UploadingPhotoItem
 
 class UploadBigPreviewAdapter(
     private val lifecycleOwner: LifecycleOwner,
     private val viewModel: UploadViewModel
-) : RecyclerView.Adapter<BaseViewHolder<UploadingPhoto, UploadViewModel>>() {
+) : RecyclerView.Adapter<BaseViewHolder<UploadingPhotoItem, UploadViewModel>>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<UploadingPhoto, UploadViewModel> {
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): BaseViewHolder<UploadingPhotoItem, UploadViewModel> {
 
         val binding =
             DataBindingUtil.inflate<ItemUploadUploadedImageBigBinding>(
@@ -30,15 +33,20 @@ class UploadBigPreviewAdapter(
         return BaseViewHolder(binding, lifecycleOwner)
     }
 
-    override fun onBindViewHolder(holder: BaseViewHolder<UploadingPhoto, UploadViewModel>, position: Int) {
-        holder.bind(position, viewModel.previewData.value!![position], viewModel)
+    override fun onBindViewHolder(
+        holder: BaseViewHolder<UploadingPhotoItem, UploadViewModel>,
+        position: Int
+    ) {
+        viewModel.previewData.value?.get(position)?.let { uploadingPhotoItem ->
+            holder.bind(position, uploadingPhotoItem, viewModel)
+        }
     }
 
     override fun getItemCount(): Int {
-        return viewModel.previewData.value!!.size
+        return viewModel.previewData.value?.size ?: 0
     }
 
     fun changeArrowButtonStatus(currentPosition: Int) {
-        viewModel.changeArrowButtonStatus(currentPosition, viewModel.previewData.value!!.size)
+        viewModel.changeArrowButtonStatus(currentPosition, viewModel.previewData.value?.size ?: 0)
     }
 }

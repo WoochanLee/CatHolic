@@ -13,10 +13,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class GalleryViewModel(
-    private val firebaseUserManager: FirebaseUserManager,
-    private val getNextPostings: GetNextPostings
-) : BaseViewModel() {
+class GalleryViewModel(private val getNextPostings: GetNextPostings) : BaseViewModel() {
 
     companion object {
         const val POSTING_PAGE_SIZE = 10
@@ -33,7 +30,7 @@ class GalleryViewModel(
 
                 handleNetworkResult(result, onSuccess = { postingList ->
                     _photosLiveData.postValue(postingList.map {
-                        Photo(firebaseUserManager.getCurrentUserId(), it.downloadUrl)
+                        Photo(it.userId, it.downloadUrl)
                     })
                 }, onError = {
                     it.printStackTrace()

@@ -40,9 +40,9 @@ class LikeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.signInButton.setOnClickListener {
+        /*binding.signInButton.setOnClickListener {
             FirebaseUserManager.signIn(startGoogleSignInForResult, requireActivity())
-        }
+        }*/
 
         //CatHolicGoogleUserManager.signOut(requireActivity())
     }
