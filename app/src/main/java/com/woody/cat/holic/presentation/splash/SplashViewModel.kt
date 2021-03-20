@@ -21,7 +21,7 @@ class SplashViewModel : BaseViewModel() {
     private fun delayStartMainActivity() {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                delay(500)
+                delay(3000)
                 _eventStartMainActivity.postValue(Unit)
             }
         }

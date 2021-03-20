@@ -2,6 +2,7 @@ package com.woody.cat.holic.presentation.main
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
@@ -14,7 +15,6 @@ import com.woody.cat.holic.presentation.main.gallery.GalleryFragment
 import com.woody.cat.holic.presentation.main.like.LikeFragment
 import com.woody.cat.holic.presentation.main.user.UserFragment
 import com.woody.cat.holic.presentation.upload.UploadActivity
-import java.lang.reflect.Type
 
 class MainActivity : AppCompatActivity() {
 
@@ -27,18 +27,21 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding = DataBindingUtil.setContentView<ActivityMainBinding>(this, R.layout.activity_main)
-            .apply {
-                lifecycleOwner = this@MainActivity
-            }
+        binding = DataBindingUtil.setContentView<ActivityMainBinding>(this, R.layout.activity_main).apply {
+            lifecycleOwner = this@MainActivity
+        }
 
-        viewModel =
-            ViewModelProvider(this, MainViewModelFactory()).get(MainViewModel::class.java).apply {
-                binding.viewModel = this
-                eventStartUploadActivity.observe(this@MainActivity, {
-                    startActivity(Intent(this@MainActivity, UploadActivity::class.java))
-                })
-            }
+        viewModel = ViewModelProvider(this, MainViewModelFactory()).get(MainViewModel::class.java).apply {
+            binding.viewModel = this
+            eventStartUploadActivity.observe(this@MainActivity, {
+                startActivity(Intent(this@MainActivity, UploadActivity::class.java))
+            })
+
+            eventMoveToSignInTabWithToast.observe(this@MainActivity, {
+                binding.tlMain.getTabAt(MainTab.TAB_USER.position)?.select()
+                Toast.makeText(this@MainActivity, R.string.need_to_sign_in, Toast.LENGTH_LONG).show()
+            })
+        }
 
         initMainTab()
         replaceFragment(galleryFragment)
@@ -61,14 +64,20 @@ class MainActivity : AppCompatActivity() {
                 val iconId = when (MainTab.tabFromPosition(tab.position)) {
                     MainTab.TAB_GALLERY -> {
                         replaceFragment(galleryFragment)
+                        viewModel.setVisibleUploadFab(true)
+                        viewModel.setVisibleOrderFab(true)
                         R.drawable.ic_cloud_data_fill
                     }
                     MainTab.TAB_LIKE -> {
                         replaceFragment(likeFragment)
+                        viewModel.setVisibleUploadFab(true)
+                        viewModel.setVisibleOrderFab(true)
                         R.drawable.ic_heart_fill
                     }
                     MainTab.TAB_USER -> {
                         replaceFragment(userFragment)
+                        viewModel.setVisibleUploadFab(false)
+                        viewModel.setVisibleOrderFab(false)
                         R.drawable.ic_user_fill
                     }
                 }

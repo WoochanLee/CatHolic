@@ -9,28 +9,23 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.woody.cat.holic.R
 import com.woody.cat.holic.databinding.FragmentGalleryBinding
+import com.woody.cat.holic.framework.base.CatHolicLogger
+import com.woody.cat.holic.presentation.main.MainViewModel
+import com.woody.cat.holic.presentation.main.MainViewModelFactory
 
 class GalleryFragment : Fragment() {
 
-    lateinit var viewModel: GalleryViewModel
-    //lateinit var activityViewModel: MainViewModel
+    lateinit var activityViewModel: MainViewModel
+    //lateinit var viewModel: GalleryViewModel
+
     lateinit var binding: FragmentGalleryBinding
 
     private val galleryAdapter: GalleryAdapter by lazy {
-        GalleryAdapter(this, viewModel)
+        GalleryAdapter(this, activityViewModel)
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        return DataBindingUtil.inflate<FragmentGalleryBinding>(
-            inflater,
-            R.layout.fragment_gallery,
-            container,
-            false
-        ).apply {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        return DataBindingUtil.inflate<FragmentGalleryBinding>(inflater, R.layout.fragment_gallery, container, false).apply {
             binding = this
         }.root
     }
@@ -38,21 +33,28 @@ class GalleryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel =
-            ViewModelProvider(this, GalleryViewModelFactory()).get(GalleryViewModel::class.java)
-                .apply {
-                    binding.viewModel = this
-                    postingsLiveData.observe(this@GalleryFragment, { list ->
-                        galleryAdapter.refreshData(list.map { it })
-                    })
-                    initPostings()
-                }
+        activity?.let {
+            activityViewModel = ViewModelProvider(it, MainViewModelFactory()).get(MainViewModel::class.java).apply {
+                binding.activityViewModel = this
 
-        /*activity?.let {
-            activityViewModel =
-                ViewModelProvider(it, GalleryViewModelFactory()).get(MainViewModel::class.java)
-            binding.viewModel = activityViewModel
-        }*/
+                postingsLiveData.observe(this@GalleryFragment, { list ->
+                    galleryAdapter.refreshData(list)
+                })
+
+                currentPostingOrder.observe(this@GalleryFragment, {
+                    initPostings()
+                })
+            }
+        }
+
+        /*viewModel = ViewModelProvider(this, GalleryViewModelFactory()).get(GalleryViewModel::class.java)
+            .apply {
+                binding.viewModel = this
+                postingsLiveData.observe(this@GalleryFragment, { list ->
+                    galleryAdapter.refreshData(list.map { it })
+                })
+                viewModel.initPostings()
+            }*/
 
         binding.rvMainGallery.adapter = galleryAdapter
     }

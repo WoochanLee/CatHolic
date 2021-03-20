@@ -15,28 +15,21 @@ class UploadBigPreviewAdapter(
     private val viewModel: UploadViewModel
 ) : RecyclerView.Adapter<BaseViewHolder<UploadingPhotoItem, UploadViewModel>>() {
 
-    override fun onCreateViewHolder(
-        parent: ViewGroup,
-        viewType: Int
-    ): BaseViewHolder<UploadingPhotoItem, UploadViewModel> {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<UploadingPhotoItem, UploadViewModel> {
 
-        val binding =
-            DataBindingUtil.inflate<ItemUploadUploadedImageBigBinding>(
-                LayoutInflater.from(parent.context),
-                R.layout.item_upload_uploaded_image_big,
-                parent,
-                false
-            ).apply {
-                this.viewModel = viewModel
-            }
+        val binding = DataBindingUtil.inflate<ItemUploadUploadedImageBigBinding>(
+            LayoutInflater.from(parent.context),
+            R.layout.item_upload_uploaded_image_big,
+            parent,
+            false
+        ).apply {
+            this.viewModel = viewModel
+        }
 
         return BaseViewHolder(binding, lifecycleOwner)
     }
 
-    override fun onBindViewHolder(
-        holder: BaseViewHolder<UploadingPhotoItem, UploadViewModel>,
-        position: Int
-    ) {
+    override fun onBindViewHolder(holder: BaseViewHolder<UploadingPhotoItem, UploadViewModel>, position: Int) {
         viewModel.previewData.value?.get(position)?.let { uploadingPhotoItem ->
             holder.bind(position, uploadingPhotoItem, viewModel)
         }

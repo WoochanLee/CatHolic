@@ -13,6 +13,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+/*
 class GalleryViewModel(private val getNextPostings: GetNextPostings) : BaseViewModel() {
 
     companion object {
@@ -37,3 +38,4 @@ class GalleryViewModel(private val getNextPostings: GetNextPostings) : BaseViewM
         }
     }
 }
+*/

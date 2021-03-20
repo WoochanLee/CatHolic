@@ -32,49 +32,45 @@ class UploadActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding =
-            DataBindingUtil.setContentView<ActivityUploadBinding>(this, R.layout.activity_upload)
-                .apply {
-                    lifecycleOwner = this@UploadActivity
-                }
+        binding = DataBindingUtil.setContentView<ActivityUploadBinding>(this, R.layout.activity_upload).apply {
+            lifecycleOwner = this@UploadActivity
+        }
 
-        viewModel =
-            ViewModelProvider(this, UploadViewModelFactory()).get(UploadViewModel::class.java)
-                .apply {
-                    binding.viewModel = this
+        viewModel = ViewModelProvider(this, UploadViewModelFactory()).get(UploadViewModel::class.java).apply {
+            binding.viewModel = this
 
-                    eventSelectImage.observe(this@UploadActivity, {
-                        getAlbumPhotos()
-                    })
+            eventSelectImage.observe(this@UploadActivity, {
+                getAlbumPhotos()
+            })
 
-                    eventMoveToNextPreviewPage.observe(this@UploadActivity, {
-                        moveToNextPreviewPage()
-                    })
+            eventMoveToNextPreviewPage.observe(this@UploadActivity, {
+                moveToNextPreviewPage()
+            })
 
-                    eventMoveToPrevPreviewPage.observe(this@UploadActivity, {
-                        moveToPrevPreviewPage()
-                    })
+            eventMoveToPrevPreviewPage.observe(this@UploadActivity, {
+                moveToPrevPreviewPage()
+            })
 
-                    eventMoveToTargetPreviewPage.observe(this@UploadActivity, {
-                        moveToTargetPreviewPage(it)
-                    })
+            eventMoveToTargetPreviewPage.observe(this@UploadActivity, {
+                moveToTargetPreviewPage(it)
+            })
 
-                    eventRemoveTargetPreviewPage.observe(this@UploadActivity, {
-                        removeTargetPreviewPage(it)
-                    })
+            eventRemoveTargetPreviewPage.observe(this@UploadActivity, {
+                removeTargetPreviewPage(it)
+            })
 
-                    eventUpdatePostingButtonEnableStatus.observe(this@UploadActivity, {
-                        updatePostingButtonEnableStatus()
-                    })
+            eventUpdatePostingButtonEnableStatus.observe(this@UploadActivity, {
+                updatePostingButtonEnableStatus()
+            })
 
-                    eventShowToast.observe(this@UploadActivity, {
-                        Toast.makeText(this@UploadActivity, it, Toast.LENGTH_LONG).show()
-                    })
+            eventShowToast.observe(this@UploadActivity, {
+                Toast.makeText(this@UploadActivity, it, Toast.LENGTH_LONG).show()
+            })
 
-                    eventCancel.observe(this@UploadActivity, {
-                        onBackPressed()
-                    })
-                }
+            eventCancel.observe(this@UploadActivity, {
+                onBackPressed()
+            })
+        }
 
         initToolbar()
         initRecyclerView()

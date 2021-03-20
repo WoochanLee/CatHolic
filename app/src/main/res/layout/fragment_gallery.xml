@@ -4,8 +4,8 @@
     <data>
 
         <variable
-            name="viewModel"
-            type="com.woody.cat.holic.presentation.main.gallery.GalleryViewModel" />
+            name="activityViewModel"
+            type="com.woody.cat.holic.presentation.main.MainViewModel" />
     </data>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"

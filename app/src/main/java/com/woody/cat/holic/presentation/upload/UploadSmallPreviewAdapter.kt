@@ -21,10 +21,7 @@ class UploadSmallPreviewAdapter(
         const val VIEW_TYPE_IMAGE = 1
     }
 
-    override fun onCreateViewHolder(
-        parent: ViewGroup,
-        viewType: Int
-    ): BaseViewHolder<UploadingPhotoItem, UploadViewModel> {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<UploadingPhotoItem, UploadViewModel> {
 
         val binding = when (viewType) {
             VIEW_TYPE_UPLOAD -> {
@@ -50,10 +47,7 @@ class UploadSmallPreviewAdapter(
         return BaseViewHolder(binding, lifecycleOwner)
     }
 
-    override fun onBindViewHolder(
-        holder: BaseViewHolder<UploadingPhotoItem, UploadViewModel>,
-        position: Int
-    ) {
+    override fun onBindViewHolder(holder: BaseViewHolder<UploadingPhotoItem, UploadViewModel>, position: Int) {
         if (position == 0) {
             return
         }

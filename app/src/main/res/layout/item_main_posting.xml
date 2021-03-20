@@ -74,7 +74,7 @@
                         android:text="@{model.user.displayName}"
                         android:textColor="@color/white"
                         android:textSize="15dp"
-                        tools:text="우디" />
+                        tools:text="Woody" />
                 </LinearLayout>
 
                 <View
@@ -101,7 +101,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@{String.valueOf(model.stared)}"
+                        android:text="@{String.valueOf(model.liked)}"
                         android:textColor="@color/white"
 
                         android:textSize="15dp"

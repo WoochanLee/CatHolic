@@ -8,7 +8,7 @@ import java.util.*
 data class PostingDto(
     val user: UserDto? = null,
     val downloadUrl: String? = null,
-    val stared: Int = 0,
+    val liked: Int = 0,
     val reported: Int = 0,
 
     @ServerTimestamp
@@ -17,7 +17,6 @@ data class PostingDto(
     @ServerTimestamp
     val updated: Date? = null
 ) {
-
     data class UserDto(
         val userId: String = "",
         val displayName: String = "",
@@ -29,7 +28,7 @@ fun Posting.mapToPostingDto(): PostingDto {
     return PostingDto(
         user = user.mapToUserDto(),
         downloadUrl = downloadUrl,
-        stared = stared,
+        liked = liked,
         reported = reported,
         created = null,
         updated = null
@@ -48,7 +47,7 @@ fun PostingDto.mapToPosting(): Posting {
     return Posting(
         user = user?.mapToUser() ?: User("", ""),
         downloadUrl = downloadUrl ?: "",
-        stared = stared,
+        liked = liked,
         reported = reported,
         created = created.toString(),
         updated = updated.toString()

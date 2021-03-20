@@ -2,6 +2,7 @@ package com.woody.cat.holic.framework
 
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.woody.cat.holic.data.PostingOrder
 import com.woody.cat.holic.data.PostingRepository
 import com.woody.cat.holic.data.common.Resource
@@ -13,7 +14,7 @@ import com.woody.cat.holic.framework.net.mapToPostingDto
 import kotlinx.coroutines.CompletableDeferred
 
 
-class PostingRepositoryImpl() : PostingRepository {
+class PostingRepositoryImpl : PostingRepository {
 
     companion object {
         const val COLLECTION_PATH = "cat"
@@ -42,23 +43,38 @@ class PostingRepositoryImpl() : PostingRepository {
     private var lastVisibleDocument: DocumentSnapshot? = null
 
     override suspend fun getNextPostings(
+        fromTheTop: Boolean,
         size: Int,
         orderBy: PostingOrder
     ): Resource<List<Posting>> {
+
+        if (fromTheTop) {
+            lastVisibleDocument = null
+        }
+
         val dataDeferred = CompletableDeferred<Resource<List<Posting>>>()
 
         db.collection(COLLECTION_PATH)
-            .orderBy(orderBy.fieldName)
-            .apply {
-                if (lastVisibleDocument != null) {
-                    this.startAfter(lastVisibleDocument)
+            .run {
+                when (orderBy) {
+                    PostingOrder.CREATED, PostingOrder.LIKED -> {
+                        orderBy(orderBy.fieldName, Query.Direction.DESCENDING)
+                    }
+                    PostingOrder.RANDOM -> {
+                        this
+                    }
                 }
-            }
-            .limit(size.toLong())
+            }.run {
+                if (lastVisibleDocument != null) {
+                    startAfter(lastVisibleDocument)
+                } else {
+                    this
+                }
+            }.limit(size.toLong())
             .get()
             .addOnSuccessListener { querySnapshot ->
 
-                if (querySnapshot.size() != 0) {
+                if (!dataDeferred.isCancelled && querySnapshot.size() != 0) {
                     lastVisibleDocument = querySnapshot.documents[querySnapshot.size() - 1]
                 }
 

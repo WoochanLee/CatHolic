@@ -6,6 +6,7 @@ import com.woody.cat.holic.framework.CatHolicApplication
 import com.woody.cat.holic.framework.FirebaseUserManager
 import com.woody.cat.holic.usecase.GetNextPostings
 
+/*
 class GalleryViewModelFactory : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(GalleryViewModel::class.java)) {
@@ -16,4 +17,4 @@ class GalleryViewModelFactory : ViewModelProvider.Factory {
             throw IllegalStateException()
         }
     }
-}
+}*/

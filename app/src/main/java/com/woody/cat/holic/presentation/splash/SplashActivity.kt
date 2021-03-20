@@ -17,13 +17,12 @@ class SplashActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_splash)
-        viewModel =
-            ViewModelProvider(this, SplashViewModelFactory()).get(SplashViewModel::class.java)
-                .apply {
-                    eventStartMainActivity.observe(this@SplashActivity, {
-                        startActivity(Intent(this@SplashActivity, MainActivity::class.java))
-                        finish()
-                    })
-                }
+        viewModel = ViewModelProvider(this, SplashViewModelFactory()).get(SplashViewModel::class.java)
+            .apply {
+                eventStartMainActivity.observe(this@SplashActivity, {
+                    startActivity(Intent(this@SplashActivity, MainActivity::class.java))
+                    finish()
+                })
+            }
     }
 }

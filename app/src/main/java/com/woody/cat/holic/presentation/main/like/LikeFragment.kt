@@ -15,24 +15,15 @@ class LikeFragment : Fragment() {
     lateinit var binding: FragmentLikeBinding
 
     //TODO: move FirebaseUserManager to viewModel
-    private val startGoogleSignInForResult =
+    /*private val startGoogleSignInForResult =
         FirebaseUserManager.startGoogleSignInForResult(this, onSuccess = {
 
         }, onError = {
 
-        })
+        })*/
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        return DataBindingUtil.inflate<FragmentLikeBinding>(
-            inflater,
-            R.layout.fragment_like,
-            container,
-            false
-        ).apply {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        return DataBindingUtil.inflate<FragmentLikeBinding>(inflater, R.layout.fragment_like, container, false).apply {
             binding = this
         }.root
     }
@@ -40,9 +31,9 @@ class LikeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.signInButton.setOnClickListener {
+        /*binding.signInButton.setOnClickListener {
             FirebaseUserManager.signIn(startGoogleSignInForResult, requireActivity())
-        }
+        }*/
 
         //CatHolicGoogleUserManager.signOut(requireActivity())
     }

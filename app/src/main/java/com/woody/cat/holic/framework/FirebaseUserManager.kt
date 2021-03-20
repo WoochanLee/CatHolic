@@ -33,33 +33,19 @@ object FirebaseUserManager {
             .build()
     }
 
-    fun startGoogleSignInForResult(
-        fragment: Fragment,
-        onSuccess: (AuthResult) -> Unit,
-        onError: (Exception) -> Unit
-    ): ActivityResultLauncher<Intent> {
-        return fragment.registerForActivityResult(
-            ActivityResultContracts.StartActivityForResult()
-        ) {
+    fun startGoogleSignInForResult(fragment: Fragment, onSuccess: (AuthResult) -> Unit, onError: (Exception) -> Unit): ActivityResultLauncher<Intent> {
+        return fragment.registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             val task = GoogleSignIn.getSignedInAccountFromIntent(it.data)
             handleGoogleSignInResult(task, onSuccess, onError)
         }
     }
 
-    fun signIn(
-        activityResultLauncher: ActivityResultLauncher<Intent>,
-        activity: Activity
-    ) {
-
+    fun signIn(activityResultLauncher: ActivityResultLauncher<Intent>, activity: Activity) {
         val googleSignInClient = GoogleSignIn.getClient(activity, gso)
         activityResultLauncher.launch(googleSignInClient.signInIntent)
     }
 
-    private fun handleGoogleSignInResult(
-        task: Task<GoogleSignInAccount>,
-        onSuccess: (AuthResult) -> Unit,
-        onError: (Exception) -> Unit
-    ) {
+    private fun handleGoogleSignInResult(task: Task<GoogleSignInAccount>, onSuccess: (AuthResult) -> Unit, onError: (Exception) -> Unit) {
         try {
             val account = task.getResult(ApiException::class.java)
             val credential = GoogleAuthProvider.getCredential(account?.idToken, null)

@@ -70,7 +70,7 @@ class UploadViewModel(
     fun removePreviewData(position: Int) {
         previewData.value?.apply {
             get(position).uploadingJob?.cancel(CancellationException())
-            removeAt(position)
+            _previewData.value = this.apply { removeAt(position) }
         }
         _eventUpdatePostingButtonEnableStatus.postValue(Unit)
     }
