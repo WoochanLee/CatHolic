@@ -5,12 +5,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.woody.cat.holic.R
 import com.woody.cat.holic.domain.Posting
+import com.woody.cat.holic.domain.User
 import com.woody.cat.holic.framework.FirebaseUserManager
 import com.woody.cat.holic.framework.base.BaseViewModel
 import com.woody.cat.holic.framework.base.handleNetworkResult
 import com.woody.cat.holic.framework.net.common.NotSignedInException
-import com.woody.cat.holic.presentation.upload.item.UploadStatus
-import com.woody.cat.holic.presentation.upload.item.UploadingPhotoItem
 import com.woody.cat.holic.usecase.AddPosting
 import com.woody.cat.holic.usecase.UploadPhoto
 import kotlinx.coroutines.*
@@ -55,11 +54,11 @@ class UploadViewModel(
     private val _isUploadPostingButtonEnabled = MutableLiveData(false)
     val isUploadPostingButtonEnabled: LiveData<Boolean> get() = _isUploadPostingButtonEnabled
 
-    private val _previewData = MutableLiveData<MutableList<UploadingPhotoItem>>(mutableListOf())
-    val previewData: LiveData<MutableList<UploadingPhotoItem>> get() = _previewData
+    private val _previewData = MutableLiveData<MutableList<UploadItem>>(mutableListOf())
+    val previewData: LiveData<MutableList<UploadItem>> get() = _previewData
 
     fun addPreviewData(data: List<String>) {
-        _previewData.value = data.map { UploadingPhotoItem(imageUri = it) }
+        _previewData.value = data.map { UploadItem(imageUri = it) }
             .toMutableList()
             .apply { addAll(_previewData.value ?: emptyList()) }
 
@@ -95,13 +94,17 @@ class UploadViewModel(
         _eventSelectImage.postValue(Unit)
     }
 
-    fun onClickCancel() {
-        _eventCancel.postValue(Unit)
-    }
-
     fun onClickRetryUploadPhoto(position: Int) {
+
+        val user = firebaseUserManager.getCurrentUser()
+
+        if (user == null) {
+            handleNotSignedInUser()
+            return
+        }
+
         val uploadingPhoto = previewData.value?.get(position) ?: return
-        uploadingPhoto.uploadingJob = uploadSinglePhoto(uploadingPhoto)
+        uploadingPhoto.uploadingJob = uploadSinglePhoto(user, uploadingPhoto)
     }
 
     fun onClickUploadPosting() {
@@ -118,12 +121,7 @@ class UploadViewModel(
             withContext(Dispatchers.IO) {
                 val uploadPostingItemList = previewData.value
                     ?.filter { it.imageDownloadUrl.isNotEmpty() }
-                    ?.map {
-                        Posting(
-                            user,
-                            it.imageDownloadUrl
-                        )
-                    }
+                    ?.map { Posting(user, it.imageDownloadUrl) }
                     ?: listOf()
 
                 val result = addPosting(uploadPostingItemList)
@@ -147,12 +145,19 @@ class UploadViewModel(
     }
 
     private fun uploadPhotos() {
+
+        val user = firebaseUserManager.getCurrentUser()
+        if (user == null) {
+            handleNotSignedInUser()
+            return
+        }
+
         previewData.value?.forEach breaker@{ uploadingPhoto ->
             if (uploadingPhoto.uploadStatus.value != UploadStatus.UPLOADING) {
                 return@breaker
             }
 
-            uploadingPhoto.uploadingJob = uploadSinglePhoto(uploadingPhoto)
+            uploadingPhoto.uploadingJob = uploadSinglePhoto(user, uploadingPhoto)
         }
     }
 
@@ -171,17 +176,17 @@ class UploadViewModel(
         _isUploadPostingButtonEnabled.postValue(true)
     }
 
-    private fun uploadSinglePhoto(uploadingPhotoItem: UploadingPhotoItem): Job {
+    private fun uploadSinglePhoto(user: User, uploadItem: UploadItem): Job {
         return viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                uploadingPhotoItem.uploadStatus.postValue(UploadStatus.UPLOADING)
+                uploadItem.uploadStatus.postValue(UploadStatus.UPLOADING)
 
-                val result = uploadPhoto(File(uploadingPhotoItem.imageUri)) { progress ->
-                    uploadingPhotoItem.currentProgress.postValue(progress)
+                val result = uploadPhoto(user, File(uploadItem.imageUri)) { progress ->
+                    uploadItem.currentProgress.postValue(progress)
                 }
 
                 handleNetworkResult(result, onSuccess = {
-                    uploadingPhotoItem.apply {
+                    uploadItem.apply {
                         imageDownloadUrl = it.imageUrl
                         uploadStatus.postValue(UploadStatus.COMPLETE)
                     }
@@ -189,7 +194,7 @@ class UploadViewModel(
                 }, onError = {
                     when (it) {
                         is NotSignedInException -> handleNotSignedInUser()
-                        else -> uploadingPhotoItem.uploadStatus.postValue(UploadStatus.FAIL)
+                        else -> uploadItem.uploadStatus.postValue(UploadStatus.FAIL)
                     }
                 })
             }

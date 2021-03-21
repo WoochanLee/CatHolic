@@ -9,7 +9,9 @@ data class PostingDto(
     val user: UserDto? = null,
     val downloadUrl: String? = null,
     val liked: Int = 0,
+    val likedUserIds: List<String> = listOf(),
     val reported: Int = 0,
+    val reportedUserIds: List<String> = listOf(),
 
     @ServerTimestamp
     val created: Date? = null,
@@ -29,7 +31,9 @@ fun Posting.mapToPostingDto(): PostingDto {
         user = user.mapToUserDto(),
         downloadUrl = downloadUrl,
         liked = liked,
+        likedUserIds = likedUserIds,
         reported = reported,
+        reportedUserIds = reportedUserIds,
         created = null,
         updated = null
     )
@@ -43,12 +47,15 @@ fun User.mapToUserDto(): PostingDto.UserDto {
     )
 }
 
-fun PostingDto.mapToPosting(): Posting {
+fun PostingDto.mapToPosting(postingId: String): Posting {
     return Posting(
         user = user?.mapToUser() ?: User("", ""),
         downloadUrl = downloadUrl ?: "",
         liked = liked,
+        likedUserIds = likedUserIds,
         reported = reported,
+        reportedUserIds = reportedUserIds,
+        postingId = postingId,
         created = created.toString(),
         updated = updated.toString()
     )

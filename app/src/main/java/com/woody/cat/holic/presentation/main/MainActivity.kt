@@ -23,6 +23,7 @@ class MainActivity : AppCompatActivity() {
     private val galleryFragment = GalleryFragment()
     private val likeFragment = LikeFragment()
     private val userFragment = UserFragment()
+    private val fragments = arrayOf(galleryFragment, likeFragment, userFragment)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,7 +45,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         initMainTab()
-        replaceFragment(galleryFragment)
+        initFragments()
     }
 
     private fun initMainTab() {
@@ -63,19 +64,19 @@ class MainActivity : AppCompatActivity() {
             override fun onTabSelected(tab: TabLayout.Tab) {
                 val iconId = when (MainTab.tabFromPosition(tab.position)) {
                     MainTab.TAB_GALLERY -> {
-                        replaceFragment(galleryFragment)
+                        showFragment(galleryFragment)
                         viewModel.setVisibleUploadFab(true)
                         viewModel.setVisibleOrderFab(true)
                         R.drawable.ic_cloud_data_fill
                     }
                     MainTab.TAB_LIKE -> {
-                        replaceFragment(likeFragment)
+                        showFragment(likeFragment)
                         viewModel.setVisibleUploadFab(true)
                         viewModel.setVisibleOrderFab(true)
                         R.drawable.ic_heart_fill
                     }
                     MainTab.TAB_USER -> {
-                        replaceFragment(userFragment)
+                        showFragment(userFragment)
                         viewModel.setVisibleUploadFab(false)
                         viewModel.setVisibleOrderFab(false)
                         R.drawable.ic_user_fill
@@ -87,10 +88,26 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
-    private fun replaceFragment(fragment: Fragment) {
-        supportFragmentManager
-            .beginTransaction()
-            .replace(R.id.main_container, fragment)
+    private fun initFragments() {
+        supportFragmentManager.beginTransaction()
+            .add(R.id.main_container, galleryFragment, GalleryFragment::class.java.name)
+            .add(R.id.main_container, likeFragment, LikeFragment::class.java.name)
+            .add(R.id.main_container, userFragment, UserFragment::class.java.name)
+            .commit()
+
+        showFragment(galleryFragment)
+    }
+
+    private fun showFragment(fragment: Fragment) {
+
+        fragments.forEach {
+            supportFragmentManager.beginTransaction()
+                .hide(it)
+                .commit()
+        }
+
+        supportFragmentManager.beginTransaction()
+            .show(fragment)
             .commit()
     }
 }

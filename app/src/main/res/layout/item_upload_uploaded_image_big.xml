@@ -14,9 +14,9 @@
 
         <variable
             name="model"
-            type="com.woody.cat.holic.presentation.upload.item.UploadingPhotoItem" />
+            type="com.woody.cat.holic.presentation.upload.UploadItem" />
 
-        <import type="com.woody.cat.holic.presentation.upload.item.UploadStatus" />
+        <import type="com.woody.cat.holic.presentation.upload.UploadStatus" />
 
         <import type="android.view.View" />
     </data>

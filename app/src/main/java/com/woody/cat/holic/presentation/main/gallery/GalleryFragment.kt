@@ -9,19 +9,17 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.woody.cat.holic.R
 import com.woody.cat.holic.databinding.FragmentGalleryBinding
-import com.woody.cat.holic.framework.base.CatHolicLogger
 import com.woody.cat.holic.presentation.main.MainViewModel
 import com.woody.cat.holic.presentation.main.MainViewModelFactory
+import com.woody.cat.holic.presentation.main.PostingAdapter
 
 class GalleryFragment : Fragment() {
 
-    lateinit var activityViewModel: MainViewModel
-    //lateinit var viewModel: GalleryViewModel
-
     lateinit var binding: FragmentGalleryBinding
+    lateinit var activityViewModel: MainViewModel
 
-    private val galleryAdapter: GalleryAdapter by lazy {
-        GalleryAdapter(this, activityViewModel)
+    private val postingAdapter: PostingAdapter by lazy {
+        PostingAdapter(this, activityViewModel)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -38,7 +36,7 @@ class GalleryFragment : Fragment() {
                 binding.activityViewModel = this
 
                 postingsLiveData.observe(this@GalleryFragment, { list ->
-                    galleryAdapter.refreshData(list)
+                    postingAdapter.refreshData(list)
                 })
 
                 currentPostingOrder.observe(this@GalleryFragment, {
@@ -47,15 +45,6 @@ class GalleryFragment : Fragment() {
             }
         }
 
-        /*viewModel = ViewModelProvider(this, GalleryViewModelFactory()).get(GalleryViewModel::class.java)
-            .apply {
-                binding.viewModel = this
-                postingsLiveData.observe(this@GalleryFragment, { list ->
-                    galleryAdapter.refreshData(list.map { it })
-                })
-                viewModel.initPostings()
-            }*/
-
-        binding.rvMainGallery.adapter = galleryAdapter
+        binding.rvMainGallery.adapter = postingAdapter
     }
 }

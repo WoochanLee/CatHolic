@@ -131,7 +131,6 @@ class UploadActivity : AppCompatActivity() {
 
                 viewModel.addPreviewData(checkedList.map { it.path })
                 refreshAdapterStatus()
-                // startUploadImages(checkedList.map { it.path })
             }
             .start()
     }

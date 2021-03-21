@@ -7,7 +7,13 @@ interface PostingRepository {
 
     suspend fun addPosting(postings: List<Posting>): Resource<Unit>
 
-    suspend fun getNextPostings(fromTheTop: Boolean, size: Int, orderBy: PostingOrder): Resource<List<Posting>>
+    suspend fun getNextNormalPostings(fromTheTop: Boolean, size: Int, orderBy: PostingOrder): Resource<List<Posting>>
+
+    suspend fun getNextLikedPostings(fromTheTop: Boolean, size: Int, orderBy: PostingOrder): Resource<List<Posting>>
+
+    suspend fun addLikedInPosting(userId: String, postingId: String): Resource<Unit>
+
+    suspend fun removeLikedInPosting(userId: String, postingId: String): Resource<Unit>
 }
 
 enum class PostingOrder(val fieldName: String) {

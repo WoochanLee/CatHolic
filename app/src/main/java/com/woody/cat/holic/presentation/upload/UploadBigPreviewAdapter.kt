@@ -8,14 +8,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.woody.cat.holic.R
 import com.woody.cat.holic.databinding.ItemUploadUploadedImageBigBinding
 import com.woody.cat.holic.framework.base.BaseViewHolder
-import com.woody.cat.holic.presentation.upload.item.UploadingPhotoItem
 
 class UploadBigPreviewAdapter(
     private val lifecycleOwner: LifecycleOwner,
     private val viewModel: UploadViewModel
-) : RecyclerView.Adapter<BaseViewHolder<UploadingPhotoItem, UploadViewModel>>() {
+) : RecyclerView.Adapter<BaseViewHolder<UploadItem, UploadViewModel>>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<UploadingPhotoItem, UploadViewModel> {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<UploadItem, UploadViewModel> {
 
         val binding = DataBindingUtil.inflate<ItemUploadUploadedImageBigBinding>(
             LayoutInflater.from(parent.context),
@@ -29,7 +28,7 @@ class UploadBigPreviewAdapter(
         return BaseViewHolder(binding, lifecycleOwner)
     }
 
-    override fun onBindViewHolder(holder: BaseViewHolder<UploadingPhotoItem, UploadViewModel>, position: Int) {
+    override fun onBindViewHolder(holder: BaseViewHolder<UploadItem, UploadViewModel>, position: Int) {
         viewModel.previewData.value?.get(position)?.let { uploadingPhotoItem ->
             holder.bind(position, uploadingPhotoItem, viewModel)
         }

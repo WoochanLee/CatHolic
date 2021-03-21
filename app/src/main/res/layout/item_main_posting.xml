@@ -5,12 +5,16 @@
     <data>
 
         <variable
+            name="viewModel"
+            type="com.woody.cat.holic.presentation.main.MainViewModel" />
+
+        <variable
             name="position"
             type="Integer" />
 
         <variable
             name="model"
-            type="com.woody.cat.holic.domain.Posting" />
+            type="com.woody.cat.holic.presentation.main.PostingItem" />
     </data>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -91,11 +95,12 @@
                     app:layout_constraintBottom_toBottomOf="parent">
 
                     <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
                         android:layout_marginStart="10dp"
-                        android:layout_marginEnd="3dp"
-                        android:src="@drawable/ic_heart_empty"
+                        android:onClick="@{() -> viewModel.onClickLike(model)}"
+                        android:padding="5dp"
+                        android:src="@{model.currentUserLiked ? @drawable/ic_heart_fill : @drawable/ic_heart_empty}"
                         app:tint="@color/white" />
 
                     <TextView
@@ -103,7 +108,6 @@
                         android:layout_height="wrap_content"
                         android:text="@{String.valueOf(model.liked)}"
                         android:textColor="@color/white"
-
                         android:textSize="15dp"
                         android:textStyle="bold"
                         tools:text="10" />

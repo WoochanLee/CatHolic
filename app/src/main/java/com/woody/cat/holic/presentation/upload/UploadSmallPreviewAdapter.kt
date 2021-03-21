@@ -9,19 +9,18 @@ import com.woody.cat.holic.R
 import com.woody.cat.holic.databinding.ItemUploadUploadImageBinding
 import com.woody.cat.holic.databinding.ItemUploadUploadedImageSmallBinding
 import com.woody.cat.holic.framework.base.BaseViewHolder
-import com.woody.cat.holic.presentation.upload.item.UploadingPhotoItem
 
 class UploadSmallPreviewAdapter(
     private val lifecycleOwner: LifecycleOwner,
     private val viewModel: UploadViewModel
-) : RecyclerView.Adapter<BaseViewHolder<UploadingPhotoItem, UploadViewModel>>() {
+) : RecyclerView.Adapter<BaseViewHolder<UploadItem, UploadViewModel>>() {
 
     companion object {
         const val VIEW_TYPE_UPLOAD = 0
         const val VIEW_TYPE_IMAGE = 1
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<UploadingPhotoItem, UploadViewModel> {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<UploadItem, UploadViewModel> {
 
         val binding = when (viewType) {
             VIEW_TYPE_UPLOAD -> {
@@ -47,7 +46,7 @@ class UploadSmallPreviewAdapter(
         return BaseViewHolder(binding, lifecycleOwner)
     }
 
-    override fun onBindViewHolder(holder: BaseViewHolder<UploadingPhotoItem, UploadViewModel>, position: Int) {
+    override fun onBindViewHolder(holder: BaseViewHolder<UploadItem, UploadViewModel>, position: Int) {
         if (position == 0) {
             return
         }

@@ -36,6 +36,13 @@ class UserFragment : Fragment() {
         return view
     }
 
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        if (!hidden) {
+            viewModel.refreshSignInStatus()
+        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -50,8 +57,6 @@ class UserFragment : Fragment() {
                 FirebaseUserManager.signOut(requireActivity())
                 refreshSignInStatus()
             })
-
-            refreshSignInStatus()
         }
     }
 }

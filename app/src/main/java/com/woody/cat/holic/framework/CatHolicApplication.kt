@@ -12,7 +12,7 @@ class CatHolicApplication : Application() {
         lateinit var application: CatHolicApplication
     }
 
-    val photoRepository by lazy { PhotoRepositoryImpl(FirebaseUserManager) }
+    val photoRepository by lazy { PhotoRepositoryImpl() }
     val postingRepository by lazy { PostingRepositoryImpl() }
 
     override fun onCreate() {

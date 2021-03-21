@@ -6,8 +6,9 @@
     <data>
 
         <variable
-            name="viewModel"
-            type="com.woody.cat.holic.presentation.main.like.LikeViewModel" />
+            name="activityViewModel"
+            type="com.woody.cat.holic.presentation.main.MainViewModel" />
+
     </data>
 
     <ScrollView
@@ -18,6 +19,14 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_main_gallery"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/black"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/item_main_posting" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

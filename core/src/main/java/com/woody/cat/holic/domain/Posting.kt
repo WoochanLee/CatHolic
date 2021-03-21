@@ -4,7 +4,10 @@ data class Posting(
     val user: User,
     val downloadUrl: String,
     val liked: Int = 0,
+    val likedUserIds: List<String> = listOf(),
     val reported: Int = 0,
-    val created: String? = null,
-    val updated: String? = null
+    val reportedUserIds: List<String> = listOf(),
+    val postingId: String = "",
+    val created: String = "",
+    val updated: String = ""
 )
