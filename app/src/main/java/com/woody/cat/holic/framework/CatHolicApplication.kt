@@ -2,6 +2,9 @@ package com.woody.cat.holic.framework
 
 import android.app.Application
 import com.woody.cat.holic.framework.base.AlbumMediaLoader
+import com.woody.cat.holic.framework.photo.PhotoRepositoryImpl
+import com.woody.cat.holic.framework.posting.PostingRepositoryImpl
+import com.woody.cat.holic.framework.user.FirebaseUserManager
 import com.yanzhenjie.album.Album
 import com.yanzhenjie.album.AlbumConfig
 import java.util.*

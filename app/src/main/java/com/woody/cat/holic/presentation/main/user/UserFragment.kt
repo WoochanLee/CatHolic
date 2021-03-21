@@ -11,25 +11,25 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.woody.cat.holic.R
 import com.woody.cat.holic.databinding.FragmentUserBinding
-import com.woody.cat.holic.framework.FirebaseUserManager
-import com.woody.cat.holic.presentation.main.viewmodel.UserViewModel
-import com.woody.cat.holic.presentation.main.viewmodel.UserViewModelFactory
+import com.woody.cat.holic.framework.user.FirebaseUserManager
+import com.woody.cat.holic.presentation.main.viewmodel.SignViewModel
+import com.woody.cat.holic.presentation.main.viewmodel.SignViewModelFactory
 
 class UserFragment : Fragment() {
 
     private lateinit var binding: FragmentUserBinding
-    private lateinit var userViewModel: UserViewModel
+    private lateinit var signViewModel: SignViewModel
 
     private lateinit var startGoogleSignInForResult: ActivityResultLauncher<Intent>
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val view = DataBindingUtil.inflate<FragmentUserBinding>(inflater, R.layout.fragment_user, container, false).apply {
             binding = this
-            lifecycleOwner = this@UserFragment
+            lifecycleOwner = viewLifecycleOwner
         }.root
 
         startGoogleSignInForResult = FirebaseUserManager.startGoogleSignInForResult(this, onSuccess = {
-            userViewModel.apply {
+            signViewModel.apply {
                 refreshSignInStatus()
                 onSignInSuccess()
             }
@@ -44,7 +44,7 @@ class UserFragment : Fragment() {
     override fun onHiddenChanged(hidden: Boolean) {
         super.onHiddenChanged(hidden)
         if (!hidden) {
-            userViewModel.refreshSignInStatus()
+            signViewModel.refreshSignInStatus()
         }
     }
 
@@ -52,16 +52,17 @@ class UserFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         activity?.let{ activity ->
-            userViewModel = ViewModelProvider(activity, UserViewModelFactory()).get(UserViewModel::class.java).apply {
+            signViewModel = ViewModelProvider(activity, SignViewModelFactory()).get(SignViewModel::class.java).apply {
                 binding.userViewModel = this
 
-                eventGoogleSignIn.observe(this@UserFragment, {
+                eventSignIn.observe(viewLifecycleOwner, {
                     FirebaseUserManager.signIn(startGoogleSignInForResult, requireActivity())
                 })
 
-                eventSignOutSuccess.observe(this@UserFragment, {
+                eventSignOut.observe(viewLifecycleOwner, {
                     FirebaseUserManager.signOut(requireActivity())
                     refreshSignInStatus()
+                    onSignOutSuccess()
                 })
             }
         }

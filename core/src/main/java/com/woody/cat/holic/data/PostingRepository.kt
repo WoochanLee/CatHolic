@@ -7,9 +7,9 @@ interface PostingRepository {
 
     suspend fun addPosting(postings: List<Posting>): Resource<Unit>
 
-    suspend fun getNextNormalPostings(fromTheTop: Boolean, size: Int, orderBy: PostingOrder): Resource<List<Posting>>
+    suspend fun getNormalPostings(key: String?, size: Int, orderBy: PostingOrder): Resource<List<Posting>>
 
-    suspend fun getNextLikedPostings(fromTheTop: Boolean, size: Int, orderBy: PostingOrder): Resource<List<Posting>>
+    suspend fun getLikePostings(key: String?, size: Int, orderBy: PostingOrder): Resource<List<Posting>>
 
     suspend fun addLikedInPosting(userId: String, postingId: String): Resource<Unit>
 

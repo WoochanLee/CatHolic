@@ -11,7 +11,7 @@
 
         <variable
             name="userViewModel"
-            type="com.woody.cat.holic.presentation.main.viewmodel.UserViewModel" />
+            type="com.woody.cat.holic.presentation.main.viewmodel.SignViewModel" />
 
         <import type="android.view.View" />
     </data>
@@ -31,42 +31,29 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <LinearLayout
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="horizontal"
+                    android:textColor="@color/white"
+                    android:textSize="20dp"
+                    android:textStyle="bold"
+                    android:text="@{mainViewModel.toolbarTitle}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
-
-                    <ImageView
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
-                        android:layout_marginEnd="8dp"
-                        android:src="@drawable/ic_toyger_cat"
-                        app:tint="@color/white" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="CAT HOLIC"
-                        android:textColor="@color/white"
-                        android:textSize="20dp"
-                        android:textStyle="bold" />
-
-                </LinearLayout>
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="GALLERY" />
 
                 <androidx.cardview.widget.CardView
                     android:layout_width="100dp"
                     android:layout_height="34dp"
                     android:layout_marginEnd="10dp"
                     android:foreground="?android:selectableItemBackground"
-                    android:onClick="@{() -> mainViewModel.changeToNextPostingOrder()}"
+                    android:onClick="@{() -> mainViewModel.onClickChangePostingOrder()}"
                     android:padding="0dp"
                     android:visibility="@{mainViewModel.isVisibleOrderSwitch() ? View.VISIBLE : View.GONE}"
                     app:cardBackgroundColor="@color/white"
                     app:cardCornerRadius="15dp"
+                    app:cardElevation="0dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
@@ -89,9 +76,9 @@
                         <ImageView
                             android:layout_width="18dp"
                             android:layout_height="18dp"
-                            app:imageResource="@{mainViewModel.getResourceIdByPostingOrder(mainViewModel.currentPostingOrder)}"
+                            app:imageResource="@{mainViewModel.getResourceIdByPostingOrder(mainViewModel.currentVisiblePostingOrder)}"
                             app:tint="@color/black"
-                            tools:src="@drawable/ic_heart_empty" />
+                            tools:src="@drawable/ic_heart_fill" />
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
             </androidx.constraintlayout.widget.ConstraintLayout>

@@ -12,14 +12,17 @@ import com.woody.cat.holic.databinding.FragmentGalleryBinding
 import com.woody.cat.holic.presentation.main.viewmodel.MainViewModel
 import com.woody.cat.holic.presentation.main.viewmodel.MainViewModelFactory
 import com.woody.cat.holic.presentation.main.PostingAdapter
-import com.woody.cat.holic.presentation.main.viewmodel.UserViewModel
-import com.woody.cat.holic.presentation.main.viewmodel.UserViewModelFactory
+import com.woody.cat.holic.presentation.main.gallery.viewmodel.GalleryViewModel
+import com.woody.cat.holic.presentation.main.gallery.viewmodel.GalleryViewModelFactory
+import com.woody.cat.holic.presentation.main.viewmodel.SignViewModel
+import com.woody.cat.holic.presentation.main.viewmodel.SignViewModelFactory
 
 class GalleryFragment : Fragment() {
 
     private lateinit var binding: FragmentGalleryBinding
     private lateinit var mainViewModel: MainViewModel
-    private lateinit var userViewModel: UserViewModel
+    private lateinit var signViewModel: SignViewModel
+    private lateinit var galleryViewModel: GalleryViewModel
 
     private val postingAdapter: PostingAdapter by lazy {
         PostingAdapter(this, mainViewModel)
@@ -28,7 +31,15 @@ class GalleryFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return DataBindingUtil.inflate<FragmentGalleryBinding>(inflater, R.layout.fragment_gallery, container, false).apply {
             binding = this
+            lifecycleOwner = viewLifecycleOwner
         }.root
+    }
+
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        if (!hidden) {
+            mainViewModel.setCurrentVisiblePostingOrder(galleryViewModel.currentPostingOrder)
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -38,24 +49,29 @@ class GalleryFragment : Fragment() {
             mainViewModel = ViewModelProvider(it, MainViewModelFactory()).get(MainViewModel::class.java).apply {
                 binding.mainViewModel = this
 
-                postingsLiveData.observe(this@GalleryFragment, { list ->
-                    postingAdapter.refreshData(list)
-                })
-
-                currentPostingOrder.observe(this@GalleryFragment, {
-                    initPostings()
+                eventChangeGalleryPostingOrder.observe(viewLifecycleOwner, {
+                    galleryViewModel.changeToNextPostingOrder()
+                    setCurrentVisiblePostingOrder(galleryViewModel.currentPostingOrder)
                 })
             }
 
-            userViewModel = ViewModelProvider(it, UserViewModelFactory()).get(UserViewModel::class.java).apply {
+            signViewModel = ViewModelProvider(it, SignViewModelFactory()).get(SignViewModel::class.java).apply {
                 binding.userViewModel = this
 
-                eventGoogleSignIn.observe(this@GalleryFragment, {
-                    mainViewModel.initPostings()
+                eventSignInSuccess.observe(viewLifecycleOwner, {
+                    galleryViewModel.initData()
                 })
 
-                eventSignOutSuccess.observe(this@GalleryFragment, {
-                    mainViewModel.initPostings()
+                eventSignOutSuccess.observe(viewLifecycleOwner, {
+                    galleryViewModel.initData()
+                })
+            }
+
+            galleryViewModel = ViewModelProvider(it, GalleryViewModelFactory()).get(GalleryViewModel::class.java).apply {
+                binding.galleryViewModel = this
+
+                postingList.observe(viewLifecycleOwner, { list ->
+                    postingAdapter.submitList(list)
                 })
             }
         }

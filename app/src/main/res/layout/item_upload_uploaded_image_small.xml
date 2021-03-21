@@ -36,6 +36,7 @@
                 android:layout_height="50dp"
                 android:onClick="@{() -> viewModel.onClickSmallPreview(position)}"
                 app:cardCornerRadius="10dp"
+                app:cardElevation="0dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -67,8 +68,8 @@
         <ImageView
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:padding="12dp"
             android:onClick="@{() -> viewModel.onClickRetryUploadPhoto(position)}"
+            android:padding="12dp"
             android:src="@drawable/ic_reload"
             android:visibility="@{model.uploadStatus == UploadStatus.FAIL ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -92,6 +93,7 @@
                 android:layout_height="20dp"
                 app:cardBackgroundColor="@color/gray"
                 app:cardCornerRadius="10dp"
+                app:cardElevation="0dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 

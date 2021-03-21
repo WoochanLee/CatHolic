@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.woody.cat.holic.R
 import com.woody.cat.holic.domain.Posting
 import com.woody.cat.holic.domain.User
-import com.woody.cat.holic.framework.FirebaseUserManager
+import com.woody.cat.holic.framework.user.FirebaseUserManager
 import com.woody.cat.holic.framework.base.BaseViewModel
 import com.woody.cat.holic.framework.base.handleNetworkResult
 import com.woody.cat.holic.framework.net.common.NotSignedInException

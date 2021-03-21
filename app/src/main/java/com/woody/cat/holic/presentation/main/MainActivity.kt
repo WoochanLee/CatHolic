@@ -16,15 +16,15 @@ import com.woody.cat.holic.presentation.main.like.LikeFragment
 import com.woody.cat.holic.presentation.main.user.UserFragment
 import com.woody.cat.holic.presentation.main.viewmodel.MainViewModel
 import com.woody.cat.holic.presentation.main.viewmodel.MainViewModelFactory
-import com.woody.cat.holic.presentation.main.viewmodel.UserViewModel
-import com.woody.cat.holic.presentation.main.viewmodel.UserViewModelFactory
+import com.woody.cat.holic.presentation.main.viewmodel.SignViewModel
+import com.woody.cat.holic.presentation.main.viewmodel.SignViewModelFactory
 import com.woody.cat.holic.presentation.upload.UploadActivity
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var mainViewModel: MainViewModel
-    private lateinit var userViewModel: UserViewModel
+    private lateinit var signViewModel: SignViewModel
 
     private val galleryFragment = GalleryFragment()
     private val likeFragment = LikeFragment()
@@ -50,10 +50,11 @@ class MainActivity : AppCompatActivity() {
             })
         }
 
-        userViewModel = ViewModelProvider(this, UserViewModelFactory()).get(UserViewModel::class.java).apply {
+        signViewModel = ViewModelProvider(this, SignViewModelFactory()).get(SignViewModel::class.java).apply {
             binding.userViewModel = this
         }
-
+        
+        mainViewModel.setToolbarTitle(getString(R.string.gallery))
         initMainTab()
         initFragments()
     }
@@ -72,23 +73,35 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onTabSelected(tab: TabLayout.Tab) {
-                val iconId = when (MainTab.tabFromPosition(tab.position)) {
+                val selectedTab = MainTab.tabFromPosition(tab.position)
+                mainViewModel.currentFragment = selectedTab
+
+                val iconId = when (selectedTab) {
                     MainTab.TAB_GALLERY -> {
                         showFragment(galleryFragment)
-                        mainViewModel.setVisibleUploadFab(true)
-                        mainViewModel.setVisibleOrderFab(true)
+                        mainViewModel.apply {
+                            setToolbarTitle(getString(R.string.gallery))
+                            setVisibleUploadFab(true)
+                            setVisibleOrderSwitch(true)
+                        }
                         R.drawable.ic_cloud_data_fill
                     }
                     MainTab.TAB_LIKE -> {
                         showFragment(likeFragment)
-                        mainViewModel.setVisibleUploadFab(true)
-                        mainViewModel.setVisibleOrderFab(true)
+                        mainViewModel.apply {
+                            setToolbarTitle(getString(R.string.like))
+                            setVisibleUploadFab(true)
+                            setVisibleOrderSwitch(true)
+                        }
                         R.drawable.ic_heart_fill
                     }
                     MainTab.TAB_USER -> {
                         showFragment(userFragment)
-                        mainViewModel.setVisibleUploadFab(false)
-                        mainViewModel.setVisibleOrderFab(false)
+                        mainViewModel.apply {
+                            setToolbarTitle(getString(R.string.profile))
+                            setVisibleUploadFab(false)
+                            setVisibleOrderSwitch(false)
+                        }
                         R.drawable.ic_user_fill
                     }
                 }

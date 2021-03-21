@@ -1,4 +1,4 @@
-package com.woody.cat.holic.framework
+package com.woody.cat.holic.framework.user
 
 import android.app.Activity
 import android.content.Context

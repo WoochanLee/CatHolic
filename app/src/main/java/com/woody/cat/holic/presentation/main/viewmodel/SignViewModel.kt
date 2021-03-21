@@ -3,13 +3,16 @@ package com.woody.cat.holic.presentation.main.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.woody.cat.holic.domain.User
-import com.woody.cat.holic.framework.FirebaseUserManager
+import com.woody.cat.holic.framework.user.FirebaseUserManager
 import com.woody.cat.holic.framework.base.BaseViewModel
 
-class UserViewModel(private val firebaseUserManager: FirebaseUserManager) : BaseViewModel() {
+class SignViewModel(private val firebaseUserManager: FirebaseUserManager) : BaseViewModel() {
 
-    private val _eventGoogleSignIn = MutableLiveData<Unit>()
-    val eventGoogleSignIn: LiveData<Unit> get() = _eventGoogleSignIn
+    private val _eventSignIn = MutableLiveData<Unit>()
+    val eventSignIn: LiveData<Unit> get() = _eventSignIn
+
+    private val _eventSignOut = MutableLiveData<Unit>()
+    val eventSignOut: LiveData<Unit> get() = _eventSignOut
 
     private val _eventSignInSuccess = MutableLiveData<Unit>()
     val eventSignInSuccess: LiveData<Unit> get() = _eventSignInSuccess
@@ -23,10 +26,6 @@ class UserViewModel(private val firebaseUserManager: FirebaseUserManager) : Base
     private val _userData = MutableLiveData<User>()
     val userData: LiveData<User> get() = _userData
 
-    fun onSignInSuccess() {
-        _eventSignInSuccess.postValue(Unit)
-    }
-
     fun refreshSignInStatus() {
         _isSignIn.postValue(firebaseUserManager.isSignedIn())
         if (firebaseUserManager.isSignedIn()) {
@@ -38,11 +37,19 @@ class UserViewModel(private val firebaseUserManager: FirebaseUserManager) : Base
         _userData.postValue(firebaseUserManager.getCurrentUser())
     }
 
-    fun onClickGoogleSignIn() {
-        _eventGoogleSignIn.postValue(Unit)
+    fun onClickSignIn() {
+        _eventSignIn.postValue(Unit)
+    }
+
+    fun onSignInSuccess() {
+        _eventSignInSuccess.postValue(Unit)
     }
 
     fun onClickSignOut() {
+        _eventSignOut.postValue(Unit)
+    }
+
+    fun onSignOutSuccess() {
         _eventSignOutSuccess.postValue(Unit)
     }
 }

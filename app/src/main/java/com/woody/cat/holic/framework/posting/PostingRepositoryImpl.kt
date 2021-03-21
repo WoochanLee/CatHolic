@@ -1,4 +1,4 @@
-package com.woody.cat.holic.framework
+package com.woody.cat.holic.framework.posting
 
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FieldValue
@@ -15,7 +15,6 @@ import com.woody.cat.holic.framework.net.PostingDto
 import com.woody.cat.holic.framework.net.mapToPosting
 import com.woody.cat.holic.framework.net.mapToPostingDto
 import kotlinx.coroutines.CompletableDeferred
-import java.lang.Error
 
 
 class PostingRepositoryImpl : PostingRepository {
@@ -45,16 +44,26 @@ class PostingRepositoryImpl : PostingRepository {
         return dataDeferred.await()
     }
 
-    private var lastDocInNormalPostings: DocumentSnapshot? = null
+    override suspend fun getNormalPostings(key: String?, size: Int, orderBy: PostingOrder): Resource<List<Posting>> {
+        val docDeferred = CompletableDeferred<Resource<DocumentSnapshot?>>()
 
-    override suspend fun getNextNormalPostings(
-        fromTheTop: Boolean,
-        size: Int,
-        orderBy: PostingOrder
-    ): Resource<List<Posting>> {
+        if (key != null) {
+            db.collection(COLLECTION_POSTING_PATH)
+                .document(key)
+                .get()
+                .addOnSuccessListener {
+                    docDeferred.complete(Resource.Success(it))
+                }.addOnFailureListener {
+                    docDeferred.complete(Resource.Error(it))
+                }
+        } else {
+            docDeferred.complete(Resource.Success(null))
+        }
 
-        if (fromTheTop) {
-            lastDocInNormalPostings = null
+        val lastDoc = docDeferred.await()
+
+        if(lastDoc !is Resource.Success) {
+            return Resource.Error(IllegalStateException())
         }
 
         val dataDeferred = CompletableDeferred<Resource<List<Posting>>>()
@@ -67,16 +76,12 @@ class PostingRepositoryImpl : PostingRepository {
                     PostingOrder.RANDOM -> this
                 }
             }.run {
-                if (lastDocInNormalPostings != null) {
-                    startAfter(lastDocInNormalPostings)
+                if (key != null && lastDoc.data != null) {
+                    startAfter(lastDoc.data as DocumentSnapshot)
                 } else this
             }.limit(size.toLong())
             .get()
             .addOnSuccessListener { querySnapshot ->
-                if (!dataDeferred.isCancelled && querySnapshot.size() != 0) {
-                    lastDocInNormalPostings = querySnapshot.documents[querySnapshot.size() - 1]
-                }
-
                 val postingList = querySnapshot.documents.mapNotNull {
                     val postingDto = it.toObject(PostingDto::class.java)
                     postingDto?.mapToPosting(postingId = it.id)
@@ -90,13 +95,29 @@ class PostingRepositoryImpl : PostingRepository {
         return dataDeferred.await()
     }
 
-    override suspend fun getNextLikedPostings(fromTheTop: Boolean, size: Int, orderBy: PostingOrder): Resource<List<Posting>> {
-        if (fromTheTop) {
-            lastDocInNormalPostings = null
+    override suspend fun getLikePostings(key: String?, size: Int, orderBy: PostingOrder): Resource<List<Posting>> {
+        val docDeferred = CompletableDeferred<Resource<DocumentSnapshot?>>()
+
+        if (key != null) {
+            db.collection(COLLECTION_POSTING_PATH)
+                .document(key)
+                .get()
+                .addOnSuccessListener {
+                    docDeferred.complete(Resource.Success(it))
+                }.addOnFailureListener {
+                    docDeferred.complete(Resource.Error(it))
+                }
+        } else {
+            docDeferred.complete(Resource.Success(null))
+        }
+
+        val lastDoc = docDeferred.await()
+
+        if(lastDoc !is Resource.Success) {
+            return Resource.Error(IllegalStateException())
         }
 
         val dataDeferred = CompletableDeferred<Resource<List<Posting>>>()
-
 
         db.collection(COLLECTION_POSTING_PATH)
             .run {
@@ -106,16 +127,12 @@ class PostingRepositoryImpl : PostingRepository {
                     PostingOrder.RANDOM -> this
                 }
             }.run {
-                if (lastDocInNormalPostings != null) {
-                    startAfter(lastDocInNormalPostings)
+                if (key != null && lastDoc.data != null) {
+                    startAfter(lastDoc.data as DocumentSnapshot)
                 } else this
             }.limit(size.toLong())
             .get()
             .addOnSuccessListener { querySnapshot ->
-                if (!dataDeferred.isCancelled && querySnapshot.size() != 0) {
-                    lastDocInNormalPostings = querySnapshot.documents[querySnapshot.size() - 1]
-                }
-
                 val postingList = querySnapshot.documents.mapNotNull {
                     val postingDto = it.toObject(PostingDto::class.java)
                     postingDto?.mapToPosting(postingId = it.id)
@@ -154,7 +171,7 @@ class PostingRepositoryImpl : PostingRepository {
                 Posting::liked.name, (postingDto?.likedUserIds?.size ?: 0) + 1
             )
 
-            if(likeDto == null) {
+            if (likeDto == null) {
                 it.set(
                     db.collection(COLLECTION_LIKED_PATH)
                         .document(userId),

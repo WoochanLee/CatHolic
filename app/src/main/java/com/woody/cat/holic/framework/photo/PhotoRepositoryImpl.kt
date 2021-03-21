@@ -1,4 +1,4 @@
-package com.woody.cat.holic.framework
+package com.woody.cat.holic.framework.photo
 
 import android.net.Uri
 import com.google.firebase.storage.FirebaseStorage
@@ -8,7 +8,6 @@ import com.woody.cat.holic.domain.Photo
 import com.woody.cat.holic.domain.User
 import com.woody.cat.holic.framework.base.CatHolicLogger
 import com.woody.cat.holic.framework.base.getFileExtension
-import com.woody.cat.holic.framework.net.common.NotSignedInException
 import kotlinx.coroutines.CompletableDeferred
 import java.io.File
 
@@ -62,6 +61,6 @@ class PhotoRepositoryImpl : PhotoRepository {
     }
 
     private fun makeUploadFilePath(file: File, userId: String): String {
-        return "${STORAGE_PATH}/${userId}/${(0..Long.MAX_VALUE).random()}.${getFileExtension(file.name)}"
+        return "$STORAGE_PATH/${userId}/${(0..Long.MAX_VALUE).random()}.${getFileExtension(file.name)}"
     }
 }

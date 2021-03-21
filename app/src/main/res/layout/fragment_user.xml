@@ -7,7 +7,7 @@
 
         <variable
             name="userViewModel"
-            type="com.woody.cat.holic.presentation.main.viewmodel.UserViewModel" />
+            type="com.woody.cat.holic.presentation.main.viewmodel.SignViewModel" />
 
         <import type="android.view.View" />
     </data>
@@ -60,8 +60,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:foreground="?android:selectableItemBackground"
-                    android:onClick="@{() -> userViewModel.onClickGoogleSignIn()}"
-                    app:cardCornerRadius="20dp">
+                    android:onClick="@{() -> userViewModel.onClickSignIn()}"
+                    app:cardCornerRadius="20dp"
+                    app:cardElevation="0dp">
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -121,7 +122,8 @@
                         android:layout_width="100dp"
                         android:layout_height="100dp"
                         android:layout_marginTop="30dp"
-                        app:cardCornerRadius="50dp">
+                        app:cardCornerRadius="50dp"
+                        app:cardElevation="0dp">
 
                         <ImageView
                             android:layout_width="wrap_content"

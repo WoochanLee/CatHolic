@@ -4,7 +4,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LifecycleOwner
-import androidx.recyclerview.widget.RecyclerView
+import androidx.paging.PagedListAdapter
+import androidx.recyclerview.widget.DiffUtil
 import com.woody.cat.holic.R
 import com.woody.cat.holic.databinding.ItemMainPostingBinding
 import com.woody.cat.holic.framework.base.BaseViewHolder
@@ -12,29 +13,28 @@ import com.woody.cat.holic.presentation.main.viewmodel.MainViewModel
 
 class PostingAdapter(
     private val lifecycleOwner: LifecycleOwner,
-    private val activityViewModel: MainViewModel
-) : RecyclerView.Adapter<BaseViewHolder<PostingItem, MainViewModel>>() {
+    private val mainViewModel: MainViewModel
+) : PagedListAdapter<PostingItem, BaseViewHolder<PostingItem, MainViewModel>>(object : DiffUtil.ItemCallback<PostingItem>() {
 
-    private var data = listOf<PostingItem>()
+    override fun areItemsTheSame(oldItem: PostingItem, newItem: PostingItem): Boolean {
+        return oldItem.postingId == newItem.postingId
+    }
 
+    override fun areContentsTheSame(oldItem: PostingItem, newItem: PostingItem): Boolean {
+        return oldItem == newItem
+    }
+}) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<PostingItem, MainViewModel> {
         val binding = DataBindingUtil.inflate<ItemMainPostingBinding>(LayoutInflater.from(parent.context), R.layout.item_main_posting, parent, false).apply {
-            viewModel = activityViewModel
+            viewModel = mainViewModel
         }
 
         return BaseViewHolder(binding, lifecycleOwner)
     }
 
     override fun onBindViewHolder(holder: BaseViewHolder<PostingItem, MainViewModel>, position: Int) {
-        holder.bind(position, data[position], activityViewModel)
-    }
-
-    override fun getItemCount(): Int {
-        return data.size
-    }
-
-    fun refreshData(data: List<PostingItem>) {
-        this.data = data
-        notifyDataSetChanged()
+        getItem(position)?.let { item ->
+            holder.bind(position, item, mainViewModel)
+        }
     }
 }

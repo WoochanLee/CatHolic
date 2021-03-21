@@ -25,7 +25,8 @@
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:cardCornerRadius="10dp">
+            app:cardCornerRadius="10dp"
+            app:cardElevation="0dp">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -62,7 +63,8 @@
                         android:layout_height="30dp"
                         android:layout_marginStart="10dp"
                         android:layout_marginEnd="5dp"
-                        app:cardCornerRadius="14dp">
+                        app:cardCornerRadius="14dp"
+                        app:cardElevation="0dp">
 
                         <ImageView
                             android:layout_width="wrap_content"

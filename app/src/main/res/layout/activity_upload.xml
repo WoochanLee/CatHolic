@@ -78,6 +78,7 @@
                 android:onClick="@{() -> viewModel.onClickLeftArrow()}"
                 android:visibility="@{viewModel.isLeftArrowButtonVisible() ? View.VISIBLE : View.GONE}"
                 app:cardCornerRadius="35dp"
+                app:cardElevation="0dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
@@ -100,6 +101,7 @@
                 android:onClick="@{() -> viewModel.onClickRightArrow()}"
                 android:visibility="@{viewModel.isRightArrowButtonVisible() ? View.VISIBLE : View.GONE}"
                 app:cardCornerRadius="35dp"
+                app:cardElevation="0dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
@@ -118,6 +120,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
+                android:background="@color/black"
                 android:orientation="vertical"
                 android:visibility="@{viewModel.previewData.size() == 0 ? View.VISIBLE : View.GONE}">
 
@@ -126,7 +129,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="20dp"
                     android:text="@string/select_your_cat_photo"
-                    android:textColor="@color/black"
+                    android:textColor="@color/white"
                     android:textSize="25dp" />
 
                 <ImageView
@@ -134,7 +137,7 @@
                     android:layout_height="wrap_content"
                     android:adjustViewBounds="true"
                     android:scaleType="fitXY"
-                    android:src="@drawable/woody_cat_black" />
+                    android:src="@drawable/woody_cat_white" />
             </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -150,7 +153,8 @@
                 android:clickable="@{viewModel.isUploadPostingButtonEnabled()}"
                 android:foreground="?android:selectableItemBackground"
                 android:onClick="@{() -> viewModel.onClickUploadPosting()}"
-                app:cardCornerRadius="10dp">
+                app:cardCornerRadius="10dp"
+                app:cardElevation="0dp">
 
                 <TextView
                     android:layout_width="wrap_content"

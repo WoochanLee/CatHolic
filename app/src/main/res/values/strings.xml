@@ -16,4 +16,7 @@
     <string name="select_your_cat_photo">Select Your Cat Photo !</string>
     <string name="sign_in_with_google">Sign in with Google</string>
     <string name="share_app_to_friends">Share App to Friends</string>
+    <string name="gallery">GALLERY</string>
+    <string name="like">LIKE</string>
+    <string name="profile">PROFILE</string>
 </resources>

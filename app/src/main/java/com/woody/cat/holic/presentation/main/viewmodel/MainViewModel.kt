@@ -5,30 +5,23 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.woody.cat.holic.R
 import com.woody.cat.holic.data.PostingOrder
-import com.woody.cat.holic.framework.FirebaseUserManager
+import com.woody.cat.holic.framework.user.FirebaseUserManager
 import com.woody.cat.holic.framework.base.BaseViewModel
-import com.woody.cat.holic.framework.base.handleNetworkResult
+import com.woody.cat.holic.presentation.main.MainTab
 import com.woody.cat.holic.presentation.main.PostingItem
-import com.woody.cat.holic.presentation.main.mapToPostingItem
 import com.woody.cat.holic.usecase.AddLikeInPosting
-import com.woody.cat.holic.usecase.GetNextNormalPostings
 import com.woody.cat.holic.usecase.RemoveLikeInPosting
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.util.concurrent.CancellationException
 
 class MainViewModel(
     private val firebaseUserManager: FirebaseUserManager,
-    private val getNextNormalPostings: GetNextNormalPostings,
     private val addLikeInPosting: AddLikeInPosting,
     private val removeLikeInPosting: RemoveLikeInPosting
 ) : BaseViewModel() {
 
-    companion object {
-        const val POSTING_PAGE_SIZE = 10
-    }
+    var currentFragment = MainTab.TAB_GALLERY
 
     private val _eventStartUploadActivity = MutableLiveData<Unit>()
     val eventStartUploadActivity: LiveData<Unit> get() = _eventStartUploadActivity
@@ -36,43 +29,30 @@ class MainViewModel(
     private val _eventMoveToSignInTabWithToast = MutableLiveData<Unit>()
     val eventMoveToSignInTabWithToast: LiveData<Unit> get() = _eventMoveToSignInTabWithToast
 
+    private val _eventChangeGalleryPostingOrder = MutableLiveData<Unit>()
+    val eventChangeGalleryPostingOrder: LiveData<Unit> get() = _eventChangeGalleryPostingOrder
+
+    private val _eventChangeLikePostingOrder = MutableLiveData<Unit>()
+    val eventChangeLikePostingOrder: LiveData<Unit> get() = _eventChangeLikePostingOrder
+
+    private val _toolbarTitle = MutableLiveData<String>()
+    val toolbarTitle: LiveData<String> get() = _toolbarTitle
+
     private val _isVisibleUploadFab = MutableLiveData(true)
     val isVisibleUploadFab: LiveData<Boolean> get() = _isVisibleUploadFab
 
     private val _isVisibleOrderSwitch = MutableLiveData(true)
     val isVisibleOrderSwitch: LiveData<Boolean> get() = _isVisibleOrderSwitch
 
-    private val _postingsLiveData = MutableLiveData<List<PostingItem>>()
-    val postingsLiveData: LiveData<List<PostingItem>> get() = _postingsLiveData
+    private val _currentVisiblePostingOrder = MutableLiveData(PostingOrder.LIKED)
+    val currentVisiblePostingOrder: LiveData<PostingOrder> get() = _currentVisiblePostingOrder
 
-    private val _currentPostingOrder = MutableLiveData(PostingOrder.LIKED)
-    val currentPostingOrder: LiveData<PostingOrder> get() = _currentPostingOrder
-
-    private var getNextPostingsJob: Job? = null
-
-    fun initPostings() {
-        getNextPostingsJob?.cancel(CancellationException())
-        getNextPostingsJob = viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                val result = getNextNormalPostings(true, POSTING_PAGE_SIZE, currentPostingOrder.value ?: PostingOrder.LIKED)
-                handleNetworkResult(result, onSuccess = { postingList ->
-                    _postingsLiveData.postValue(postingList.map { it.mapToPostingItem(firebaseUserManager.getCurrentUser()?.userId) })
-                }, onError = {
-                    //TODO: handle network error
-                })
-            }
-        }
+    fun setCurrentVisiblePostingOrder(postingOrder: PostingOrder) {
+        _currentVisiblePostingOrder.postValue(postingOrder)
     }
 
-    fun changeToNextPostingOrder() {
-        val nextOrder = when (currentPostingOrder.value) {
-            PostingOrder.LIKED -> PostingOrder.CREATED
-            PostingOrder.CREATED -> PostingOrder.RANDOM
-            PostingOrder.RANDOM -> PostingOrder.LIKED
-            null -> PostingOrder.LIKED
-        }
-
-        _currentPostingOrder.value = nextOrder
+    fun setToolbarTitle(title: String) {
+        _toolbarTitle.postValue(title)
     }
 
     fun getResourceIdByPostingOrder(postingOrder: PostingOrder): Int {
@@ -114,11 +94,19 @@ class MainViewModel(
         }
     }
 
+    fun onClickChangePostingOrder() {
+        if (currentFragment == MainTab.TAB_GALLERY) {
+            _eventChangeGalleryPostingOrder.postValue(Unit)
+        } else if (currentFragment == MainTab.TAB_LIKE) {
+            _eventChangeLikePostingOrder.postValue(Unit)
+        }
+    }
+
     fun setVisibleUploadFab(isVisible: Boolean) {
         _isVisibleUploadFab.postValue(isVisible)
     }
 
-    fun setVisibleOrderFab(isVisible: Boolean) {
+    fun setVisibleOrderSwitch(isVisible: Boolean) {
         _isVisibleOrderSwitch.postValue(isVisible)
     }
 }
