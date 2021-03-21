@@ -6,9 +6,12 @@
     <data>
 
         <variable
-            name="activityViewModel"
-            type="com.woody.cat.holic.presentation.main.MainViewModel" />
+            name="mainViewModel"
+            type="com.woody.cat.holic.presentation.main.viewmodel.MainViewModel" />
 
+        <variable
+            name="userViewModel"
+            type="com.woody.cat.holic.presentation.main.viewmodel.UserViewModel" />
     </data>
 
     <ScrollView

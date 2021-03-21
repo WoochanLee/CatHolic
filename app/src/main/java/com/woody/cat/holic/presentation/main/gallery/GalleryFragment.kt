@@ -9,17 +9,20 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.woody.cat.holic.R
 import com.woody.cat.holic.databinding.FragmentGalleryBinding
-import com.woody.cat.holic.presentation.main.MainViewModel
-import com.woody.cat.holic.presentation.main.MainViewModelFactory
+import com.woody.cat.holic.presentation.main.viewmodel.MainViewModel
+import com.woody.cat.holic.presentation.main.viewmodel.MainViewModelFactory
 import com.woody.cat.holic.presentation.main.PostingAdapter
+import com.woody.cat.holic.presentation.main.viewmodel.UserViewModel
+import com.woody.cat.holic.presentation.main.viewmodel.UserViewModelFactory
 
 class GalleryFragment : Fragment() {
 
-    lateinit var binding: FragmentGalleryBinding
-    lateinit var activityViewModel: MainViewModel
+    private lateinit var binding: FragmentGalleryBinding
+    private lateinit var mainViewModel: MainViewModel
+    private lateinit var userViewModel: UserViewModel
 
     private val postingAdapter: PostingAdapter by lazy {
-        PostingAdapter(this, activityViewModel)
+        PostingAdapter(this, mainViewModel)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -32,8 +35,8 @@ class GalleryFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         activity?.let {
-            activityViewModel = ViewModelProvider(it, MainViewModelFactory()).get(MainViewModel::class.java).apply {
-                binding.activityViewModel = this
+            mainViewModel = ViewModelProvider(it, MainViewModelFactory()).get(MainViewModel::class.java).apply {
+                binding.mainViewModel = this
 
                 postingsLiveData.observe(this@GalleryFragment, { list ->
                     postingAdapter.refreshData(list)
@@ -41,6 +44,18 @@ class GalleryFragment : Fragment() {
 
                 currentPostingOrder.observe(this@GalleryFragment, {
                     initPostings()
+                })
+            }
+
+            userViewModel = ViewModelProvider(it, UserViewModelFactory()).get(UserViewModel::class.java).apply {
+                binding.userViewModel = this
+
+                eventGoogleSignIn.observe(this@GalleryFragment, {
+                    mainViewModel.initPostings()
+                })
+
+                eventSignOutSuccess.observe(this@GalleryFragment, {
+                    mainViewModel.initPostings()
                 })
             }
         }

@@ -9,18 +9,20 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.woody.cat.holic.R
 import com.woody.cat.holic.databinding.FragmentLikeBinding
-import com.woody.cat.holic.framework.FirebaseUserManager
-import com.woody.cat.holic.presentation.main.MainViewModel
-import com.woody.cat.holic.presentation.main.MainViewModelFactory
+import com.woody.cat.holic.presentation.main.viewmodel.MainViewModel
+import com.woody.cat.holic.presentation.main.viewmodel.MainViewModelFactory
 import com.woody.cat.holic.presentation.main.PostingAdapter
+import com.woody.cat.holic.presentation.main.viewmodel.UserViewModel
+import com.woody.cat.holic.presentation.main.viewmodel.UserViewModelFactory
 
 class LikeFragment : Fragment() {
 
-    lateinit var binding: FragmentLikeBinding
-    lateinit var activityViewModel: MainViewModel
+    private lateinit var binding: FragmentLikeBinding
+    private lateinit var mainViewModel: MainViewModel
+    private lateinit var userViewModel: UserViewModel
 
     private val postingAdapter: PostingAdapter by lazy {
-        PostingAdapter(this, activityViewModel)
+        PostingAdapter(this, mainViewModel)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -33,8 +35,8 @@ class LikeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         activity?.let {
-            activityViewModel = ViewModelProvider(it, MainViewModelFactory()).get(MainViewModel::class.java).apply {
-                binding.activityViewModel = this
+            mainViewModel = ViewModelProvider(it, MainViewModelFactory()).get(MainViewModel::class.java).apply {
+                binding.mainViewModel = this
 
                 postingsLiveData.observe(this@LikeFragment, { list ->
                     postingAdapter.refreshData(list)
@@ -42,6 +44,18 @@ class LikeFragment : Fragment() {
 
                 currentPostingOrder.observe(this@LikeFragment, {
                     initPostings()
+                })
+            }
+
+            userViewModel = ViewModelProvider(it, UserViewModelFactory()).get(UserViewModel::class.java).apply {
+                binding.userViewModel = this
+
+                eventSignInSuccess.observe(this@LikeFragment, {
+                    mainViewModel.initPostings()
+                })
+
+                eventSignOutSuccess.observe(this@LikeFragment, {
+                    mainViewModel.initPostings()
                 })
             }
         }

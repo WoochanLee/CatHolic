@@ -6,8 +6,8 @@
     <data>
 
         <variable
-            name="viewModel"
-            type="com.woody.cat.holic.presentation.main.user.UserViewModel" />
+            name="userViewModel"
+            type="com.woody.cat.holic.presentation.main.viewmodel.UserViewModel" />
 
         <import type="android.view.View" />
     </data>
@@ -28,7 +28,7 @@
                 android:layout_height="0dp"
                 android:gravity="center"
                 android:orientation="vertical"
-                android:visibility="@{viewModel.isSignIn() ? View.GONE : View.VISIBLE}"
+                android:visibility="@{userViewModel.isSignIn() ? View.GONE : View.VISIBLE}"
                 app:layout_constraintBottom_toTopOf="@id/lyt_bottom_link"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:visibility="gone">
@@ -60,7 +60,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:foreground="?android:selectableItemBackground"
-                    android:onClick="@{() -> viewModel.onClickGoogleSignIn()}"
+                    android:onClick="@{() -> userViewModel.onClickGoogleSignIn()}"
                     app:cardCornerRadius="20dp">
 
                     <LinearLayout
@@ -94,7 +94,7 @@
                 android:gravity="center_horizontal"
                 android:orientation="vertical"
                 android:paddingHorizontal="30dp"
-                android:visibility="@{viewModel.isSignIn() ? View.VISIBLE : View.GONE}"
+                android:visibility="@{userViewModel.isSignIn() ? View.VISIBLE : View.GONE}"
                 app:layout_constraintBottom_toTopOf="@id/lyt_bottom_link"
                 app:layout_constraintTop_toTopOf="parent">
 
@@ -127,7 +127,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:scaleType="centerCrop"
-                            app:imageUrl="@{viewModel.userData.userPhotoUrl}"
+                            app:imageUrl="@{userViewModel.userData.userPhotoUrl}"
                             tools:src="@drawable/congshu_cat_black" />
 
                     </androidx.cardview.widget.CardView>
@@ -136,7 +136,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:text="@{viewModel.userData.displayName}"
+                        android:text="@{userViewModel.userData.displayName}"
                         android:textColor="@color/white"
                         android:textSize="20dp"
                         android:textStyle="bold"
@@ -314,12 +314,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dp"
-                    android:onClick="@{() -> viewModel.onClickSignOut()}"
+                    android:onClick="@{() -> userViewModel.onClickSignOut()}"
                     android:padding="10dp"
                     android:text="Sign Out"
                     android:textColor="@color/gray"
                     android:textSize="15dp"
-                    android:visibility="@{viewModel.isSignIn() ? View.VISIBLE : View.GONE}" />
+                    android:visibility="@{userViewModel.isSignIn() ? View.VISIBLE : View.GONE}" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"

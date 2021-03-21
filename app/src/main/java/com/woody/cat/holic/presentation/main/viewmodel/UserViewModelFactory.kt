@@ -1,4 +1,4 @@
-package com.woody.cat.holic.presentation.main.user
+package com.woody.cat.holic.presentation.main.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

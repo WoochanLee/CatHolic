@@ -1,4 +1,4 @@
-package com.woody.cat.holic.presentation.main.user
+package com.woody.cat.holic.presentation.main.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -11,14 +11,21 @@ class UserViewModel(private val firebaseUserManager: FirebaseUserManager) : Base
     private val _eventGoogleSignIn = MutableLiveData<Unit>()
     val eventGoogleSignIn: LiveData<Unit> get() = _eventGoogleSignIn
 
-    private val _eventSignOut = MutableLiveData<Unit>()
-    val eventSignOut: LiveData<Unit> get() = _eventSignOut
+    private val _eventSignInSuccess = MutableLiveData<Unit>()
+    val eventSignInSuccess: LiveData<Unit> get() = _eventSignInSuccess
+
+    private val _eventSignOutSuccess = MutableLiveData<Unit>()
+    val eventSignOutSuccess: LiveData<Unit> get() = _eventSignOutSuccess
 
     private val _isSignIn = MutableLiveData<Boolean>()
     val isSignIn: LiveData<Boolean> get() = _isSignIn
 
     private val _userData = MutableLiveData<User>()
     val userData: LiveData<User> get() = _userData
+
+    fun onSignInSuccess() {
+        _eventSignInSuccess.postValue(Unit)
+    }
 
     fun refreshSignInStatus() {
         _isSignIn.postValue(firebaseUserManager.isSignedIn())
@@ -36,6 +43,6 @@ class UserViewModel(private val firebaseUserManager: FirebaseUserManager) : Base
     }
 
     fun onClickSignOut() {
-        _eventSignOut.postValue(Unit)
+        _eventSignOutSuccess.postValue(Unit)
     }
 }

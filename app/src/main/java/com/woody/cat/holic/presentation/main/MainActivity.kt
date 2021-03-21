@@ -14,12 +14,18 @@ import com.woody.cat.holic.databinding.ActivityMainBinding
 import com.woody.cat.holic.presentation.main.gallery.GalleryFragment
 import com.woody.cat.holic.presentation.main.like.LikeFragment
 import com.woody.cat.holic.presentation.main.user.UserFragment
+import com.woody.cat.holic.presentation.main.viewmodel.MainViewModel
+import com.woody.cat.holic.presentation.main.viewmodel.MainViewModelFactory
+import com.woody.cat.holic.presentation.main.viewmodel.UserViewModel
+import com.woody.cat.holic.presentation.main.viewmodel.UserViewModelFactory
 import com.woody.cat.holic.presentation.upload.UploadActivity
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private lateinit var viewModel: MainViewModel
+    private lateinit var mainViewModel: MainViewModel
+    private lateinit var userViewModel: UserViewModel
+
     private val galleryFragment = GalleryFragment()
     private val likeFragment = LikeFragment()
     private val userFragment = UserFragment()
@@ -32,8 +38,8 @@ class MainActivity : AppCompatActivity() {
             lifecycleOwner = this@MainActivity
         }
 
-        viewModel = ViewModelProvider(this, MainViewModelFactory()).get(MainViewModel::class.java).apply {
-            binding.viewModel = this
+        mainViewModel = ViewModelProvider(this, MainViewModelFactory()).get(MainViewModel::class.java).apply {
+            binding.mainViewModel = this
             eventStartUploadActivity.observe(this@MainActivity, {
                 startActivity(Intent(this@MainActivity, UploadActivity::class.java))
             })
@@ -42,6 +48,10 @@ class MainActivity : AppCompatActivity() {
                 binding.tlMain.getTabAt(MainTab.TAB_USER.position)?.select()
                 Toast.makeText(this@MainActivity, R.string.need_to_sign_in, Toast.LENGTH_LONG).show()
             })
+        }
+
+        userViewModel = ViewModelProvider(this, UserViewModelFactory()).get(UserViewModel::class.java).apply {
+            binding.userViewModel = this
         }
 
         initMainTab()
@@ -65,20 +75,20 @@ class MainActivity : AppCompatActivity() {
                 val iconId = when (MainTab.tabFromPosition(tab.position)) {
                     MainTab.TAB_GALLERY -> {
                         showFragment(galleryFragment)
-                        viewModel.setVisibleUploadFab(true)
-                        viewModel.setVisibleOrderFab(true)
+                        mainViewModel.setVisibleUploadFab(true)
+                        mainViewModel.setVisibleOrderFab(true)
                         R.drawable.ic_cloud_data_fill
                     }
                     MainTab.TAB_LIKE -> {
                         showFragment(likeFragment)
-                        viewModel.setVisibleUploadFab(true)
-                        viewModel.setVisibleOrderFab(true)
+                        mainViewModel.setVisibleUploadFab(true)
+                        mainViewModel.setVisibleOrderFab(true)
                         R.drawable.ic_heart_fill
                     }
                     MainTab.TAB_USER -> {
                         showFragment(userFragment)
-                        viewModel.setVisibleUploadFab(false)
-                        viewModel.setVisibleOrderFab(false)
+                        mainViewModel.setVisibleUploadFab(false)
+                        mainViewModel.setVisibleOrderFab(false)
                         R.drawable.ic_user_fill
                     }
                 }

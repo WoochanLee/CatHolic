@@ -6,8 +6,12 @@
     <data>
 
         <variable
-            name="viewModel"
-            type="com.woody.cat.holic.presentation.main.MainViewModel" />
+            name="mainViewModel"
+            type="com.woody.cat.holic.presentation.main.viewmodel.MainViewModel" />
+
+        <variable
+            name="userViewModel"
+            type="com.woody.cat.holic.presentation.main.viewmodel.UserViewModel" />
 
         <import type="android.view.View" />
     </data>
@@ -58,9 +62,9 @@
                     android:layout_height="34dp"
                     android:layout_marginEnd="10dp"
                     android:foreground="?android:selectableItemBackground"
-                    android:onClick="@{() -> viewModel.changeToNextPostingOrder()}"
+                    android:onClick="@{() -> mainViewModel.changeToNextPostingOrder()}"
                     android:padding="0dp"
-                    android:visibility="@{viewModel.isVisibleOrderSwitch() ? View.VISIBLE : View.GONE}"
+                    android:visibility="@{mainViewModel.isVisibleOrderSwitch() ? View.VISIBLE : View.GONE}"
                     app:cardBackgroundColor="@color/white"
                     app:cardCornerRadius="15dp"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -85,7 +89,7 @@
                         <ImageView
                             android:layout_width="18dp"
                             android:layout_height="18dp"
-                            app:imageResource="@{viewModel.getResourceIdByPostingOrder(viewModel.currentPostingOrder)}"
+                            app:imageResource="@{mainViewModel.getResourceIdByPostingOrder(mainViewModel.currentPostingOrder)}"
                             app:tint="@color/black"
                             tools:src="@drawable/ic_heart_empty" />
                     </LinearLayout>
@@ -110,9 +114,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="25dp"
                 android:layout_marginBottom="25dp"
-                android:onClick="@{() -> viewModel.onClickUploadFab()}"
+                android:onClick="@{() -> mainViewModel.onClickUploadFab()}"
                 android:src="@drawable/ic_upload"
-                android:visibility="@{viewModel.isVisibleUploadFab() ? View.VISIBLE : View.GONE}"
+                android:visibility="@{mainViewModel.isVisibleUploadFab() ? View.VISIBLE : View.GONE}"
                 app:backgroundTint="@color/black"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

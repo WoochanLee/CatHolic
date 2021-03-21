@@ -1,4 +1,4 @@
-package com.woody.cat.holic.presentation.main
+package com.woody.cat.holic.presentation.main.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -8,6 +8,8 @@ import com.woody.cat.holic.data.PostingOrder
 import com.woody.cat.holic.framework.FirebaseUserManager
 import com.woody.cat.holic.framework.base.BaseViewModel
 import com.woody.cat.holic.framework.base.handleNetworkResult
+import com.woody.cat.holic.presentation.main.PostingItem
+import com.woody.cat.holic.presentation.main.mapToPostingItem
 import com.woody.cat.holic.usecase.AddLikeInPosting
 import com.woody.cat.holic.usecase.GetNextNormalPostings
 import com.woody.cat.holic.usecase.RemoveLikeInPosting
