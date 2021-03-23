@@ -9,7 +9,6 @@ import com.woody.cat.holic.data.PostingRepository
 import com.woody.cat.holic.data.common.Resource
 import com.woody.cat.holic.domain.Posting
 import com.woody.cat.holic.framework.base.CatHolicLogger
-import com.woody.cat.holic.framework.base.handleNetworkResult
 import com.woody.cat.holic.framework.net.LikeDto
 import com.woody.cat.holic.framework.net.PostingDto
 import com.woody.cat.holic.framework.net.mapToPosting
@@ -23,6 +22,9 @@ class PostingRepositoryImpl : PostingRepository {
         const val COLLECTION_POSTING_PATH = "posting"
         const val COLLECTION_LIKED_PATH = "liked"
     }
+
+    override var currentGalleryPostingOrder = PostingOrder.LIKED
+    override var currentLikePostingOrder = PostingOrder.LIKED
 
     private val db = FirebaseFirestore.getInstance()
 
@@ -44,7 +46,11 @@ class PostingRepositoryImpl : PostingRepository {
         return dataDeferred.await()
     }
 
-    override suspend fun getNormalPostings(key: String?, size: Int, orderBy: PostingOrder): Resource<List<Posting>> {
+    override suspend fun getGalleryPostings(key: String?, size: Int, isChangeToNextOrder: Boolean): Resource<List<Posting>> {
+        if (isChangeToNextOrder) {
+            changeToNextGalleryPostingOrder()
+        }
+
         val docDeferred = CompletableDeferred<Resource<DocumentSnapshot?>>()
 
         if (key != null) {
@@ -62,7 +68,7 @@ class PostingRepositoryImpl : PostingRepository {
 
         val lastDoc = docDeferred.await()
 
-        if(lastDoc !is Resource.Success) {
+        if (lastDoc !is Resource.Success) {
             return Resource.Error(IllegalStateException())
         }
 
@@ -70,9 +76,9 @@ class PostingRepositoryImpl : PostingRepository {
 
         db.collection(COLLECTION_POSTING_PATH)
             .run {
-                when (orderBy) {
+                when (currentGalleryPostingOrder) {
                     PostingOrder.CREATED,
-                    PostingOrder.LIKED -> orderBy(orderBy.fieldName, Query.Direction.DESCENDING)
+                    PostingOrder.LIKED -> orderBy(currentGalleryPostingOrder.fieldName, Query.Direction.DESCENDING)
                     PostingOrder.RANDOM -> this
                 }
             }.run {
@@ -95,7 +101,11 @@ class PostingRepositoryImpl : PostingRepository {
         return dataDeferred.await()
     }
 
-    override suspend fun getLikePostings(key: String?, size: Int, orderBy: PostingOrder): Resource<List<Posting>> {
+    override suspend fun getLikePostings(key: String?, size: Int, isChangeToNextOrder: Boolean): Resource<List<Posting>> {
+        if (isChangeToNextOrder) {
+            changeToNextLikePostingOrder()
+        }
+
         val docDeferred = CompletableDeferred<Resource<DocumentSnapshot?>>()
 
         if (key != null) {
@@ -113,7 +123,7 @@ class PostingRepositoryImpl : PostingRepository {
 
         val lastDoc = docDeferred.await()
 
-        if(lastDoc !is Resource.Success) {
+        if (lastDoc !is Resource.Success) {
             return Resource.Error(IllegalStateException())
         }
 
@@ -121,9 +131,9 @@ class PostingRepositoryImpl : PostingRepository {
 
         db.collection(COLLECTION_POSTING_PATH)
             .run {
-                when (orderBy) {
+                when (currentLikePostingOrder) {
                     PostingOrder.CREATED,
-                    PostingOrder.LIKED -> orderBy(orderBy.fieldName, Query.Direction.DESCENDING)
+                    PostingOrder.LIKED -> orderBy(currentLikePostingOrder.fieldName, Query.Direction.DESCENDING)
                     PostingOrder.RANDOM -> this
                 }
             }.run {
@@ -234,5 +244,13 @@ class PostingRepositoryImpl : PostingRepository {
         }
 
         return dataDeferred.await()
+    }
+
+    private fun changeToNextGalleryPostingOrder() {
+        currentGalleryPostingOrder = currentGalleryPostingOrder.getNextPostingOrder()
+    }
+
+    private fun changeToNextLikePostingOrder() {
+        currentLikePostingOrder = currentLikePostingOrder.getNextPostingOrder()
     }
 }

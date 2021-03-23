@@ -19,4 +19,5 @@
     <string name="gallery">GALLERY</string>
     <string name="like">LIKE</string>
     <string name="profile">PROFILE</string>
+    <string name="select_cats">SELECT CATS</string>
 </resources>

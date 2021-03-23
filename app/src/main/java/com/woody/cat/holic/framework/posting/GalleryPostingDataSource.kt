@@ -4,9 +4,9 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.woody.cat.holic.data.common.Resource
 import com.woody.cat.holic.domain.Posting
-import com.woody.cat.holic.usecase.GetLikePostings
+import com.woody.cat.holic.usecase.GetGalleryPostings
 
-class LikePostingDataSource(private val getPostings: GetLikePostings, private var isNeedToChangeToNextPostingOrder: Boolean) : PagingSource<String, Posting>() {
+class GalleryPostingDataSource(private val getPostings: GetGalleryPostings, private var isNeedToChangeToNextPostingOrder: Boolean) : PagingSource<String, Posting>() {
 
     override suspend fun load(params: LoadParams<String>): LoadResult<String, Posting> {
         getPostings.getPostings(params.key, isNeedToChangeToNextPostingOrder).let { result ->

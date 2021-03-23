@@ -1,45 +1,46 @@
 package com.woody.cat.holic.presentation.main.gallery.viewmodel
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import androidx.paging.Config
-import androidx.paging.PagedList
-import androidx.paging.toLiveData
-import com.woody.cat.holic.data.PostingOrder
-import com.woody.cat.holic.data.PostingRepository
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingSource
+import androidx.paging.cachedIn
+import com.woody.cat.holic.domain.Posting
 import com.woody.cat.holic.framework.base.BaseViewModel
-import com.woody.cat.holic.framework.posting.NormalPostingDataSourceFactory
-import com.woody.cat.holic.framework.user.FirebaseUserManager
-import com.woody.cat.holic.presentation.main.PostingItem
+import com.woody.cat.holic.framework.posting.GalleryPostingDataSource
+import com.woody.cat.holic.usecase.GetGalleryPostings
 
-class GalleryViewModel(firebaseUserManager: FirebaseUserManager, postingRepository: PostingRepository) : BaseViewModel() {
+class GalleryViewModel(private val getPostings: GetGalleryPostings) : BaseViewModel() {
 
     companion object {
         const val PAGE_SIZE = 10
     }
 
-    var currentPostingOrder = PostingOrder.LIKED
-        private set
+    private val _eventRefreshData = MutableLiveData<Unit>()
+    val eventRefreshData: LiveData<Unit> get() = _eventRefreshData
 
-    private val postingDataSourceFactory = NormalPostingDataSourceFactory(firebaseUserManager, postingRepository, currentPostingOrder, viewModelScope)
+    private var isNeedToChangeToNextPostingOrder = false
 
-    private val _postingList: LiveData<PagedList<PostingItem>> = postingDataSourceFactory.toLiveData(
-        Config(pageSize = PAGE_SIZE, initialLoadSizeHint = PAGE_SIZE)
-    )
-    val postingList: LiveData<PagedList<PostingItem>> get() = _postingList
+    val flow = Pager(PagingConfig(pageSize = PAGE_SIZE)) {
+        GalleryPostingDataSource(getPostings, isNeedToChangeToNextPostingOrder).apply { isNeedToChangeToNextPostingOrder = false }
+    }.flow.cachedIn(viewModelScope)
 
-    fun changeToNextPostingOrder() {
-        currentPostingOrder = when (currentPostingOrder) {
-            PostingOrder.LIKED -> PostingOrder.CREATED
-            PostingOrder.CREATED -> PostingOrder.RANDOM
-            PostingOrder.RANDOM -> PostingOrder.LIKED
-        }
+    private val _isLoading = MutableLiveData<Boolean>()
+    val isLoading: LiveData<Boolean> get() = _isLoading
 
-        postingDataSourceFactory.changePostingOrder(currentPostingOrder)
-        initData()
+    fun setLoading(isLoading: Boolean) {
+        _isLoading.postValue(isLoading)
     }
 
     fun initData() {
-        postingDataSourceFactory.initData()
+        _eventRefreshData.postValue(Unit)
     }
+
+    fun changeToNextPostingOrder() {
+        isNeedToChangeToNextPostingOrder = true
+    }
+
+    fun getCurrentPostingOrder() = getPostings.getCurrentPostingOrder()
 }

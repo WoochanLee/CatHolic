@@ -7,15 +7,21 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.paging.LoadState
+import androidx.paging.map
 import com.woody.cat.holic.R
 import com.woody.cat.holic.databinding.FragmentLikeBinding
 import com.woody.cat.holic.presentation.main.PostingAdapter
 import com.woody.cat.holic.presentation.main.like.viewmodel.LikeViewModel
 import com.woody.cat.holic.presentation.main.like.viewmodel.LikeViewModelFactory
+import com.woody.cat.holic.presentation.main.mapToPostingItem
 import com.woody.cat.holic.presentation.main.viewmodel.MainViewModel
 import com.woody.cat.holic.presentation.main.viewmodel.MainViewModelFactory
 import com.woody.cat.holic.presentation.main.viewmodel.SignViewModel
 import com.woody.cat.holic.presentation.main.viewmodel.SignViewModelFactory
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 class LikeFragment : Fragment() {
 
@@ -38,40 +44,57 @@ class LikeFragment : Fragment() {
     override fun onHiddenChanged(hidden: Boolean) {
         super.onHiddenChanged(hidden)
         if (!hidden) {
-            mainViewModel.setCurrentVisiblePostingOrder(likeViewModel.currentPostingOrder)
+            mainViewModel.setCurrentVisiblePostingOrder(likeViewModel.getCurrentPostingOrder())
         }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         
-        activity?.let {
-            mainViewModel = ViewModelProvider(it, MainViewModelFactory()).get(MainViewModel::class.java).apply {
+        activity?.let { activity ->
+            mainViewModel = ViewModelProvider(activity, MainViewModelFactory()).get(MainViewModel::class.java).apply {
                 binding.mainViewModel = this
 
                 eventChangeLikePostingOrder.observe(viewLifecycleOwner, {
                     likeViewModel.changeToNextPostingOrder()
-                    setCurrentVisiblePostingOrder(likeViewModel.currentPostingOrder)
+                    setCurrentVisiblePostingOrder(likeViewModel.getCurrentPostingOrder().getNextPostingOrder())
+                    postingAdapter.refresh()
                 })
             }
 
-            signViewModel = ViewModelProvider(it, SignViewModelFactory()).get(SignViewModel::class.java).apply {
+            signViewModel = ViewModelProvider(activity, SignViewModelFactory()).get(SignViewModel::class.java).apply {
                 binding.userViewModel = this
 
                 eventSignInSuccess.observe(viewLifecycleOwner, {
-                    likeViewModel.initData()
+                    postingAdapter.refresh()
                 })
 
                 eventSignOutSuccess.observe(viewLifecycleOwner, {
-                    likeViewModel.initData()
+                    postingAdapter.refresh()
                 })
             }
 
-            likeViewModel = ViewModelProvider(it, LikeViewModelFactory()).get(LikeViewModel::class.java).apply {
+            likeViewModel = ViewModelProvider(activity, LikeViewModelFactory()).get(LikeViewModel::class.java).apply {
                 binding.likeViewModel = this
 
-                postingList.observe(viewLifecycleOwner, { list ->
-                    postingAdapter.submitList(list)
+                viewLifecycleOwner.lifecycleScope.launch {
+                    flow.collectLatest { pagingData ->
+                        postingAdapter.submitData(pagingData.map { it.mapToPostingItem(signViewModel.userData.value?.userId) })
+                    }
+                }
+
+                viewLifecycleOwner.lifecycleScope.launch {
+                    postingAdapter.loadStateFlow.collectLatest { loadStates ->
+                        setLoading(loadStates.refresh is LoadState.Loading)
+
+                        if(loadStates.refresh is LoadState.Error) {
+                            //TODO: handle network error
+                        }
+                    }
+                }
+
+                eventRefreshData.observe(viewLifecycleOwner, {
+                    postingAdapter.refresh()
                 })
             }
         }
