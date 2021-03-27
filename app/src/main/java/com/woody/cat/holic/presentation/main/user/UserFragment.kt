@@ -51,20 +51,20 @@ class UserFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        activity?.let{ activity ->
-            signViewModel = ViewModelProvider(activity, SignViewModelFactory()).get(SignViewModel::class.java).apply {
-                binding.userViewModel = this
+        val activity = activity ?: return
 
-                eventSignIn.observe(viewLifecycleOwner, {
-                    FirebaseUserManager.signIn(startGoogleSignInForResult, requireActivity())
-                })
+        signViewModel = ViewModelProvider(activity, SignViewModelFactory()).get(SignViewModel::class.java).apply {
+            binding.userViewModel = this
 
-                eventSignOut.observe(viewLifecycleOwner, {
-                    FirebaseUserManager.signOut(requireActivity())
-                    refreshSignInStatus()
-                    onSignOutSuccess()
-                })
-            }
+            eventSignIn.observe(viewLifecycleOwner, {
+                FirebaseUserManager.signIn(startGoogleSignInForResult, requireActivity())
+            })
+
+            eventSignOut.observe(viewLifecycleOwner, {
+                FirebaseUserManager.signOut(requireActivity())
+                refreshSignInStatus()
+                onSignOutSuccess()
+            })
         }
     }
 }

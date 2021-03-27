@@ -6,11 +6,14 @@ import com.woody.cat.holic.data.common.Resource
 import com.woody.cat.holic.domain.Posting
 import com.woody.cat.holic.usecase.GetGalleryPostings
 
-class GalleryPostingDataSource(private val getPostings: GetGalleryPostings, private var isNeedToChangeToNextPostingOrder: Boolean) : PagingSource<String, Posting>() {
+class GalleryPostingDataSource(
+    private val getPostings: GetGalleryPostings,
+    private var isChangingToNextPostingOrder: Boolean
+) : PagingSource<String, Posting>() {
 
     override suspend fun load(params: LoadParams<String>): LoadResult<String, Posting> {
-        getPostings.getPostings(params.key, isNeedToChangeToNextPostingOrder).let { result ->
-            isNeedToChangeToNextPostingOrder = false
+        getPostings.getPostings(params.key, isChangingToNextPostingOrder).let { result ->
+            isChangingToNextPostingOrder = false
 
             return if (result is Resource.Success) {
                 val postingList = result.data

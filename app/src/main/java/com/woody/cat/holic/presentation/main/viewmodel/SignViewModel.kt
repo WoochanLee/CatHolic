@@ -23,7 +23,7 @@ class SignViewModel(private val firebaseUserManager: FirebaseUserManager) : Base
     private val _isSignIn = MutableLiveData<Boolean>()
     val isSignIn: LiveData<Boolean> get() = _isSignIn
 
-    private val _userData = MutableLiveData<User>()
+    private val _userData = MutableLiveData<User>(firebaseUserManager.getCurrentUser())
     val userData: LiveData<User> get() = _userData
 
     fun refreshSignInStatus() {

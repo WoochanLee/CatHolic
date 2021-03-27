@@ -12,7 +12,7 @@ interface PostingRepository {
 
     suspend fun getGalleryPostings(key: String?, size: Int, isChangeToNextOrder: Boolean): Resource<List<Posting>>
 
-    suspend fun getLikePostings(key: String?, size: Int, isChangeToNextOrder: Boolean): Resource<List<Posting>>
+    suspend fun getUserLikePostings(key: String?, userId: String, size: Int, isChangeToNextOrder: Boolean): Resource<List<Posting>>
 
     suspend fun addLikedInPosting(userId: String, postingId: String): Resource<Unit>
 

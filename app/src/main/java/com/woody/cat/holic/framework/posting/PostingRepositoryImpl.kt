@@ -9,7 +9,6 @@ import com.woody.cat.holic.data.PostingRepository
 import com.woody.cat.holic.data.common.Resource
 import com.woody.cat.holic.domain.Posting
 import com.woody.cat.holic.framework.base.CatHolicLogger
-import com.woody.cat.holic.framework.net.LikeDto
 import com.woody.cat.holic.framework.net.PostingDto
 import com.woody.cat.holic.framework.net.mapToPosting
 import com.woody.cat.holic.framework.net.mapToPostingDto
@@ -51,26 +50,28 @@ class PostingRepositoryImpl : PostingRepository {
             changeToNextGalleryPostingOrder()
         }
 
-        val docDeferred = CompletableDeferred<Resource<DocumentSnapshot?>>()
+        // get paging key document reference (start)
+        val lastDocDeferred = CompletableDeferred<Resource<DocumentSnapshot?>>()
 
         if (key != null) {
             db.collection(COLLECTION_POSTING_PATH)
                 .document(key)
                 .get()
                 .addOnSuccessListener {
-                    docDeferred.complete(Resource.Success(it))
+                    lastDocDeferred.complete(Resource.Success(it))
                 }.addOnFailureListener {
-                    docDeferred.complete(Resource.Error(it))
+                    lastDocDeferred.complete(Resource.Error(it))
                 }
         } else {
-            docDeferred.complete(Resource.Success(null))
+            lastDocDeferred.complete(Resource.Success(null))
         }
 
-        val lastDoc = docDeferred.await()
+        val lastDoc = lastDocDeferred.await()
 
         if (lastDoc !is Resource.Success) {
             return Resource.Error(IllegalStateException())
         }
+        // get paging key document reference (end)
 
         val dataDeferred = CompletableDeferred<Resource<List<Posting>>>()
 
@@ -101,35 +102,38 @@ class PostingRepositoryImpl : PostingRepository {
         return dataDeferred.await()
     }
 
-    override suspend fun getLikePostings(key: String?, size: Int, isChangeToNextOrder: Boolean): Resource<List<Posting>> {
+    override suspend fun getUserLikePostings(key: String?, userId: String, size: Int, isChangeToNextOrder: Boolean): Resource<List<Posting>> {
         if (isChangeToNextOrder) {
             changeToNextLikePostingOrder()
         }
 
-        val docDeferred = CompletableDeferred<Resource<DocumentSnapshot?>>()
+        // get paging key document reference (start)
+        val lastDocDeferred = CompletableDeferred<Resource<DocumentSnapshot?>>()
 
         if (key != null) {
             db.collection(COLLECTION_POSTING_PATH)
                 .document(key)
                 .get()
                 .addOnSuccessListener {
-                    docDeferred.complete(Resource.Success(it))
+                    lastDocDeferred.complete(Resource.Success(it))
                 }.addOnFailureListener {
-                    docDeferred.complete(Resource.Error(it))
+                    lastDocDeferred.complete(Resource.Error(it))
                 }
         } else {
-            docDeferred.complete(Resource.Success(null))
+            lastDocDeferred.complete(Resource.Success(null))
         }
 
-        val lastDoc = docDeferred.await()
+        val lastDoc = lastDocDeferred.await()
 
         if (lastDoc !is Resource.Success) {
             return Resource.Error(IllegalStateException())
         }
+        // get paging key document reference (end)
 
         val dataDeferred = CompletableDeferred<Resource<List<Posting>>>()
 
         db.collection(COLLECTION_POSTING_PATH)
+            .whereArrayContains(PostingDto::likedUserIds.name, userId)
             .run {
                 when (currentLikePostingOrder) {
                     PostingOrder.CREATED,
@@ -161,7 +165,7 @@ class PostingRepositoryImpl : PostingRepository {
 
         db.runTransaction {
             val postingDto = it.get(db.collection(COLLECTION_POSTING_PATH).document(postingId)).toObject(PostingDto::class.java)
-            val likeDto = it.get(db.collection(COLLECTION_LIKED_PATH).document(userId)).toObject(LikeDto::class.java)
+            //val likeDto = it.get(db.collection(COLLECTION_LIKED_PATH).document(userId)).toObject(LikeDto::class.java)
 
             val isUserAlreadyLiked = postingDto?.likedUserIds?.contains(userId) == true
 
@@ -181,7 +185,7 @@ class PostingRepositoryImpl : PostingRepository {
                 Posting::liked.name, (postingDto?.likedUserIds?.size ?: 0) + 1
             )
 
-            if (likeDto == null) {
+            /*if (likeDto == null) {
                 it.set(
                     db.collection(COLLECTION_LIKED_PATH)
                         .document(userId),
@@ -193,7 +197,7 @@ class PostingRepositoryImpl : PostingRepository {
                 db.collection(COLLECTION_LIKED_PATH)
                     .document(userId),
                 LikeDto::likedPostingIds.name, FieldValue.arrayUnion(postingId)
-            )
+            )*/
         }.addOnSuccessListener {
             dataDeferred.complete(Resource.Success(Unit))
             CatHolicLogger.log("success to add liked to posting")
@@ -229,12 +233,12 @@ class PostingRepositoryImpl : PostingRepository {
                     .document(postingId),
                 Posting::liked.name, (postingDto?.likedUserIds?.size ?: 0) - 1
             )
-
+/*
             it.update(
                 db.collection(COLLECTION_LIKED_PATH)
                     .document(userId),
                 LikeDto::likedPostingIds.name, FieldValue.arrayRemove(postingId)
-            )
+            )*/
         }.addOnSuccessListener {
             dataDeferred.complete(Resource.Success(Unit))
             CatHolicLogger.log("success to add liked to posting")

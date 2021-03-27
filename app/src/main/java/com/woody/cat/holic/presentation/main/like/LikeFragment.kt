@@ -50,53 +50,53 @@ class LikeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        
-        activity?.let { activity ->
-            mainViewModel = ViewModelProvider(activity, MainViewModelFactory()).get(MainViewModel::class.java).apply {
-                binding.mainViewModel = this
 
-                eventChangeLikePostingOrder.observe(viewLifecycleOwner, {
-                    likeViewModel.changeToNextPostingOrder()
-                    setCurrentVisiblePostingOrder(likeViewModel.getCurrentPostingOrder().getNextPostingOrder())
-                    postingAdapter.refresh()
-                })
+        val activity = activity ?: return
+
+        mainViewModel = ViewModelProvider(activity, MainViewModelFactory()).get(MainViewModel::class.java).apply {
+            binding.mainViewModel = this
+
+            eventChangeLikePostingOrder.observe(viewLifecycleOwner, {
+                likeViewModel.changeToNextPostingOrder()
+                setCurrentVisiblePostingOrder(likeViewModel.getCurrentPostingOrder().getNextPostingOrder())
+                postingAdapter.refresh()
+            })
+        }
+
+        signViewModel = ViewModelProvider(activity, SignViewModelFactory()).get(SignViewModel::class.java).apply {
+            binding.userViewModel = this
+
+            eventSignInSuccess.observe(viewLifecycleOwner, {
+                postingAdapter.refresh()
+            })
+
+            eventSignOutSuccess.observe(viewLifecycleOwner, {
+                postingAdapter.refresh()
+            })
+        }
+
+        likeViewModel = ViewModelProvider(activity, LikeViewModelFactory()).get(LikeViewModel::class.java).apply {
+            binding.likeViewModel = this
+
+            viewLifecycleOwner.lifecycleScope.launch {
+                flow.collectLatest { pagingData ->
+                    postingAdapter.submitData(pagingData.map { it.mapToPostingItem(signViewModel.userData.value?.userId) })
+                }
             }
 
-            signViewModel = ViewModelProvider(activity, SignViewModelFactory()).get(SignViewModel::class.java).apply {
-                binding.userViewModel = this
+            viewLifecycleOwner.lifecycleScope.launch {
+                postingAdapter.loadStateFlow.collectLatest { loadStates ->
+                    setLoading(loadStates.refresh is LoadState.Loading)
 
-                eventSignInSuccess.observe(viewLifecycleOwner, {
-                    postingAdapter.refresh()
-                })
-
-                eventSignOutSuccess.observe(viewLifecycleOwner, {
-                    postingAdapter.refresh()
-                })
-            }
-
-            likeViewModel = ViewModelProvider(activity, LikeViewModelFactory()).get(LikeViewModel::class.java).apply {
-                binding.likeViewModel = this
-
-                viewLifecycleOwner.lifecycleScope.launch {
-                    flow.collectLatest { pagingData ->
-                        postingAdapter.submitData(pagingData.map { it.mapToPostingItem(signViewModel.userData.value?.userId) })
+                    if(loadStates.refresh is LoadState.Error) {
+                        //TODO: handle network error
                     }
                 }
-
-                viewLifecycleOwner.lifecycleScope.launch {
-                    postingAdapter.loadStateFlow.collectLatest { loadStates ->
-                        setLoading(loadStates.refresh is LoadState.Loading)
-
-                        if(loadStates.refresh is LoadState.Error) {
-                            //TODO: handle network error
-                        }
-                    }
-                }
-
-                eventRefreshData.observe(viewLifecycleOwner, {
-                    postingAdapter.refresh()
-                })
             }
+
+            eventRefreshData.observe(viewLifecycleOwner, {
+                postingAdapter.refresh()
+            })
         }
 
         binding.rvMainGallery.adapter = postingAdapter

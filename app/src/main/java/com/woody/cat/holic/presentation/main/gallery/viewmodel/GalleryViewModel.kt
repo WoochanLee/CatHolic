@@ -5,9 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
-import androidx.paging.PagingSource
 import androidx.paging.cachedIn
-import com.woody.cat.holic.domain.Posting
 import com.woody.cat.holic.framework.base.BaseViewModel
 import com.woody.cat.holic.framework.posting.GalleryPostingDataSource
 import com.woody.cat.holic.usecase.GetGalleryPostings
@@ -21,10 +19,10 @@ class GalleryViewModel(private val getPostings: GetGalleryPostings) : BaseViewMo
     private val _eventRefreshData = MutableLiveData<Unit>()
     val eventRefreshData: LiveData<Unit> get() = _eventRefreshData
 
-    private var isNeedToChangeToNextPostingOrder = false
+    private var isChangingToNextPostingOrder = false
 
     val flow = Pager(PagingConfig(pageSize = PAGE_SIZE)) {
-        GalleryPostingDataSource(getPostings, isNeedToChangeToNextPostingOrder).apply { isNeedToChangeToNextPostingOrder = false }
+        GalleryPostingDataSource(getPostings, isChangingToNextPostingOrder).apply { isChangingToNextPostingOrder = false }
     }.flow.cachedIn(viewModelScope)
 
     private val _isLoading = MutableLiveData<Boolean>()
@@ -39,7 +37,7 @@ class GalleryViewModel(private val getPostings: GetGalleryPostings) : BaseViewMo
     }
 
     fun changeToNextPostingOrder() {
-        isNeedToChangeToNextPostingOrder = true
+        isChangingToNextPostingOrder = true
     }
 
     fun getCurrentPostingOrder() = getPostings.getCurrentPostingOrder()
