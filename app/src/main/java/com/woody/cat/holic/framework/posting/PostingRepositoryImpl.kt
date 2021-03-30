@@ -19,11 +19,10 @@ class PostingRepositoryImpl : PostingRepository {
 
     companion object {
         const val COLLECTION_POSTING_PATH = "posting"
-        const val COLLECTION_LIKED_PATH = "liked"
     }
 
     override var currentGalleryPostingOrder = PostingOrder.LIKED
-    override var currentLikePostingOrder = PostingOrder.LIKED
+    override var currentLikePostingOrder = PostingOrder.CREATED
 
     private val db = FirebaseFirestore.getInstance()
 
@@ -165,7 +164,6 @@ class PostingRepositoryImpl : PostingRepository {
 
         db.runTransaction {
             val postingDto = it.get(db.collection(COLLECTION_POSTING_PATH).document(postingId)).toObject(PostingDto::class.java)
-            //val likeDto = it.get(db.collection(COLLECTION_LIKED_PATH).document(userId)).toObject(LikeDto::class.java)
 
             val isUserAlreadyLiked = postingDto?.likedUserIds?.contains(userId) == true
 
@@ -184,20 +182,6 @@ class PostingRepositoryImpl : PostingRepository {
                     .document(postingId),
                 Posting::liked.name, (postingDto?.likedUserIds?.size ?: 0) + 1
             )
-
-            /*if (likeDto == null) {
-                it.set(
-                    db.collection(COLLECTION_LIKED_PATH)
-                        .document(userId),
-                    LikeDto()
-                )
-            }
-
-            it.update(
-                db.collection(COLLECTION_LIKED_PATH)
-                    .document(userId),
-                LikeDto::likedPostingIds.name, FieldValue.arrayUnion(postingId)
-            )*/
         }.addOnSuccessListener {
             dataDeferred.complete(Resource.Success(Unit))
             CatHolicLogger.log("success to add liked to posting")
@@ -233,12 +217,6 @@ class PostingRepositoryImpl : PostingRepository {
                     .document(postingId),
                 Posting::liked.name, (postingDto?.likedUserIds?.size ?: 0) - 1
             )
-/*
-            it.update(
-                db.collection(COLLECTION_LIKED_PATH)
-                    .document(userId),
-                LikeDto::likedPostingIds.name, FieldValue.arrayRemove(postingId)
-            )*/
         }.addOnSuccessListener {
             dataDeferred.complete(Resource.Success(Unit))
             CatHolicLogger.log("success to add liked to posting")

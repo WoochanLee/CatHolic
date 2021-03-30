@@ -89,216 +89,236 @@
                 </androidx.cardview.widget.CardView>
             </LinearLayout>
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <ScrollView
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:gravity="center_horizontal"
-                android:orientation="vertical"
-                android:paddingHorizontal="30dp"
-                android:visibility="@{userViewModel.isSignIn() ? View.VISIBLE : View.GONE}"
+                android:fillViewport="true"
                 app:layout_constraintBottom_toTopOf="@id/lyt_bottom_link"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toTopOf="parent" >
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_marginTop="80dp"
-                    android:background="@drawable/border_profile"
-                    android:translationY="2dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0" />
-
-                <LinearLayout
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
                     android:orientation="vertical"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0">
-
-                    <androidx.cardview.widget.CardView
-                        android:layout_width="100dp"
-                        android:layout_height="100dp"
-                        android:layout_marginTop="30dp"
-                        app:cardCornerRadius="50dp"
-                        app:cardElevation="0dp">
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:scaleType="centerCrop"
-                            app:imageUrl="@{userViewModel.userData.userPhotoUrl}"
-                            tools:src="@drawable/congshu_cat_black" />
-
-                    </androidx.cardview.widget.CardView>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:text="@{userViewModel.userData.displayName}"
-                        android:textColor="@color/white"
-                        android:textSize="20dp"
-                        android:textStyle="bold"
-                        tools:text="Woody" />
+                    android:paddingHorizontal="30dp"
+                    android:visibility="@{userViewModel.isSignIn() ? View.VISIBLE : View.GONE}">
 
                     <View
                         android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginTop="20dp"
-                        android:background="@color/gray" />
+                        android:layout_height="0dp"
+                        android:layout_marginTop="80dp"
+                        android:background="@drawable/border_profile"
+                        android:translationY="2dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0" />
 
-                    <androidx.cardview.widget.CardView
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="70dp"
-                        android:backgroundTint="@android:color/transparent"
-                        android:foreground="?android:selectableItemBackground"
-                        app:cardCornerRadius="10dp"
-                        app:cardElevation="0dp">
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:orientation="vertical"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0">
 
-                        <androidx.constraintlayout.widget.ConstraintLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:paddingHorizontal="20dp">
-
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:orientation="horizontal"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent">
-
-                                <ImageView
-                                    android:layout_width="25dp"
-                                    android:layout_height="25dp"
-                                    android:layout_marginEnd="10dp"
-                                    android:src="@drawable/ic_toyger_cat"
-                                    app:tint="@color/white" />
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_gravity="center"
-                                    android:text="@string/my_cat_photos"
-                                    android:textColor="@color/white"
-                                    android:textSize="17dp"
-                                    android:textStyle="bold" />
-                            </LinearLayout>
+                        <androidx.cardview.widget.CardView
+                            android:layout_width="100dp"
+                            android:layout_height="100dp"
+                            android:layout_marginTop="30dp"
+                            app:cardCornerRadius="50dp"
+                            app:cardElevation="0dp">
 
                             <ImageView
-                                android:layout_width="20dp"
-                                android:layout_height="20dp"
-                                android:src="@drawable/ic_arrow_point_to_right"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:tint="@color/white" />
-                        </androidx.constraintlayout.widget.ConstraintLayout>
-                    </androidx.cardview.widget.CardView>
-
-                    <androidx.cardview.widget.CardView
-                        android:layout_width="match_parent"
-                        android:layout_height="70dp"
-                        android:backgroundTint="@android:color/transparent"
-                        android:foreground="?android:selectableItemBackground"
-                        app:cardCornerRadius="10dp"
-                        app:cardElevation="0dp">
-
-                        <androidx.constraintlayout.widget.ConstraintLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:paddingHorizontal="20dp">
-
-                            <LinearLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:orientation="horizontal"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent">
+                                android:scaleType="centerCrop"
+                                app:imageUrl="@{userViewModel.userData.userPhotoUrl}"
+                                tools:src="@drawable/congshu_cat_black" />
 
-                                <ImageView
-                                    android:layout_width="25dp"
-                                    android:layout_height="25dp"
-                                    android:layout_marginEnd="10dp"
-                                    android:src="@drawable/ic_notification"
-                                    app:tint="@color/white" />
+                        </androidx.cardview.widget.CardView>
 
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_gravity="center"
-                                    android:text="@string/notification"
-                                    android:textColor="@color/white"
-                                    android:textSize="17dp"
-                                    android:textStyle="bold" />
-                            </LinearLayout>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:text="@{userViewModel.userData.displayName}"
+                            android:textColor="@color/white"
+                            android:textSize="20dp"
+                            android:textStyle="bold"
+                            tools:text="Woody" />
 
-                            <ImageView
-                                android:layout_width="20dp"
-                                android:layout_height="20dp"
-                                android:src="@drawable/ic_arrow_point_to_right"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:tint="@color/white" />
-                        </androidx.constraintlayout.widget.ConstraintLayout>
-                    </androidx.cardview.widget.CardView>
-
-                    <androidx.cardview.widget.CardView
-                        android:layout_width="match_parent"
-                        android:layout_height="70dp"
-                        android:backgroundTint="@android:color/transparent"
-                        android:foreground="?android:selectableItemBackground"
-                        app:cardCornerRadius="10dp"
-                        app:cardElevation="0dp">
-
-                        <androidx.constraintlayout.widget.ConstraintLayout
+                        <View
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:paddingHorizontal="20dp">
+                            android:layout_height="1dp"
+                            android:layout_marginTop="20dp"
+                            android:background="@color/gray" />
 
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:orientation="horizontal"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent">
+                        <androidx.cardview.widget.CardView
+                            android:layout_width="match_parent"
+                            android:layout_height="70dp"
+                            android:backgroundTint="@android:color/transparent"
+                            android:foreground="?android:selectableItemBackground"
+                            app:cardCornerRadius="10dp"
+                            app:cardElevation="0dp">
 
-                                <ImageView
-                                    android:layout_width="25dp"
-                                    android:layout_height="25dp"
-                                    android:layout_marginEnd="10dp"
-                                    android:src="@drawable/ic_share"
-                                    app:tint="@color/white" />
+                            <androidx.constraintlayout.widget.ConstraintLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:paddingHorizontal="20dp">
 
-                                <TextView
+                                <LinearLayout
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_gravity="center"
-                                    android:text="@string/share_app_to_friends"
-                                    android:textColor="@color/white"
-                                    android:textSize="17dp"
-                                    android:textStyle="bold" />
-                            </LinearLayout>
+                                    android:orientation="horizontal"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent">
 
-                            <ImageView
-                                android:layout_width="20dp"
-                                android:layout_height="20dp"
-                                android:src="@drawable/ic_arrow_point_to_right"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:tint="@color/white" />
-                        </androidx.constraintlayout.widget.ConstraintLayout>
-                    </androidx.cardview.widget.CardView>
-                </LinearLayout>
+                                    <ImageView
+                                        android:layout_width="25dp"
+                                        android:layout_height="25dp"
+                                        android:layout_marginEnd="10dp"
+                                        android:src="@drawable/ic_toyger_cat"
+                                        app:tint="@color/white" />
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center"
+                                        android:text="@string/my_cat_photos"
+                                        android:textColor="@color/white"
+                                        android:textSize="17dp"
+                                        android:textStyle="bold" />
+                                </LinearLayout>
+
+                                <ImageView
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:src="@drawable/ic_arrow_point_to_right"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    app:tint="@color/white" />
+                            </androidx.constraintlayout.widget.ConstraintLayout>
+                        </androidx.cardview.widget.CardView>
+
+                        <androidx.cardview.widget.CardView
+                            android:layout_width="match_parent"
+                            android:layout_height="70dp"
+                            android:backgroundTint="@android:color/transparent"
+                            android:foreground="?android:selectableItemBackground"
+                            app:cardCornerRadius="10dp"
+                            app:cardElevation="0dp">
+
+                            <androidx.constraintlayout.widget.ConstraintLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:paddingHorizontal="20dp">
+
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent">
+
+                                    <ImageView
+                                        android:layout_width="25dp"
+                                        android:layout_height="25dp"
+                                        android:layout_marginEnd="10dp"
+                                        android:src="@drawable/ic_notification"
+                                        app:tint="@color/white" />
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center"
+                                        android:text="@string/notification"
+                                        android:textColor="@color/white"
+                                        android:textSize="17dp"
+                                        android:textStyle="bold" />
+                                </LinearLayout>
+
+                                <ImageView
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:src="@drawable/ic_arrow_point_to_right"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    app:tint="@color/white" />
+                            </androidx.constraintlayout.widget.ConstraintLayout>
+                        </androidx.cardview.widget.CardView>
+
+                        <androidx.cardview.widget.CardView
+                            android:layout_width="match_parent"
+                            android:layout_height="70dp"
+                            android:backgroundTint="@android:color/transparent"
+                            android:foreground="?android:selectableItemBackground"
+                            app:cardCornerRadius="10dp"
+                            app:cardElevation="0dp">
+
+                            <androidx.constraintlayout.widget.ConstraintLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:paddingHorizontal="20dp">
+
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent">
+
+                                    <ImageView
+                                        android:layout_width="25dp"
+                                        android:layout_height="25dp"
+                                        android:layout_marginEnd="10dp"
+                                        android:src="@drawable/ic_share"
+                                        app:tint="@color/white" />
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center"
+                                        android:text="@string/share_app_to_friends"
+                                        android:textColor="@color/white"
+                                        android:textSize="17dp"
+                                        android:textStyle="bold" />
+                                </LinearLayout>
+
+                                <ImageView
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:src="@drawable/ic_arrow_point_to_right"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    app:tint="@color/white" />
+                            </androidx.constraintlayout.widget.ConstraintLayout>
+                        </androidx.cardview.widget.CardView>
+
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="100dp"
+                            android:layout_marginBottom="70dp"
+                            android:onClick="@{() -> userViewModel.onClickSignOut()}"
+                            android:padding="10dp"
+                            android:text="Sign Out"
+                            android:textColor="@color/white"
+                            android:textSize="15dp"
+                            android:visibility="@{userViewModel.isSignIn() ? View.VISIBLE : View.GONE}" />
+
+                    </LinearLayout>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </ScrollView>
 
             <LinearLayout
                 android:id="@+id/lyt_bottom_link"
@@ -311,17 +331,6 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:onClick="@{() -> userViewModel.onClickSignOut()}"
-                    android:padding="10dp"
-                    android:text="Sign Out"
-                    android:textColor="@color/gray"
-                    android:textSize="15dp"
-                    android:visibility="@{userViewModel.isSignIn() ? View.VISIBLE : View.GONE}" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
