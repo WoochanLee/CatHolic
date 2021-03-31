@@ -1,6 +1,7 @@
 package com.woody.cat.holic.framework.base
 
 import android.widget.ImageView
+import androidx.annotation.ColorInt
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
@@ -14,4 +15,9 @@ fun bindImage(view: ImageView, imageUrl: String?) {
             .error(ContextCompat.getDrawable(view.context, R.drawable.congshu_cat_white))
             .into(view)
     }
+}
+
+@BindingAdapter("app:tint")
+fun ImageView.setImageTint(@ColorInt color: Int) {
+    setColorFilter(color)
 }

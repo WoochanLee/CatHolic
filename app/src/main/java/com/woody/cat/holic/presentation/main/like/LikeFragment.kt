@@ -12,7 +12,7 @@ import androidx.paging.LoadState
 import androidx.paging.map
 import com.woody.cat.holic.R
 import com.woody.cat.holic.databinding.FragmentLikeBinding
-import com.woody.cat.holic.presentation.main.PostingAdapter
+import com.woody.cat.holic.presentation.main.MainPostingAdapter
 import com.woody.cat.holic.presentation.main.like.viewmodel.LikeViewModel
 import com.woody.cat.holic.presentation.main.like.viewmodel.LikeViewModelFactory
 import com.woody.cat.holic.presentation.main.mapToPostingItem
@@ -30,9 +30,7 @@ class LikeFragment : Fragment() {
     private lateinit var signViewModel: SignViewModel
     private lateinit var likeViewModel: LikeViewModel
 
-    private val postingAdapter: PostingAdapter by lazy {
-        PostingAdapter(this, mainViewModel)
-    }
+    private lateinit var postingAdapter: MainPostingAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return DataBindingUtil.inflate<FragmentLikeBinding>(inflater, R.layout.fragment_like, container, false).apply {
@@ -55,6 +53,7 @@ class LikeFragment : Fragment() {
 
         mainViewModel = ViewModelProvider(activity, MainViewModelFactory()).get(MainViewModel::class.java).apply {
             binding.mainViewModel = this
+            postingAdapter = MainPostingAdapter(viewLifecycleOwner, this)
 
             eventChangeLikePostingOrder.observe(viewLifecycleOwner, {
                 likeViewModel.changeToNextPostingOrder()

@@ -93,16 +93,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:fillViewport="true"
+                android:visibility="@{userViewModel.isSignIn() ? View.VISIBLE : View.GONE}"
                 app:layout_constraintBottom_toTopOf="@id/lyt_bottom_link"
-                app:layout_constraintTop_toTopOf="parent" >
+                app:layout_constraintTop_toTopOf="parent">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
                     android:orientation="vertical"
-                    android:paddingHorizontal="30dp"
-                    android:visibility="@{userViewModel.isSignIn() ? View.VISIBLE : View.GONE}">
+                    android:paddingHorizontal="30dp">
 
                     <View
                         android:layout_width="match_parent"
@@ -160,6 +160,7 @@
                             android:layout_height="70dp"
                             android:backgroundTint="@android:color/transparent"
                             android:foreground="?android:selectableItemBackground"
+                            android:onClick="@{() -> userViewModel.onClickMyCatPhotos()}"
                             app:cardCornerRadius="10dp"
                             app:cardElevation="0dp">
 
@@ -311,7 +312,7 @@
                             android:onClick="@{() -> userViewModel.onClickSignOut()}"
                             android:padding="10dp"
                             android:text="Sign Out"
-                            android:textColor="@color/white"
+                            android:textColor="@color/gray"
                             android:textSize="15dp"
                             android:visibility="@{userViewModel.isSignIn() ? View.VISIBLE : View.GONE}" />
 

@@ -14,6 +14,7 @@ import com.woody.cat.holic.databinding.ActivityMainBinding
 import com.woody.cat.holic.presentation.main.gallery.GalleryFragment
 import com.woody.cat.holic.presentation.main.like.LikeFragment
 import com.woody.cat.holic.presentation.main.user.UserFragment
+import com.woody.cat.holic.presentation.main.user.myphoto.MyPhotoActivity
 import com.woody.cat.holic.presentation.main.viewmodel.MainViewModel
 import com.woody.cat.holic.presentation.main.viewmodel.MainViewModelFactory
 import com.woody.cat.holic.presentation.main.viewmodel.SignViewModel
@@ -52,6 +53,9 @@ class MainActivity : AppCompatActivity() {
 
         signViewModel = ViewModelProvider(this, SignViewModelFactory()).get(SignViewModel::class.java).apply {
             binding.userViewModel = this
+            eventStartMyCatPhotos.observe(this@MainActivity, {
+                startActivity(Intent(this@MainActivity, MyPhotoActivity::class.java))
+            })
         }
         
         mainViewModel.setToolbarTitle(getString(R.string.gallery))

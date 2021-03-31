@@ -8,6 +8,9 @@ import com.woody.cat.holic.framework.base.BaseViewModel
 
 class SignViewModel(private val firebaseUserManager: FirebaseUserManager) : BaseViewModel() {
 
+    private val _eventStartMyCatPhotos = MutableLiveData<Unit>()
+    val eventStartMyCatPhotos: LiveData<Unit> get() = _eventStartMyCatPhotos
+
     private val _eventSignIn = MutableLiveData<Unit>()
     val eventSignIn: LiveData<Unit> get() = _eventSignIn
 
@@ -35,6 +38,10 @@ class SignViewModel(private val firebaseUserManager: FirebaseUserManager) : Base
 
     private fun refreshUserData() {
         _userData.postValue(firebaseUserManager.getCurrentUser())
+    }
+
+    fun onClickMyCatPhotos() {
+        _eventStartMyCatPhotos.postValue(Unit)
     }
 
     fun onClickSignIn() {

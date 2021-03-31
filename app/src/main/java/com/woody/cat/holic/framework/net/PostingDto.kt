@@ -3,6 +3,7 @@ package com.woody.cat.holic.framework.net
 import com.google.firebase.firestore.ServerTimestamp
 import com.woody.cat.holic.domain.Posting
 import com.woody.cat.holic.domain.User
+import com.woody.cat.holic.framework.base.makePostingDateString
 import java.util.*
 
 data class PostingDto(
@@ -56,8 +57,8 @@ fun PostingDto.mapToPosting(postingId: String): Posting {
         reported = reported,
         reportedUserIds = reportedUserIds,
         postingId = postingId,
-        created = created.toString(),
-        updated = updated.toString()
+        created = created.makePostingDateString(),
+        updated = updated.makePostingDateString()
     )
 }
 

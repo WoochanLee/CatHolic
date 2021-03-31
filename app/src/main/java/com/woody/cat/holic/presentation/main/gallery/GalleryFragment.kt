@@ -14,7 +14,7 @@ import com.woody.cat.holic.R
 import com.woody.cat.holic.databinding.FragmentGalleryBinding
 import com.woody.cat.holic.presentation.main.viewmodel.MainViewModel
 import com.woody.cat.holic.presentation.main.viewmodel.MainViewModelFactory
-import com.woody.cat.holic.presentation.main.PostingAdapter
+import com.woody.cat.holic.presentation.main.MainPostingAdapter
 import com.woody.cat.holic.presentation.main.gallery.viewmodel.GalleryViewModel
 import com.woody.cat.holic.presentation.main.gallery.viewmodel.GalleryViewModelFactory
 import com.woody.cat.holic.presentation.main.mapToPostingItem
@@ -30,9 +30,7 @@ class GalleryFragment : Fragment() {
     private lateinit var signViewModel: SignViewModel
     private lateinit var galleryViewModel: GalleryViewModel
 
-    private val postingAdapter: PostingAdapter by lazy {
-        PostingAdapter(this, mainViewModel)
-    }
+    private lateinit var postingAdapter: MainPostingAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return DataBindingUtil.inflate<FragmentGalleryBinding>(inflater, R.layout.fragment_gallery, container, false).apply {
@@ -55,6 +53,7 @@ class GalleryFragment : Fragment() {
 
         mainViewModel = ViewModelProvider(activity, MainViewModelFactory()).get(MainViewModel::class.java).apply {
             binding.mainViewModel = this
+            postingAdapter = MainPostingAdapter(viewLifecycleOwner, this)
 
             eventChangeGalleryPostingOrder.observe(viewLifecycleOwner, {
                 galleryViewModel.changeToNextPostingOrder()

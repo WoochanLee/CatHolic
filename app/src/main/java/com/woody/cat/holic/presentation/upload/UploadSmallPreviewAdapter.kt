@@ -9,6 +9,7 @@ import com.woody.cat.holic.R
 import com.woody.cat.holic.databinding.ItemUploadUploadImageBinding
 import com.woody.cat.holic.databinding.ItemUploadUploadedImageSmallBinding
 import com.woody.cat.holic.framework.base.BaseViewHolder
+import com.woody.cat.holic.presentation.upload.viewmodel.UploadViewModel
 
 class UploadSmallPreviewAdapter(
     private val lifecycleOwner: LifecycleOwner,

@@ -8,6 +8,8 @@ import androidx.lifecycle.ViewModelProvider
 import com.woody.cat.holic.R
 import com.woody.cat.holic.databinding.ActivitySplashBinding
 import com.woody.cat.holic.presentation.main.MainActivity
+import com.woody.cat.holic.presentation.splash.viewmodel.SplashViewModel
+import com.woody.cat.holic.presentation.splash.viewmodel.SplashViewModelFactory
 
 class SplashActivity : AppCompatActivity() {
 

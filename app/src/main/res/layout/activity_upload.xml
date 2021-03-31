@@ -9,7 +9,7 @@
 
         <variable
             name="viewModel"
-            type="com.woody.cat.holic.presentation.upload.UploadViewModel" />
+            type="com.woody.cat.holic.presentation.upload.viewmodel.UploadViewModel" />
     </data>
 
     <LinearLayout
@@ -43,11 +43,6 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.appcompat.widget.Toolbar>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/white" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_upload_small"

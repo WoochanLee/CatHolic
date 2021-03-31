@@ -1,4 +1,4 @@
-package com.woody.cat.holic.presentation.upload
+package com.woody.cat.holic.presentation.upload.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -10,6 +10,8 @@ import com.woody.cat.holic.framework.user.FirebaseUserManager
 import com.woody.cat.holic.framework.base.BaseViewModel
 import com.woody.cat.holic.framework.base.handleNetworkResult
 import com.woody.cat.holic.framework.net.common.NotSignedInException
+import com.woody.cat.holic.presentation.upload.UploadItem
+import com.woody.cat.holic.presentation.upload.UploadStatus
 import com.woody.cat.holic.usecase.AddPosting
 import com.woody.cat.holic.usecase.UploadPhoto
 import kotlinx.coroutines.*

@@ -1,4 +1,4 @@
-package com.woody.cat.holic.presentation.splash
+package com.woody.cat.holic.presentation.splash.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

@@ -12,7 +12,7 @@ import com.woody.cat.holic.databinding.ItemMainPostingBinding
 import com.woody.cat.holic.framework.base.BaseViewHolder
 import com.woody.cat.holic.presentation.main.viewmodel.MainViewModel
 
-class PostingAdapter(
+class MainPostingAdapter(
     private val lifecycleOwner: LifecycleOwner,
     private val mainViewModel: MainViewModel
 ) : PagingDataAdapter<PostingItem, BaseViewHolder<PostingItem, MainViewModel>>(object : DiffUtil.ItemCallback<PostingItem>() {
