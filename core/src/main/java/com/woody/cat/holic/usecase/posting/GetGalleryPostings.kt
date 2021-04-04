@@ -1,4 +1,4 @@
-package com.woody.cat.holic.usecase
+package com.woody.cat.holic.usecase.posting
 
 import com.woody.cat.holic.data.PostingRepository
 
@@ -9,5 +9,5 @@ class GetGalleryPostings(private val postingRepository: PostingRepository) {
 
     fun getCurrentPostingOrder() = postingRepository.currentGalleryPostingOrder
 
-    suspend fun getPostings(key: String?, isChangeToNextOrder: Boolean) = postingRepository.getGalleryPostings(key, PAGE_SIZE, isChangeToNextOrder)
+    suspend operator fun invoke(key: String?, isChangeToNextOrder: Boolean) = postingRepository.getGalleryPostings(key, PAGE_SIZE, isChangeToNextOrder)
 }

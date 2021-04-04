@@ -1,17 +1,20 @@
 package com.woody.cat.holic.presentation.main.user
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.woody.cat.holic.R
 import com.woody.cat.holic.databinding.FragmentUserBinding
-import com.woody.cat.holic.framework.user.FirebaseUserManager
 import com.woody.cat.holic.presentation.main.viewmodel.SignViewModel
 import com.woody.cat.holic.presentation.main.viewmodel.SignViewModelFactory
 
@@ -28,15 +31,10 @@ class UserFragment : Fragment() {
             lifecycleOwner = viewLifecycleOwner
         }.root
 
-        startGoogleSignInForResult = FirebaseUserManager.startGoogleSignInForResult(this, onSuccess = {
-            signViewModel.apply {
-                refreshSignInStatus()
-                onSignInSuccess()
-            }
-        }, onError = {
-            it.printStackTrace()
-            //TODO: handle error
-        })
+        startGoogleSignInForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            val task = GoogleSignIn.getSignedInAccountFromIntent(it.data)
+            signViewModel.handleGoogleSignInResult(task)
+        }
 
         return view
     }
@@ -56,15 +54,31 @@ class UserFragment : Fragment() {
         signViewModel = ViewModelProvider(activity, SignViewModelFactory()).get(SignViewModel::class.java).apply {
             binding.userViewModel = this
 
+            initFirebaseAuth(getString(R.string.default_web_client_id))
+
             eventSignIn.observe(viewLifecycleOwner, {
-                FirebaseUserManager.signIn(startGoogleSignInForResult, requireActivity())
+                signIn(startGoogleSignInForResult, requireActivity())
             })
 
             eventSignOut.observe(viewLifecycleOwner, {
-                FirebaseUserManager.signOut(requireActivity())
+                signOut()
                 refreshSignInStatus()
                 onSignOutSuccess()
             })
+
+            eventSignInFail.observe(viewLifecycleOwner, {
+                Toast.makeText(activity, "fail to sign in", Toast.LENGTH_SHORT).show()
+            })
         }
+    }
+
+    private fun signIn(activityResultLauncher: ActivityResultLauncher<Intent>, activity: Activity) {
+        val googleSignInClient = GoogleSignIn.getClient(activity, signViewModel.gso)
+        activityResultLauncher.launch(googleSignInClient.signInIntent)
+    }
+
+    private fun signOut() {
+        GoogleSignIn.getClient(requireActivity(), signViewModel.gso).signOut()
+        signViewModel.signOutFirbase()
     }
 }

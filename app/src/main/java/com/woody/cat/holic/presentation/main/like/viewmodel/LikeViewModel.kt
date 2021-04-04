@@ -5,15 +5,20 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
+import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.woody.cat.holic.framework.base.BaseViewModel
 import com.woody.cat.holic.framework.posting.LikePostingDataSource
-import com.woody.cat.holic.framework.user.FirebaseUserManager
-import com.woody.cat.holic.usecase.GetUserLikePostings
+import com.woody.cat.holic.presentation.main.PostingItem
+import com.woody.cat.holic.usecase.user.GetCurrentUserId
+import com.woody.cat.holic.usecase.posting.GetUserLikePostings
+import com.woody.cat.holic.usecase.user.GetUserProfile
+import kotlinx.coroutines.flow.Flow
 
 class LikeViewModel(
-    private val firebaseUserManager: FirebaseUserManager,
-    private val getUserPostings: GetUserLikePostings
+    private val getCurrentUserId: GetCurrentUserId,
+    private val getUserLikePostings: GetUserLikePostings,
+    private val getUserProfile: GetUserProfile,
 ) : BaseViewModel() {
 
     companion object {
@@ -24,13 +29,23 @@ class LikeViewModel(
     val eventRefreshData: LiveData<Unit> get() = _eventRefreshData
 
     private var isChangingToNextPostingOrder = false
-    val flow = Pager(PagingConfig(pageSize = PAGE_SIZE)) {
-        LikePostingDataSource(
-            firebaseUserManager.getCurrentUser()?.userId,
-            getUserPostings,
-            isChangingToNextPostingOrder
-        ).apply { isChangingToNextPostingOrder = false }
-    }.flow.cachedIn(viewModelScope)
+
+    var dataSource: LikePostingDataSource? = null
+
+    fun getLikedPostingFlow() = Pager(
+        config = PagingConfig(pageSize = PAGE_SIZE),
+        pagingSourceFactory = {
+            LikePostingDataSource(
+                getCurrentUserId,
+                getUserLikePostings,
+                getUserProfile,
+                isChangingToNextPostingOrder
+            ).apply {
+                dataSource = this
+                isChangingToNextPostingOrder = false
+            }
+        }
+    ).flow.cachedIn(viewModelScope)
 
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> get() = _isLoading
@@ -43,9 +58,13 @@ class LikeViewModel(
         _eventRefreshData.postValue(Unit)
     }
 
+    fun clearData() {
+        //dataSource?.
+    }
+
     fun changeToNextPostingOrder() {
         isChangingToNextPostingOrder = true
     }
 
-    fun getCurrentPostingOrder() = getUserPostings.getCurrentPostingOrder()
+    fun getCurrentPostingOrder() = getUserLikePostings.getCurrentPostingOrder()
 }

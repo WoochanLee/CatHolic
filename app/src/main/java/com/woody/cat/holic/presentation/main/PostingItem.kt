@@ -5,7 +5,7 @@ import com.woody.cat.holic.domain.Posting
 import com.woody.cat.holic.domain.User
 
 data class PostingItem(
-    val user: User,
+    val user: UserItem,
     val downloadUrl: String,
     val likedUserIds: List<String>,
     val liked: MutableLiveData<Int>,
@@ -16,16 +16,16 @@ data class PostingItem(
     val updated: String
 )
 
-fun Posting.mapToPostingItem(currentUserId: String?): PostingItem {
+fun mapToPostingItem(posting: Posting, currentUserId: String?): PostingItem {
     return PostingItem(
-        user = user,
-        downloadUrl = downloadUrl,
-        likedUserIds = likedUserIds,
-        liked = MutableLiveData(liked),
-        currentUserLiked = if (currentUserId != null) MutableLiveData(likedUserIds.contains(currentUserId)) else MutableLiveData(false),
-        reported = reported,
-        postingId = postingId,
-        created = created,
-        updated = updated
+        user = UserItem(posting.userId),
+        downloadUrl = posting.downloadUrl,
+        likedUserIds = posting.likedUserIds,
+        liked = MutableLiveData(posting.liked),
+        currentUserLiked = if (currentUserId != null) MutableLiveData(posting.likedUserIds.contains(currentUserId)) else MutableLiveData(false),
+        reported = posting.reported,
+        postingId = posting.postingId,
+        created = posting.created,
+        updated = posting.updated
     )
 }

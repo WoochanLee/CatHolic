@@ -1,4 +1,4 @@
-package com.woody.cat.holic.usecase
+package com.woody.cat.holic.usecase.posting
 
 import com.woody.cat.holic.data.PostingRepository
 
@@ -9,5 +9,5 @@ class GetUserLikePostings(private val postingRepository: PostingRepository) {
 
     fun getCurrentPostingOrder() = postingRepository.currentLikePostingOrder
 
-    suspend fun getPostings(key: String?, userId: String, isChangeToNextOrder: Boolean) = postingRepository.getUserLikePostings(key, userId, PAGE_SIZE, isChangeToNextOrder)
+    suspend operator fun invoke(key: String?, userId: String, isChangeToNextOrder: Boolean) = postingRepository.getUserLikePostings(key, userId, PAGE_SIZE, isChangeToNextOrder)
 }

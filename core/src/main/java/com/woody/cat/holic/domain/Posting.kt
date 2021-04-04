@@ -1,7 +1,7 @@
 package com.woody.cat.holic.domain
 
 data class Posting(
-    val user: User,
+    val userId: String,
     val downloadUrl: String,
     val liked: Int = 0,
     val likedUserIds: List<String> = listOf(),

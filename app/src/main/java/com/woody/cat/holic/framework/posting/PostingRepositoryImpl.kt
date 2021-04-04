@@ -12,7 +12,7 @@ import com.woody.cat.holic.framework.net.mapToPostingDto
 import kotlinx.coroutines.CompletableDeferred
 
 
-class PostingRepositoryImpl : PostingRepository {
+class PostingRepositoryImpl(private val db: FirebaseFirestore) : PostingRepository {
 
     companion object {
         const val COLLECTION_POSTING_PATH = "posting"
@@ -20,8 +20,6 @@ class PostingRepositoryImpl : PostingRepository {
 
     override var currentGalleryPostingOrder = PostingOrder.LIKED
     override var currentLikePostingOrder = PostingOrder.CREATED
-
-    private val db = FirebaseFirestore.getInstance()
 
     override suspend fun addPosting(postings: List<Posting>): Resource<Unit> {
         val dataDeferred = CompletableDeferred<Resource<Unit>>()
@@ -147,7 +145,7 @@ class PostingRepositoryImpl : PostingRepository {
         val dataDeferred = CompletableDeferred<Resource<List<Posting>>>()
 
         db.collection(COLLECTION_POSTING_PATH)
-            .whereEqualTo("${PostingDto::user.name}.${PostingDto.UserDto::userId.name}", userId)
+            .whereEqualTo(PostingDto::userId.name, userId)
             .orderBy(PostingOrder.CREATED.fieldName, Query.Direction.DESCENDING)
             .run {
                 if (key != null && lastDoc.data != null) {

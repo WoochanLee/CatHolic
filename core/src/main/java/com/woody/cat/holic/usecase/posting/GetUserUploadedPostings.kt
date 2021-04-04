@@ -1,4 +1,4 @@
-package com.woody.cat.holic.usecase
+package com.woody.cat.holic.usecase.posting
 
 import com.woody.cat.holic.data.PostingRepository
 
@@ -7,5 +7,5 @@ class GetUserUploadedPostings(private val postingRepository: PostingRepository) 
         const val PAGE_SIZE = 10
     }
 
-    suspend fun getPostings(key: String?, userId: String) = postingRepository.getUserUploadedPostings(key, userId, PAGE_SIZE)
+    suspend operator fun invoke(key: String?, userId: String) = postingRepository.getUserUploadedPostings(key, userId, PAGE_SIZE)
 }

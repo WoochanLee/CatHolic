@@ -5,18 +5,20 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.woody.cat.holic.R
 import com.woody.cat.holic.data.PostingOrder
-import com.woody.cat.holic.framework.user.FirebaseUserManager
 import com.woody.cat.holic.framework.base.BaseViewModel
 import com.woody.cat.holic.presentation.main.MainTab
 import com.woody.cat.holic.presentation.main.PostingItem
-import com.woody.cat.holic.usecase.AddLikeInPosting
-import com.woody.cat.holic.usecase.RemoveLikeInPosting
+import com.woody.cat.holic.usecase.posting.AddLikeInPosting
+import com.woody.cat.holic.usecase.user.GetCurrentUserId
+import com.woody.cat.holic.usecase.user.GetIsSignedIn
+import com.woody.cat.holic.usecase.posting.RemoveLikeInPosting
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class MainViewModel(
-    private val firebaseUserManager: FirebaseUserManager,
+    private val getIsSignedIn: GetIsSignedIn,
+    private val getCurrentUserId: GetCurrentUserId,
     private val addLikeInPosting: AddLikeInPosting,
     private val removeLikeInPosting: RemoveLikeInPosting
 ) : BaseViewModel() {
@@ -64,8 +66,8 @@ class MainViewModel(
     }
 
     fun onClickLike(postingItem: PostingItem) {
-        val user = firebaseUserManager.getCurrentUser()
-        if (user == null) {
+        val userId = getCurrentUserId()
+        if (userId == null) {
             _eventMoveToSignInTabWithToast.postValue(Unit)
             return
         }
@@ -78,16 +80,16 @@ class MainViewModel(
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 if (currentUserLiked) {
-                    removeLikeInPosting(user.userId, postingItem.postingId)
+                    removeLikeInPosting(userId, postingItem.postingId)
                 } else {
-                    addLikeInPosting(user.userId, postingItem.postingId)
+                    addLikeInPosting(userId, postingItem.postingId)
                 }
             }
         }
     }
 
     fun onClickUploadFab() {
-        if (firebaseUserManager.isSignedIn()) {
+        if (getIsSignedIn()) {
             _eventStartUploadActivity.postValue(Unit)
         } else {
             _eventMoveToSignInTabWithToast.postValue(Unit)

@@ -7,7 +7,7 @@ import com.woody.cat.holic.framework.base.makePostingDateString
 import java.util.*
 
 data class PostingDto(
-    val user: UserDto? = null,
+    val userId: String = "",
     val downloadUrl: String? = null,
     val liked: Int = 0,
     val likedUserIds: List<String> = listOf(),
@@ -19,17 +19,11 @@ data class PostingDto(
 
     @ServerTimestamp
     val updated: Date? = null
-) {
-    data class UserDto(
-        val userId: String = "",
-        val displayName: String = "",
-        val userPhotoUrl: String? = null,
-    )
-}
+)
 
 fun Posting.mapToPostingDto(): PostingDto {
     return PostingDto(
-        user = user.mapToUserDto(),
+        userId = userId,
         downloadUrl = downloadUrl,
         liked = liked,
         likedUserIds = likedUserIds,
@@ -40,17 +34,9 @@ fun Posting.mapToPostingDto(): PostingDto {
     )
 }
 
-fun User.mapToUserDto(): PostingDto.UserDto {
-    return PostingDto.UserDto(
-        userId = userId,
-        displayName = displayName,
-        userPhotoUrl = userPhotoUrl
-    )
-}
-
 fun PostingDto.mapToPosting(postingId: String): Posting {
     return Posting(
-        user = user?.mapToUser() ?: User("", ""),
+        userId = userId,
         downloadUrl = downloadUrl ?: "",
         liked = liked,
         likedUserIds = likedUserIds,
@@ -59,13 +45,5 @@ fun PostingDto.mapToPosting(postingId: String): Posting {
         postingId = postingId,
         created = created.makePostingDateString(),
         updated = updated.makePostingDateString()
-    )
-}
-
-fun PostingDto.UserDto.mapToUser(): User {
-    return User(
-        userId = userId,
-        displayName = displayName,
-        userPhotoUrl = userPhotoUrl
     )
 }

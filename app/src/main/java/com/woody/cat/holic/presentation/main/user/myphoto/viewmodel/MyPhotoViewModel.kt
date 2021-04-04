@@ -9,17 +9,19 @@ import androidx.paging.cachedIn
 import com.woody.cat.holic.framework.base.BaseViewModel
 import com.woody.cat.holic.framework.base.handleNetworkResult
 import com.woody.cat.holic.framework.posting.UploadedPostingDataSource
-import com.woody.cat.holic.framework.user.FirebaseUserManager
-import com.woody.cat.holic.usecase.GetUserUploadedPostings
-import com.woody.cat.holic.usecase.RemoveUserPosting
+import com.woody.cat.holic.usecase.user.GetCurrentUserId
+import com.woody.cat.holic.usecase.user.GetUserProfile
+import com.woody.cat.holic.usecase.posting.GetUserUploadedPostings
+import com.woody.cat.holic.usecase.posting.RemoveUserPosting
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class MyPhotoViewModel(
-    private val firebaseUserManager: FirebaseUserManager,
+    private val getCurrentUserId: GetCurrentUserId,
     private val getUserUploadedPostings: GetUserUploadedPostings,
-    private val removeUserPosting: RemoveUserPosting
+    private val removeUserPosting: RemoveUserPosting,
+    private val getUserProfile: GetUserProfile
 ) : BaseViewModel() {
 
     companion object {
@@ -29,9 +31,16 @@ class MyPhotoViewModel(
     private val _eventRefreshData = MutableLiveData<Unit>()
     val eventRefreshData: LiveData<Unit> get() = _eventRefreshData
 
-    val flow = Pager(PagingConfig(pageSize = PAGE_SIZE)) {
-        UploadedPostingDataSource(firebaseUserManager.getCurrentUser()?.userId, getUserUploadedPostings)
-    }.flow.cachedIn(viewModelScope)
+    fun getUploadedPostings() = Pager(
+        config = PagingConfig(pageSize = PAGE_SIZE),
+        pagingSourceFactory = {
+            UploadedPostingDataSource(
+                getCurrentUserId,
+                getUserUploadedPostings,
+                getUserProfile
+            )
+        }
+    ).flow.cachedIn(viewModelScope)
 
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> get() = _isLoading
@@ -58,6 +67,4 @@ class MyPhotoViewModel(
             }
         }
     }
-
-    fun getCurrentUser() = firebaseUserManager.getCurrentUser()
 }

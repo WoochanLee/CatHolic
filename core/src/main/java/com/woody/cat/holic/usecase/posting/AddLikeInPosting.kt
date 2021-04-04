@@ -1,4 +1,4 @@
-package com.woody.cat.holic.usecase
+package com.woody.cat.holic.usecase.posting
 
 import com.woody.cat.holic.data.PostingRepository
 
