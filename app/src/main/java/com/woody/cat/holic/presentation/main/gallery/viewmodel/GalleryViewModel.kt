@@ -59,6 +59,4 @@ class GalleryViewModel(
     fun changeToNextPostingOrder() {
         isChangingToNextPostingOrder = true
     }
-
-    fun getCurrentPostingOrder() = getGalleryPostings.getCurrentPostingOrder()
 }

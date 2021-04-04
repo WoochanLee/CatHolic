@@ -58,13 +58,7 @@ class LikeViewModel(
         _eventRefreshData.postValue(Unit)
     }
 
-    fun clearData() {
-        //dataSource?.
-    }
-
     fun changeToNextPostingOrder() {
         isChangingToNextPostingOrder = true
     }
-
-    fun getCurrentPostingOrder() = getUserLikePostings.getCurrentPostingOrder()
 }

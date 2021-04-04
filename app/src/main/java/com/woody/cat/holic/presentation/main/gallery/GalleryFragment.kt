@@ -14,9 +14,9 @@ import com.woody.cat.holic.R
 import com.woody.cat.holic.databinding.FragmentGalleryBinding
 import com.woody.cat.holic.framework.net.common.NotSignedInException
 import com.woody.cat.holic.presentation.main.MainPostingAdapter
+import com.woody.cat.holic.presentation.main.MainTab
 import com.woody.cat.holic.presentation.main.gallery.viewmodel.GalleryViewModel
 import com.woody.cat.holic.presentation.main.gallery.viewmodel.GalleryViewModelFactory
-import com.woody.cat.holic.presentation.main.like.viewmodel.LikeViewModel
 import com.woody.cat.holic.presentation.main.viewmodel.MainViewModel
 import com.woody.cat.holic.presentation.main.viewmodel.MainViewModelFactory
 import com.woody.cat.holic.presentation.main.viewmodel.SignViewModel
@@ -42,13 +42,6 @@ class GalleryFragment : Fragment() {
         }.root
     }
 
-    override fun onHiddenChanged(hidden: Boolean) {
-        super.onHiddenChanged(hidden)
-        if (!hidden) {
-            mainViewModel.setCurrentVisiblePostingOrder(galleryViewModel.getCurrentPostingOrder())
-        }
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -60,7 +53,7 @@ class GalleryFragment : Fragment() {
 
             eventChangeGalleryPostingOrder.observe(viewLifecycleOwner, {
                 galleryViewModel.changeToNextPostingOrder()
-                setCurrentVisiblePostingOrder(galleryViewModel.getCurrentPostingOrder().getNextPostingOrder())
+                mainViewModel.refreshVisiblePostingOrder(MainTab.TAB_GALLERY)
                 postingAdapter.refresh()
             })
         }

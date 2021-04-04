@@ -27,10 +27,10 @@ class MainActivity : AppCompatActivity() {
     private lateinit var mainViewModel: MainViewModel
     private lateinit var signViewModel: SignViewModel
 
-    private val galleryFragment = GalleryFragment()
-    private val likeFragment = LikeFragment()
-    private val userFragment = UserFragment()
-    private val fragments = arrayOf(galleryFragment, likeFragment, userFragment)
+    private lateinit var galleryFragment: GalleryFragment
+    private lateinit var likeFragment: LikeFragment
+    private lateinit var userFragment: UserFragment
+    private lateinit var fragments: Array<Fragment>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,15 +57,19 @@ class MainActivity : AppCompatActivity() {
                 startActivity(Intent(this@MainActivity, MyPhotoActivity::class.java))
             })
         }
-        
+
         mainViewModel.setToolbarTitle(getString(R.string.gallery))
+        if (savedInstanceState == null) {
+            initFragments()
+        } else {
+            restoreFragments()
+        }
         initMainTab()
-        initFragments()
     }
 
     private fun initMainTab() {
         binding.tlMain.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-            override fun onTabReselected(tab: TabLayout.Tab) = Unit
+            override fun onTabReselected(tab: TabLayout.Tab) = onTabSelected(tab)
             override fun onTabUnselected(tab: TabLayout.Tab) {
                 val iconId = when (MainTab.tabFromPosition(tab.position)) {
                     MainTab.TAB_GALLERY -> R.drawable.ic_cloud_data_empty
@@ -87,6 +91,7 @@ class MainActivity : AppCompatActivity() {
                             setToolbarTitle(getString(R.string.gallery))
                             setVisibleUploadFab(true)
                             setVisibleOrderSwitch(true)
+                            refreshVisiblePostingOrder(MainTab.TAB_GALLERY)
                         }
                         R.drawable.ic_cloud_data_fill
                     }
@@ -96,6 +101,7 @@ class MainActivity : AppCompatActivity() {
                             setToolbarTitle(getString(R.string.like))
                             setVisibleUploadFab(true)
                             setVisibleOrderSwitch(true)
+                            refreshVisiblePostingOrder(MainTab.TAB_LIKE)
                         }
                         R.drawable.ic_heart_fill
                     }
@@ -113,16 +119,30 @@ class MainActivity : AppCompatActivity() {
                 tab.icon = ContextCompat.getDrawable(this@MainActivity, iconId)
             }
         })
+        binding.tlMain.getTabAt(MainTab.TAB_USER.position)?.select()
     }
 
     private fun initFragments() {
         supportFragmentManager.beginTransaction()
-            .add(R.id.main_container, galleryFragment, GalleryFragment::class.java.name)
-            .add(R.id.main_container, likeFragment, LikeFragment::class.java.name)
-            .add(R.id.main_container, userFragment, UserFragment::class.java.name)
+            .add(R.id.main_container, GalleryFragment().apply { galleryFragment = this }, GalleryFragment::class.java.name)
+            .add(R.id.main_container, LikeFragment().apply { likeFragment = this }, LikeFragment::class.java.name)
+            .add(R.id.main_container, UserFragment().apply { userFragment = this }, UserFragment::class.java.name)
             .commit()
 
+        supportFragmentManager.fragments.size
+
+        fragments = arrayOf(galleryFragment, likeFragment, userFragment)
+
         showFragment(galleryFragment)
+    }
+
+    private fun restoreFragments() {
+        galleryFragment = supportFragmentManager.findFragmentByTag(GalleryFragment::class.java.name) as GalleryFragment
+        likeFragment = supportFragmentManager.findFragmentByTag(LikeFragment::class.java.name) as LikeFragment
+        userFragment = supportFragmentManager.findFragmentByTag(UserFragment::class.java.name) as UserFragment
+        supportFragmentManager.fragments.size
+
+        fragments = arrayOf(galleryFragment, likeFragment, userFragment)
     }
 
     private fun showFragment(fragment: Fragment) {

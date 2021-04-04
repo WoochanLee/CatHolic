@@ -7,7 +7,7 @@ class GetUserLikePostings(private val postingRepository: PostingRepository) {
         const val PAGE_SIZE = 10
     }
 
-    fun getCurrentPostingOrder() = postingRepository.currentLikePostingOrder
+    //fun getCurrentPostingOrder() = postingRepository.currentLikePostingOrder
 
     suspend operator fun invoke(key: String?, userId: String, isChangeToNextOrder: Boolean) = postingRepository.getUserLikePostings(key, userId, PAGE_SIZE, isChangeToNextOrder)
 }

@@ -9,6 +9,7 @@ import com.woody.cat.holic.framework.base.BaseViewModel
 import com.woody.cat.holic.presentation.main.MainTab
 import com.woody.cat.holic.presentation.main.PostingItem
 import com.woody.cat.holic.usecase.posting.AddLikeInPosting
+import com.woody.cat.holic.usecase.posting.GetPostingOrder
 import com.woody.cat.holic.usecase.user.GetCurrentUserId
 import com.woody.cat.holic.usecase.user.GetIsSignedIn
 import com.woody.cat.holic.usecase.posting.RemoveLikeInPosting
@@ -17,6 +18,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class MainViewModel(
+    private val getPostingOrder: GetPostingOrder,
     private val getIsSignedIn: GetIsSignedIn,
     private val getCurrentUserId: GetCurrentUserId,
     private val addLikeInPosting: AddLikeInPosting,
@@ -49,8 +51,12 @@ class MainViewModel(
     private val _currentVisiblePostingOrder = MutableLiveData(PostingOrder.LIKED)
     val currentVisiblePostingOrder: LiveData<PostingOrder> get() = _currentVisiblePostingOrder
 
-    fun setCurrentVisiblePostingOrder(postingOrder: PostingOrder) {
-        _currentVisiblePostingOrder.postValue(postingOrder)
+    fun refreshVisiblePostingOrder(mainTab: MainTab) {
+        when (mainTab) {
+            MainTab.TAB_GALLERY -> _currentVisiblePostingOrder.postValue(getPostingOrder.getGalleryPostingOrder())
+            MainTab.TAB_LIKE -> _currentVisiblePostingOrder.postValue(getPostingOrder.getLikePostingOrder())
+            MainTab.TAB_USER -> Unit
+        }
     }
 
     fun setToolbarTitle(title: String) {

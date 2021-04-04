@@ -45,7 +45,7 @@
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@color/white"
+                    android:background="@color/background_color_sub"
                     android:scaleType="centerCrop"
                     app:imageUrl="@{model.imageUri}" />
             </androidx.cardview.widget.CardView>
@@ -76,7 +76,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:tint="@color/white" />
+            app:tint="@color/background_color_sub" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="wrap_content"
@@ -105,7 +105,7 @@
                     android:paddingStart="2dp"
                     android:paddingEnd="1dp"
                     android:src="@drawable/ic_close"
-                    app:tint="@color/white" />
+                    app:tint="@color/background_color_sub" />
             </androidx.cardview.widget.CardView>
 
         </androidx.constraintlayout.widget.ConstraintLayout>

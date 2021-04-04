@@ -6,8 +6,12 @@
     <data>
 
         <variable
-            name="userViewModel"
+            name="signViewModel"
             type="com.woody.cat.holic.presentation.main.viewmodel.SignViewModel" />
+
+        <variable
+            name="userViewModel"
+            type="com.woody.cat.holic.presentation.main.user.viewmodel.UserViewModel" />
 
         <import type="android.view.View" />
     </data>
@@ -15,7 +19,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/black"
+        android:background="@color/background_color_main"
         android:fillViewport="true"
         android:overScrollMode="never">
 
@@ -28,7 +32,7 @@
                 android:layout_height="0dp"
                 android:gravity="center"
                 android:orientation="vertical"
-                android:visibility="@{userViewModel.isSignIn() ? View.GONE : View.VISIBLE}"
+                android:visibility="@{signViewModel.isSignIn() ? View.GONE : View.VISIBLE}"
                 app:layout_constraintBottom_toTopOf="@id/lyt_bottom_link"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:visibility="gone">
@@ -37,7 +41,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/welcome_to_cat_holic"
-                    android:textColor="@color/white"
+                    android:textColor="@color/text_color"
                     android:textSize="20dp" />
 
                 <ImageView
@@ -45,14 +49,14 @@
                     android:layout_height="150dp"
                     android:layout_marginTop="20dp"
                     android:layout_marginBottom="20dp"
-                    android:src="@drawable/congshu_cat_white" />
+                    android:src="@drawable/congshu_cat" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="20dp"
                     android:text="@string/please_sign_in_to_manage_your_cat_photos"
-                    android:textColor="@color/white"
+                    android:textColor="@color/text_color"
                     android:textSize="15dp" />
 
                 <androidx.cardview.widget.CardView
@@ -60,7 +64,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:foreground="?android:selectableItemBackground"
-                    android:onClick="@{() -> userViewModel.onClickSignIn()}"
+                    android:onClick="@{() -> signViewModel.onClickSignIn()}"
                     app:cardCornerRadius="20dp"
                     app:cardElevation="0dp">
 
@@ -83,7 +87,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/sign_in_with_google"
-                            android:textColor="@color/black"
+                            android:textColor="@color/background_color_main"
                             android:textSize="16dp" />
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
@@ -93,7 +97,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:fillViewport="true"
-                android:visibility="@{userViewModel.isSignIn() ? View.VISIBLE : View.GONE}"
+                android:scrollbars="none"
+                android:visibility="@{signViewModel.isSignIn() ? View.VISIBLE : View.GONE}"
                 app:layout_constraintBottom_toTopOf="@id/lyt_bottom_link"
                 app:layout_constraintTop_toTopOf="parent">
 
@@ -127,6 +132,7 @@
                             android:layout_width="100dp"
                             android:layout_height="100dp"
                             android:layout_marginTop="30dp"
+                            app:cardBackgroundColor="@color/gray"
                             app:cardCornerRadius="50dp"
                             app:cardElevation="0dp">
 
@@ -134,8 +140,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:scaleType="centerCrop"
-                                app:imageUrl="@{userViewModel.userData.userPhotoUrl}"
-                                tools:src="@drawable/congshu_cat_black" />
+                                app:imageUrl="@{signViewModel.userData.userPhotoUrl}" />
 
                         </androidx.cardview.widget.CardView>
 
@@ -143,8 +148,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
-                            android:text="@{userViewModel.userData.displayName}"
-                            android:textColor="@color/white"
+                            android:text="@{signViewModel.userData.displayName}"
+                            android:textColor="@color/text_color"
                             android:textSize="20dp"
                             android:textStyle="bold"
                             tools:text="Woody" />
@@ -160,7 +165,7 @@
                             android:layout_height="70dp"
                             android:backgroundTint="@android:color/transparent"
                             android:foreground="?android:selectableItemBackground"
-                            android:onClick="@{() -> userViewModel.onClickMyCatPhotos()}"
+                            android:onClick="@{() -> signViewModel.onClickMyCatPhotos()}"
                             app:cardCornerRadius="10dp"
                             app:cardElevation="0dp">
 
@@ -182,14 +187,14 @@
                                         android:layout_height="25dp"
                                         android:layout_marginEnd="10dp"
                                         android:src="@drawable/ic_toyger_cat"
-                                        app:tint="@color/white" />
+                                        app:tint="@color/background_color_sub" />
 
                                     <TextView
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_gravity="center"
                                         android:text="@string/my_cat_photos"
-                                        android:textColor="@color/white"
+                                        android:textColor="@color/text_color"
                                         android:textSize="17dp"
                                         android:textStyle="bold" />
                                 </LinearLayout>
@@ -201,7 +206,7 @@
                                     app:layout_constraintBottom_toBottomOf="parent"
                                     app:layout_constraintEnd_toEndOf="parent"
                                     app:layout_constraintTop_toTopOf="parent"
-                                    app:tint="@color/white" />
+                                    app:tint="@color/background_color_sub" />
                             </androidx.constraintlayout.widget.ConstraintLayout>
                         </androidx.cardview.widget.CardView>
 
@@ -231,14 +236,14 @@
                                         android:layout_height="25dp"
                                         android:layout_marginEnd="10dp"
                                         android:src="@drawable/ic_notification"
-                                        app:tint="@color/white" />
+                                        app:tint="@color/background_color_sub" />
 
                                     <TextView
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_gravity="center"
                                         android:text="@string/notification"
-                                        android:textColor="@color/white"
+                                        android:textColor="@color/text_color"
                                         android:textSize="17dp"
                                         android:textStyle="bold" />
                                 </LinearLayout>
@@ -250,7 +255,7 @@
                                     app:layout_constraintBottom_toBottomOf="parent"
                                     app:layout_constraintEnd_toEndOf="parent"
                                     app:layout_constraintTop_toTopOf="parent"
-                                    app:tint="@color/white" />
+                                    app:tint="@color/background_color_sub" />
                             </androidx.constraintlayout.widget.ConstraintLayout>
                         </androidx.cardview.widget.CardView>
 
@@ -280,14 +285,14 @@
                                         android:layout_height="25dp"
                                         android:layout_marginEnd="10dp"
                                         android:src="@drawable/ic_share"
-                                        app:tint="@color/white" />
+                                        app:tint="@color/background_color_sub" />
 
                                     <TextView
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_gravity="center"
                                         android:text="@string/share_app_to_friends"
-                                        android:textColor="@color/white"
+                                        android:textColor="@color/text_color"
                                         android:textSize="17dp"
                                         android:textStyle="bold" />
                                 </LinearLayout>
@@ -299,7 +304,59 @@
                                     app:layout_constraintBottom_toBottomOf="parent"
                                     app:layout_constraintEnd_toEndOf="parent"
                                     app:layout_constraintTop_toTopOf="parent"
-                                    app:tint="@color/white" />
+                                    app:tint="@color/background_color_sub" />
+                            </androidx.constraintlayout.widget.ConstraintLayout>
+                        </androidx.cardview.widget.CardView>
+
+                        <androidx.cardview.widget.CardView
+                            android:layout_width="match_parent"
+                            android:layout_height="70dp"
+                            android:backgroundTint="@android:color/transparent"
+                            android:foreground="?android:selectableItemBackground"
+                            android:onClick="@{() -> userViewModel.changeDarkMode()}"
+                            app:cardCornerRadius="10dp"
+                            app:cardElevation="0dp">
+
+                            <androidx.constraintlayout.widget.ConstraintLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:paddingHorizontal="20dp">
+
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent">
+
+                                    <ImageView
+                                        android:layout_width="25dp"
+                                        android:layout_height="25dp"
+                                        android:layout_marginEnd="10dp"
+                                        android:src="@drawable/ic_moon"
+                                        app:tint="@color/background_color_sub" />
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center"
+                                        android:text="@string/dark_mode"
+                                        android:textColor="@color/text_color"
+                                        android:textSize="17dp"
+                                        android:textStyle="bold" />
+                                </LinearLayout>
+
+                                <androidx.appcompat.widget.SwitchCompat
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:checked="@{userViewModel.isDarkMode()}"
+                                    android:clickable="false"
+                                    android:thumb="@drawable/switch_thumb_selector"
+                                    android:track="@drawable/switch_track_selector"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent" />
                             </androidx.constraintlayout.widget.ConstraintLayout>
                         </androidx.cardview.widget.CardView>
 
@@ -309,12 +366,12 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="100dp"
                             android:layout_marginBottom="70dp"
-                            android:onClick="@{() -> userViewModel.onClickSignOut()}"
+                            android:onClick="@{() -> signViewModel.onClickSignOut()}"
                             android:padding="10dp"
                             android:text="Sign Out"
                             android:textColor="@color/gray"
                             android:textSize="15dp"
-                            android:visibility="@{userViewModel.isSignIn() ? View.VISIBLE : View.GONE}" />
+                            android:visibility="@{signViewModel.isSignIn() ? View.VISIBLE : View.GONE}" />
 
                     </LinearLayout>
 
@@ -354,13 +411,13 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Open Source License"
-                            android:textColor="@color/white"
+                            android:textColor="@color/text_color"
                             android:textSize="15dp" />
 
                         <View
                             android:layout_width="140dp"
                             android:layout_height="1dp"
-                            android:background="@color/white" />
+                            android:background="@color/background_color_sub" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -378,13 +435,13 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/privacy_policy"
-                            android:textColor="@color/white"
+                            android:textColor="@color/text_color"
                             android:textSize="15dp" />
 
                         <View
                             android:layout_width="92dp"
                             android:layout_height="1dp"
-                            android:background="@color/white" />
+                            android:background="@color/background_color_sub" />
 
                     </LinearLayout>
                 </androidx.constraintlayout.widget.ConstraintLayout>

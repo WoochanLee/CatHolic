@@ -14,6 +14,7 @@ import com.woody.cat.holic.R
 import com.woody.cat.holic.databinding.FragmentLikeBinding
 import com.woody.cat.holic.framework.net.common.NotSignedInException
 import com.woody.cat.holic.presentation.main.MainPostingAdapter
+import com.woody.cat.holic.presentation.main.MainTab
 import com.woody.cat.holic.presentation.main.like.viewmodel.LikeViewModel
 import com.woody.cat.holic.presentation.main.like.viewmodel.LikeViewModelFactory
 import com.woody.cat.holic.presentation.main.viewmodel.MainViewModel
@@ -41,13 +42,6 @@ class LikeFragment : Fragment() {
         }.root
     }
 
-    override fun onHiddenChanged(hidden: Boolean) {
-        super.onHiddenChanged(hidden)
-        if (!hidden) {
-            mainViewModel.setCurrentVisiblePostingOrder(likeViewModel.getCurrentPostingOrder())
-        }
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -59,7 +53,7 @@ class LikeFragment : Fragment() {
 
             eventChangeLikePostingOrder.observe(viewLifecycleOwner, {
                 likeViewModel.changeToNextPostingOrder()
-                setCurrentVisiblePostingOrder(likeViewModel.getCurrentPostingOrder().getNextPostingOrder())
+                mainViewModel.refreshVisiblePostingOrder(MainTab.TAB_GALLERY)
                 postingAdapter.refresh()
             })
         }

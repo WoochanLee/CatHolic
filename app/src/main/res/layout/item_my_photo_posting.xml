@@ -40,13 +40,13 @@
                     app:imageUrl="@{model.downloadUrl}"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:src="@drawable/ic_toyger_cat"
-                    tools:tint="@color/white" />
+                    tools:tint="@color/background_color_sub" />
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:alpha="0.5"
-                    android:background="@color/black"
+                    android:background="@color/background_color_main"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -61,7 +61,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="20dp"
                         android:text="@{model.created}"
-                        android:textColor="@color/white"
+                        android:textColor="@color/text_color"
                         android:textSize="15dp"
                         android:textStyle="bold"
                         app:layout_constraintBottom_toBottomOf="parent"
@@ -78,7 +78,7 @@
                         android:padding="10dp"
                         android:scaleType="centerInside"
                         android:src="@drawable/ic_menu"
-                        android:tint="@color/white"
+                        android:tint="@color/background_color_sub"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -89,7 +89,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:alpha="0.5"
-                    android:background="@color/black"
+                    android:background="@color/background_color_main"
                     app:layout_constraintBottom_toBottomOf="parent" />
 
                 <LinearLayout
@@ -113,13 +113,13 @@
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
-                            app:tint="@color/white" />
+                            app:tint="@color/background_color_sub" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@{String.valueOf(model.liked)}"
-                            android:textColor="@color/white"
+                            android:textColor="@color/text_color"
                             android:textSize="17dp"
                             android:textStyle="bold"
                             app:layout_constraintBottom_toBottomOf="parent"
@@ -132,7 +132,7 @@
                         android:layout_width="1dp"
                         android:layout_height="match_parent"
                         android:layout_marginVertical="10dp"
-                        android:background="@color/white" />
+                        android:background="@color/background_color_sub" />
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -149,13 +149,13 @@
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
-                            app:tint="@color/white" />
+                            app:tint="@color/background_color_sub" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="0"
-                            android:textColor="@color/white"
+                            android:textColor="@color/text_color"
                             android:textSize="17dp"
                             android:textStyle="bold"
                             app:layout_constraintBottom_toBottomOf="parent"
@@ -168,7 +168,7 @@
                         android:layout_width="1dp"
                         android:layout_height="match_parent"
                         android:layout_marginVertical="10dp"
-                        android:background="@color/white" />
+                        android:background="@color/background_color_sub" />
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -185,13 +185,13 @@
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
-                            app:tint="@color/white" />
+                            app:tint="@color/background_color_sub" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="SHARE"
-                            android:textColor="@color/white"
+                            android:textColor="@color/text_color"
                             android:textSize="15dp"
                             android:textStyle="bold" />
                     </LinearLayout>

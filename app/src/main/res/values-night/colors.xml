@@ -5,7 +5,7 @@
     <color name="gray">#FF808080</color>
     <color name="red">#FFDA7E7F</color>
 
-    <color name="text_color">@color/black</color>
-    <color name="background_color_main">@color/white</color>
-    <color name="background_color_sub">@color/black</color>
+    <color name="text_color">@color/white</color>
+    <color name="background_color_main">@color/black</color>
+    <color name="background_color_sub">@color/white</color>
 </resources>

@@ -32,10 +32,10 @@
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/white"
+                android:background="@color/background_color_sub"
                 android:padding="15dp"
                 android:src="@drawable/ic_plus"
-                app:tint="@color/black" />
+                app:tint="@color/background_color_main" />
         </androidx.cardview.widget.CardView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

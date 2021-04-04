@@ -22,4 +22,5 @@
     <string name="profile">PROFILE</string>
     <string name="select_cats">SELECT CATS</string>
     <string name="delete">DELETE</string>
+    <string name="dark_mode">Dark Mode</string>
 </resources>

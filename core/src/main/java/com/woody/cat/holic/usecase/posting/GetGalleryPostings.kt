@@ -7,7 +7,7 @@ class GetGalleryPostings(private val postingRepository: PostingRepository) {
         const val PAGE_SIZE = 10
     }
 
-    fun getCurrentPostingOrder() = postingRepository.currentGalleryPostingOrder
+    //fun getCurrentPostingOrder() = postingRepository.currentGalleryPostingOrder
 
     suspend operator fun invoke(key: String?, isChangeToNextOrder: Boolean) = postingRepository.getGalleryPostings(key, PAGE_SIZE, isChangeToNextOrder)
 }

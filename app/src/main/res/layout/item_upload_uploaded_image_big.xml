@@ -35,7 +35,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:alpha="0.5"
-            android:background="@color/white"
+            android:background="@color/background_color_sub"
             android:visibility="@{model.uploadStatus != UploadStatus.COMPLETE ? View.VISIBLE : View.GONE}" />
 
         <LinearLayout
@@ -54,7 +54,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:tint="@color/white" />
+                app:tint="@color/background_color_sub" />
 
             <ProgressBar
                 android:id="@+id/pb_upload_dialog_progress"
@@ -78,7 +78,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:tint="@color/white" />
+            app:tint="@color/background_color_sub" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
