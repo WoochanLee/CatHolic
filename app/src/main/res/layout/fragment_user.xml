@@ -65,6 +65,7 @@
                     android:layout_height="wrap_content"
                     android:foreground="?android:selectableItemBackground"
                     android:onClick="@{() -> signViewModel.onClickSignIn()}"
+                    app:cardBackgroundColor="@color/background_color_sub"
                     app:cardCornerRadius="20dp"
                     app:cardElevation="0dp">
 
@@ -81,7 +82,8 @@
                             android:layout_width="30dp"
                             android:layout_height="30dp"
                             android:layout_marginEnd="10dp"
-                            android:src="@drawable/ic_google" />
+                            android:src="@drawable/ic_google"
+                            app:tint="@color/background_color_main" />
 
                         <TextView
                             android:layout_width="wrap_content"
