@@ -8,19 +8,29 @@ interface PostingRepository {
     var currentGalleryPostingOrder: PostingOrder
     var currentLikePostingOrder: PostingOrder
 
+    fun getPostingOrder(postingType: PostingType): PostingOrder
+
+    fun changeToNextPostingOrder(postingType: PostingType)
+
     suspend fun addPosting(postings: List<Posting>): Resource<Unit>
 
     suspend fun removePosting(postingId: String): Resource<Unit>
 
-    suspend fun getGalleryPostings(key: String?, size: Int, isChangeToNextOrder: Boolean): Resource<List<Posting>>
+    suspend fun getGalleryPostings(key: String?, size: Int): Resource<List<Posting>>
 
-    suspend fun getUserLikePostings(key: String?, userId: String, size: Int, isChangeToNextOrder: Boolean): Resource<List<Posting>>
+    suspend fun getUserLikePostings(key: String?, userId: String, size: Int): Resource<List<Posting>>
 
     suspend fun getUserUploadedPostings(key: String?, userId: String, size: Int): Resource<List<Posting>>
 
     suspend fun addLikedInPosting(userId: String, postingId: String): Resource<Unit>
 
     suspend fun removeLikedInPosting(userId: String, postingId: String): Resource<Unit>
+}
+
+enum class PostingType {
+    GALLERY,
+    LIKED,
+    USER
 }
 
 enum class PostingOrder(val fieldName: String) {

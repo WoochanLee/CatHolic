@@ -7,7 +7,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import com.woody.cat.holic.framework.base.BaseViewModel
-import com.woody.cat.holic.framework.base.handleNetworkResult
+import com.woody.cat.holic.framework.base.handleResourceResult
 import com.woody.cat.holic.framework.posting.UploadedPostingDataSource
 import com.woody.cat.holic.usecase.user.GetCurrentUserId
 import com.woody.cat.holic.usecase.user.GetUserProfile
@@ -58,7 +58,7 @@ class MyPhotoViewModel(
             withContext(Dispatchers.IO) {
                 val result = removeUserPosting(postingId)
 
-                handleNetworkResult(result, onSuccess = {
+                handleResourceResult(result, onSuccess = {
                     _eventRefreshData.postValue(Unit)
                 }, onError = {
                     it.printStackTrace()

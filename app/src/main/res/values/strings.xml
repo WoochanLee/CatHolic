@@ -13,7 +13,7 @@
     <string name="welcome_to_cat_holic">Welcome to Cat Holic !</string>
     <string name="please_sign_in_to_manage_your_cat_photos">Please sign in to manage your cat photos.</string>
     <string name="post_these_photos">Post These Photos !</string>
-    <string name="please_upload_cat_photos_first">Please Upload Cat Photos First</string>
+    <string name="please_upload_photos_first">Please Upload Photos First</string>
     <string name="select_your_cat_photo">Select Your Cat Photo !</string>
     <string name="sign_in_with_google">Sign in with Google</string>
     <string name="share_app_to_friends">Share App to Friends</string>
@@ -23,4 +23,5 @@
     <string name="select_cats">SELECT CATS</string>
     <string name="delete">DELETE</string>
     <string name="dark_mode">Dark Mode</string>
+    <string name="we_didn_t_find_any_cats_in_this_photo">"We didn't find any cats in this photo."</string>
 </resources>

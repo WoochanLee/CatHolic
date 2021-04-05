@@ -3,6 +3,7 @@ package com.woody.cat.holic.framework.posting
 import com.google.firebase.firestore.*
 import com.woody.cat.holic.data.PostingOrder
 import com.woody.cat.holic.data.PostingRepository
+import com.woody.cat.holic.data.PostingType
 import com.woody.cat.holic.data.common.Resource
 import com.woody.cat.holic.domain.Posting
 import com.woody.cat.holic.framework.base.CatHolicLogger
@@ -20,6 +21,22 @@ class PostingRepositoryImpl(private val db: FirebaseFirestore) : PostingReposito
 
     override var currentGalleryPostingOrder = PostingOrder.LIKED
     override var currentLikePostingOrder = PostingOrder.CREATED
+
+    override fun getPostingOrder(postingType: PostingType): PostingOrder {
+        return when(postingType) {
+            PostingType.GALLERY -> currentGalleryPostingOrder
+            PostingType.LIKED -> currentLikePostingOrder
+            PostingType.USER -> PostingOrder.LIKED
+        }
+    }
+
+    override fun changeToNextPostingOrder(postingType: PostingType) {
+        when(postingType) {
+            PostingType.GALLERY -> currentGalleryPostingOrder = currentGalleryPostingOrder.getNextPostingOrder()
+            PostingType.LIKED -> currentLikePostingOrder = currentLikePostingOrder.getNextPostingOrder()
+            PostingType.USER -> Unit
+        }
+    }
 
     override suspend fun addPosting(postings: List<Posting>): Resource<Unit> {
         val dataDeferred = CompletableDeferred<Resource<Unit>>()
@@ -54,10 +71,7 @@ class PostingRepositoryImpl(private val db: FirebaseFirestore) : PostingReposito
         return dataDeferred.await()
     }
 
-    override suspend fun getGalleryPostings(key: String?, size: Int, isChangeToNextOrder: Boolean): Resource<List<Posting>> {
-        if (isChangeToNextOrder) {
-            changeToNextGalleryPostingOrder()
-        }
+    override suspend fun getGalleryPostings(key: String?, size: Int): Resource<List<Posting>> {
 
         val lastDoc = getPagingKey(key)
 
@@ -94,10 +108,7 @@ class PostingRepositoryImpl(private val db: FirebaseFirestore) : PostingReposito
         return dataDeferred.await()
     }
 
-    override suspend fun getUserLikePostings(key: String?, userId: String, size: Int, isChangeToNextOrder: Boolean): Resource<List<Posting>> {
-        if (isChangeToNextOrder) {
-            changeToNextLikePostingOrder()
-        }
+    override suspend fun getUserLikePostings(key: String?, userId: String, size: Int): Resource<List<Posting>> {
 
         val lastDoc = getPagingKey(key)
 
@@ -234,14 +245,6 @@ class PostingRepositoryImpl(private val db: FirebaseFirestore) : PostingReposito
         }
 
         return dataDeferred.await()
-    }
-
-    private fun changeToNextGalleryPostingOrder() {
-        currentGalleryPostingOrder = currentGalleryPostingOrder.getNextPostingOrder()
-    }
-
-    private fun changeToNextLikePostingOrder() {
-        currentLikePostingOrder = currentLikePostingOrder.getNextPostingOrder()
     }
 
     private suspend fun getPagingKey(key: String?): Resource<DocumentSnapshot?> {

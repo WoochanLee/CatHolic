@@ -78,12 +78,26 @@
             app:layout_constraintTop_toTopOf="parent"
             app:tint="@color/background_color_sub" />
 
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:onClick="@{() -> viewModel.onClickPreviewRemove(position)}"
+            android:padding="12dp"
+            android:src="@drawable/ic_close"
+            android:visibility="@{model.uploadStatus == UploadStatus.CAT_NOT_DETECTED ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/red"
+            tools:visibility="gone" />
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
             android:layout_marginEnd="2dp"
-            android:onClick="@{() -> viewModel.onClickSmallPreviewRemove(position)}"
+            android:onClick="@{() -> viewModel.onClickPreviewRemove(position)}"
             android:padding="5dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent">

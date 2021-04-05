@@ -3,7 +3,7 @@ package com.woody.cat.holic.framework.posting
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.woody.cat.holic.data.common.Resource
-import com.woody.cat.holic.framework.base.handleNetworkResult
+import com.woody.cat.holic.framework.base.handleResourceResult
 import com.woody.cat.holic.framework.net.common.NotSignedInException
 import com.woody.cat.holic.presentation.main.PostingItem
 import com.woody.cat.holic.presentation.main.UserItem
@@ -19,15 +19,12 @@ import kotlinx.coroutines.withContext
 class LikePostingDataSource(
     private val getCurrentUserId: GetCurrentUserId,
     private val getUserLikePostings: GetUserLikePostings,
-    private val getUserProfile: GetUserProfile,
-    private var isChangingToNextPostingOrder: Boolean
+    private val getUserProfile: GetUserProfile
 ) : PagingSource<String, PostingItem>() {
 
     override suspend fun load(params: LoadParams<String>): LoadResult<String, PostingItem> {
         getCurrentUserId()?.let { userId ->
-            getUserLikePostings(params.key, userId, isChangingToNextPostingOrder).let { result ->
-                isChangingToNextPostingOrder = false
-
+            getUserLikePostings(params.key, userId).let { result ->
                 return if (result is Resource.Success) {
                     result.data
                         .map { mapToPostingItem(it, getCurrentUserId()) }
@@ -53,7 +50,7 @@ class LikePostingDataSource(
     private fun getPostingUserProfile(userItem: UserItem) {
         GlobalScope.launch {
             withContext(Dispatchers.IO) {
-                handleNetworkResult(getUserProfile(userItem.userId), onSuccess = {
+                handleResourceResult(getUserProfile(userItem.userId), onSuccess = {
                     userItem.displayName.postValue(it.displayName)
                     userItem.userPhotoUrl.postValue(it.userPhotoUrl)
                 })

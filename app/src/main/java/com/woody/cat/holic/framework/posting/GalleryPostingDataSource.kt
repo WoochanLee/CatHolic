@@ -3,7 +3,7 @@ package com.woody.cat.holic.framework.posting
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.woody.cat.holic.data.common.Resource
-import com.woody.cat.holic.framework.base.handleNetworkResult
+import com.woody.cat.holic.framework.base.handleResourceResult
 import com.woody.cat.holic.presentation.main.PostingItem
 import com.woody.cat.holic.presentation.main.UserItem
 import com.woody.cat.holic.presentation.main.mapToPostingItem
@@ -18,14 +18,11 @@ import kotlinx.coroutines.withContext
 class GalleryPostingDataSource(
     private val getCurrentUserId: GetCurrentUserId,
     private val getGalleryPostings: GetGalleryPostings,
-    private val getUserProfile: GetUserProfile,
-    private var isChangingToNextPostingOrder: Boolean
+    private val getUserProfile: GetUserProfile
 ) : PagingSource<String, PostingItem>() {
 
     override suspend fun load(params: LoadParams<String>): LoadResult<String, PostingItem> {
-        getGalleryPostings(params.key, isChangingToNextPostingOrder).let { result ->
-            isChangingToNextPostingOrder = false
-
+        getGalleryPostings(params.key).let { result ->
             return if (result is Resource.Success) {
                 result.data
                     .map { mapToPostingItem(it, getCurrentUserId()) }
@@ -50,7 +47,7 @@ class GalleryPostingDataSource(
     private fun getPostingUserProfile(userItem: UserItem) {
         GlobalScope.launch {
             withContext(Dispatchers.IO) {
-                handleNetworkResult(getUserProfile(userItem.userId), onSuccess = {
+                handleResourceResult(getUserProfile(userItem.userId), onSuccess = {
                     userItem.displayName.postValue(it.displayName)
                     userItem.userPhotoUrl.postValue(it.userPhotoUrl)
                 })

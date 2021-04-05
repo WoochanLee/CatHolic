@@ -6,6 +6,7 @@
     <color name="red">#FFDA7E7F</color>
 
     <color name="text_color">@color/black</color>
+    <color name="text_color_reverse">@color/white</color>
     <color name="background_color_main">@color/white</color>
     <color name="background_color_sub">@color/black</color>
 </resources>

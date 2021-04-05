@@ -7,15 +7,18 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import com.woody.cat.holic.data.PostingType
 import com.woody.cat.holic.framework.base.BaseViewModel
 import com.woody.cat.holic.framework.posting.LikePostingDataSource
 import com.woody.cat.holic.presentation.main.PostingItem
+import com.woody.cat.holic.usecase.posting.ChangeToNextPostingOrder
 import com.woody.cat.holic.usecase.user.GetCurrentUserId
 import com.woody.cat.holic.usecase.posting.GetUserLikePostings
 import com.woody.cat.holic.usecase.user.GetUserProfile
 import kotlinx.coroutines.flow.Flow
 
 class LikeViewModel(
+    private val changeToNextPostingOrder: ChangeToNextPostingOrder,
     private val getCurrentUserId: GetCurrentUserId,
     private val getUserLikePostings: GetUserLikePostings,
     private val getUserProfile: GetUserProfile,
@@ -28,22 +31,14 @@ class LikeViewModel(
     private val _eventRefreshData = MutableLiveData<Unit>()
     val eventRefreshData: LiveData<Unit> get() = _eventRefreshData
 
-    private var isChangingToNextPostingOrder = false
-
-    var dataSource: LikePostingDataSource? = null
-
     fun getLikedPostingFlow() = Pager(
         config = PagingConfig(pageSize = PAGE_SIZE),
         pagingSourceFactory = {
             LikePostingDataSource(
                 getCurrentUserId,
                 getUserLikePostings,
-                getUserProfile,
-                isChangingToNextPostingOrder
-            ).apply {
-                dataSource = this
-                isChangingToNextPostingOrder = false
-            }
+                getUserProfile
+            )
         }
     ).flow.cachedIn(viewModelScope)
 
@@ -59,6 +54,6 @@ class LikeViewModel(
     }
 
     fun changeToNextPostingOrder() {
-        isChangingToNextPostingOrder = true
+        changeToNextPostingOrder(PostingType.LIKED)
     }
 }

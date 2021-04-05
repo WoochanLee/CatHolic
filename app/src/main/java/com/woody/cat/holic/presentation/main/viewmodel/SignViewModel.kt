@@ -12,7 +12,7 @@ import com.google.firebase.auth.GoogleAuthProvider
 import com.woody.cat.holic.domain.User
 import com.woody.cat.holic.framework.base.BaseViewModel
 import com.woody.cat.holic.framework.base.CatHolicLogger
-import com.woody.cat.holic.framework.base.handleNetworkResult
+import com.woody.cat.holic.framework.base.handleResourceResult
 import com.woody.cat.holic.framework.net.common.DataNotExistException
 import com.woody.cat.holic.usecase.user.AddUserProfile
 import com.woody.cat.holic.usecase.user.GetCurrentUserId
@@ -106,7 +106,7 @@ class SignViewModel(
             withContext(Dispatchers.IO) {
                 val result = getUserProfile(userId)
 
-                handleNetworkResult(result, onSuccess = {
+                handleResourceResult(result, onSuccess = {
                     onResult(it)
                 }, onError = {
                     if (it is DataNotExistException) {
@@ -124,7 +124,7 @@ class SignViewModel(
             withContext(Dispatchers.IO) {
                 val result = addUserProfile(user)
 
-                handleNetworkResult(result, onSuccess = {
+                handleResourceResult(result, onSuccess = {
                     getProfileOrMakeProfile(user)
                 }, onError = {
                     _eventSignInFail.postValue(Unit)

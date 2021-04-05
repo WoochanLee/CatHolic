@@ -22,6 +22,7 @@ import com.woody.cat.holic.presentation.main.viewmodel.MainViewModelFactory
 import com.woody.cat.holic.presentation.main.viewmodel.SignViewModel
 import com.woody.cat.holic.presentation.main.viewmodel.SignViewModelFactory
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.launch
@@ -87,6 +88,10 @@ class GalleryFragment : Fragment() {
                             if (loadState.error is NotSignedInException) {
                                 postingAdapter.submitData(PagingData.empty())
                             }
+                        }
+
+                        if (loadState is LoadState.NotLoading) {
+                            binding.rvMainGallery.scrollToPosition(0)
                         }
                     }
             }

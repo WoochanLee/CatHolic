@@ -61,10 +61,6 @@ class UploadActivity : AppCompatActivity() {
                 removeTargetPreviewPage(it)
             })
 
-            eventUpdatePostingButtonEnableStatus.observe(this@UploadActivity, {
-                updatePostingButtonEnableStatus()
-            })
-
             eventShowToast.observe(this@UploadActivity, {
                 Toast.makeText(this@UploadActivity, it, Toast.LENGTH_LONG).show()
             })

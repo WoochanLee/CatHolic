@@ -80,5 +80,29 @@
             app:layout_constraintTop_toTopOf="parent"
             app:tint="@color/background_color_sub" />
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:onClick="@{() -> viewModel.onClickPreviewRemove(position)}"
+            android:orientation="vertical"
+            android:visibility="@{model.uploadStatus == UploadStatus.CAT_NOT_DETECTED ? View.VISIBLE : View.GONE}">
+
+            <ImageView
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_marginBottom="50dp"
+                android:src="@drawable/ic_close"
+                app:tint="@color/red" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/we_didn_t_find_any_cats_in_this_photo"
+                android:textColor="@color/red"
+                android:textSize="15dp" />
+
+        </LinearLayout>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

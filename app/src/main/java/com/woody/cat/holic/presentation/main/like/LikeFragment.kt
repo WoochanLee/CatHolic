@@ -53,7 +53,7 @@ class LikeFragment : Fragment() {
 
             eventChangeLikePostingOrder.observe(viewLifecycleOwner, {
                 likeViewModel.changeToNextPostingOrder()
-                mainViewModel.refreshVisiblePostingOrder(MainTab.TAB_GALLERY)
+                mainViewModel.refreshVisiblePostingOrder(MainTab.TAB_LIKE)
                 postingAdapter.refresh()
             })
         }
@@ -73,7 +73,7 @@ class LikeFragment : Fragment() {
         likeViewModel = ViewModelProvider(activity, LikeViewModelFactory()).get(LikeViewModel::class.java).apply {
             binding.likeViewModel = this
 
-           initPagingFlow()
+            initPagingFlow()
 
             viewLifecycleOwner.lifecycleScope.launch {
                 postingAdapter.loadStateFlow
@@ -84,9 +84,13 @@ class LikeFragment : Fragment() {
 
                         if (loadState is LoadState.Error) {
                             //TODO: handle network error
-                            if(loadState.error is NotSignedInException) {
+                            if (loadState.error is NotSignedInException) {
                                 postingAdapter.submitData(PagingData.empty())
                             }
+                        }
+
+                        if (loadState is LoadState.NotLoading) {
+                            binding.rvMainGallery.scrollToPosition(0)
                         }
                     }
             }

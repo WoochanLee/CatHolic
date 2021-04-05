@@ -3,7 +3,7 @@ package com.woody.cat.holic.framework.posting
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.woody.cat.holic.data.common.Resource
-import com.woody.cat.holic.framework.base.handleNetworkResult
+import com.woody.cat.holic.framework.base.handleResourceResult
 import com.woody.cat.holic.framework.net.common.NotSignedInException
 import com.woody.cat.holic.presentation.main.PostingItem
 import com.woody.cat.holic.presentation.main.UserItem
@@ -50,7 +50,7 @@ class UploadedPostingDataSource(
     private fun getPostingUserProfile(userItem: UserItem) {
         GlobalScope.launch {
             withContext(Dispatchers.IO) {
-                handleNetworkResult(getUserProfile(userItem.userId), onSuccess = {
+                handleResourceResult(getUserProfile(userItem.userId), onSuccess = {
                     userItem.displayName.postValue(it.displayName)
                     userItem.userPhotoUrl.postValue(it.userPhotoUrl)
                 })

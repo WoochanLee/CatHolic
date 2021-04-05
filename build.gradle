@@ -3,6 +3,7 @@ buildscript {
     ext.kotlin_version = "1.4.30"
     ext.lifecycle_version = '2.2.0'
     ext.paging_version = "3.0.0-beta01"
+    ext.camerax_version = "1.0.0-beta07"
     repositories {
         google()
         jcenter()

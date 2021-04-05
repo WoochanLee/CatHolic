@@ -8,11 +8,13 @@ data class UploadItem(
     val imageUri: String,
     var imageDownloadUrl: String = "",
     var currentProgress: MutableLiveData<Int> = MutableLiveData(0),
-    val uploadStatus: MutableLiveData<UploadStatus> = MutableLiveData(UploadStatus.UPLOADING),
+    val uploadStatus: MutableLiveData<UploadStatus> = MutableLiveData(UploadStatus.READY),
     var uploadingJob: Job? = null
 )
 
 enum class UploadStatus{
+    READY,
+    CAT_NOT_DETECTED,
     UPLOADING,
     COMPLETE,
     FAIL

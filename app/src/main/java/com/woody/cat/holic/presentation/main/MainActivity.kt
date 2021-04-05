@@ -41,6 +41,8 @@ class MainActivity : AppCompatActivity() {
 
         mainViewModel = ViewModelProvider(this, MainViewModelFactory()).get(MainViewModel::class.java).apply {
             binding.mainViewModel = this
+
+            //TODO: event be emitted when activity restored
             eventStartUploadActivity.observe(this@MainActivity, {
                 startActivity(Intent(this@MainActivity, UploadActivity::class.java))
             })
@@ -65,6 +67,9 @@ class MainActivity : AppCompatActivity() {
             restoreFragments()
         }
         initMainTab()
+        if (savedInstanceState != null) {
+            binding.tlMain.getTabAt(MainTab.TAB_USER.position)?.select()
+        }
     }
 
     private fun initMainTab() {
@@ -119,7 +124,6 @@ class MainActivity : AppCompatActivity() {
                 tab.icon = ContextCompat.getDrawable(this@MainActivity, iconId)
             }
         })
-        binding.tlMain.getTabAt(MainTab.TAB_USER.position)?.select()
     }
 
     private fun initFragments() {

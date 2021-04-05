@@ -32,7 +32,7 @@ class CatHolicApplication : Application() {
     private lateinit var firebaseStorageReference: StorageReference
 
     val settingRepository by lazy { SettingRepositoryImpl(settingSharedPreferences) }
-    val photoRepository by lazy { PhotoRepositoryImpl(firebaseStorageReference) }
+    val photoRepository by lazy { PhotoRepositoryImpl(this, firebaseStorageReference) }
     val postingRepository by lazy { PostingRepositoryImpl(firebaseFirestore) }
     val userRepository by lazy { UserRepositoryImpl(firebaseFirestore, firebaseAuth) }
 
