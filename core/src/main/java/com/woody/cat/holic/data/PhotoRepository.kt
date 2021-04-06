@@ -7,6 +7,4 @@ import java.io.File
 interface PhotoRepository {
 
     suspend fun uploadPhoto(userId: String, file: File, onProgress: (Int) -> Unit): Resource<Photo>
-
-    suspend fun detectCatFromLocalPhoto(uri: String): Resource<Boolean>
 }

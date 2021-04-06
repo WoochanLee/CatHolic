@@ -10,6 +10,7 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.woody.cat.holic.framework.base.AlbumMediaLoader
 import com.woody.cat.holic.framework.db.SettingRepositoryImpl
+import com.woody.cat.holic.framework.photo.PhotoAnalyzerImpl
 import com.woody.cat.holic.framework.photo.PhotoRepositoryImpl
 import com.woody.cat.holic.framework.posting.PostingRepositoryImpl
 import com.woody.cat.holic.framework.user.UserRepositoryImpl
@@ -32,9 +33,10 @@ class CatHolicApplication : Application() {
     private lateinit var firebaseStorageReference: StorageReference
 
     val settingRepository by lazy { SettingRepositoryImpl(settingSharedPreferences) }
-    val photoRepository by lazy { PhotoRepositoryImpl(this, firebaseStorageReference) }
+    val photoRepository by lazy { PhotoRepositoryImpl(firebaseStorageReference) }
     val postingRepository by lazy { PostingRepositoryImpl(firebaseFirestore) }
     val userRepository by lazy { UserRepositoryImpl(firebaseFirestore, firebaseAuth) }
+    val photoAnalyzer by lazy { PhotoAnalyzerImpl(this) }
 
     override fun onCreate() {
         super.onCreate()

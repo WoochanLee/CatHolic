@@ -1,7 +1,7 @@
 package com.woody.cat.holic.usecase.photo
 
-import com.woody.cat.holic.data.PhotoRepository
+import com.woody.cat.holic.data.PhotoAnalyzer
 
-class DetectCatFromPhoto(private val photoRepository: PhotoRepository) {
-    suspend operator fun invoke(uri: String) = photoRepository.detectCatFromLocalPhoto(uri)
+class DetectCatFromPhoto(private val photoAnalyzer: PhotoAnalyzer) {
+    suspend operator fun invoke(uri: String) = photoAnalyzer.detectCatFromLocalPhoto(uri)
 }
