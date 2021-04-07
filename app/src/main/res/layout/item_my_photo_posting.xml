@@ -70,18 +70,19 @@
                         tools:text="10.15, 2020" />
 
                     <ImageButton
+                        android:id="@+id/ib_my_photo_posting_menu"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:layout_marginEnd="5dp"
                         android:background="@null"
-                        android:onClick="@{() -> viewModel.onClickMenu(model.postingId)}"
                         android:padding="10dp"
                         android:scaleType="centerInside"
                         android:src="@drawable/ic_menu"
                         android:tint="@color/background_color_sub"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:onClickDelete="@{() -> viewModel.onClickDelete(model.postingId)}" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 

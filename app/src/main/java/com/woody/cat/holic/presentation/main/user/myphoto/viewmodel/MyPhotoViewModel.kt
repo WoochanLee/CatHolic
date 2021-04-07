@@ -8,11 +8,12 @@ import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import com.woody.cat.holic.framework.base.BaseViewModel
 import com.woody.cat.holic.framework.base.handleResourceResult
+import com.woody.cat.holic.framework.base.printStackTraceIfDebug
 import com.woody.cat.holic.framework.posting.UploadedPostingDataSource
-import com.woody.cat.holic.usecase.user.GetCurrentUserId
-import com.woody.cat.holic.usecase.user.GetUserProfile
 import com.woody.cat.holic.usecase.posting.GetUserUploadedPostings
 import com.woody.cat.holic.usecase.posting.RemoveUserPosting
+import com.woody.cat.holic.usecase.user.GetCurrentUserId
+import com.woody.cat.holic.usecase.user.GetUserProfile
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -53,7 +54,7 @@ class MyPhotoViewModel(
         _eventRefreshData.postValue(Unit)
     }
 
-    fun onClickMenu(postingId: String) {
+    fun onClickDelete(postingId: String) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 val result = removeUserPosting(postingId)
@@ -61,7 +62,7 @@ class MyPhotoViewModel(
                 handleResourceResult(result, onSuccess = {
                     _eventRefreshData.postValue(Unit)
                 }, onError = {
-                    it.printStackTrace()
+                    it.printStackTraceIfDebug()
                     //TODO : handle network error
                 })
             }

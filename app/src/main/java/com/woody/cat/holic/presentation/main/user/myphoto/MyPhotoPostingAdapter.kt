@@ -4,16 +4,13 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LifecycleOwner
-import androidx.paging.PagedListAdapter
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import com.woody.cat.holic.R
-import com.woody.cat.holic.databinding.ItemMainPostingBinding
 import com.woody.cat.holic.databinding.ItemMyPhotoPostingBinding
 import com.woody.cat.holic.framework.base.BaseViewHolder
 import com.woody.cat.holic.presentation.main.PostingItem
 import com.woody.cat.holic.presentation.main.user.myphoto.viewmodel.MyPhotoViewModel
-import com.woody.cat.holic.presentation.main.viewmodel.MainViewModel
 
 class MyPhotoPostingAdapter(
     private val lifecycleOwner: LifecycleOwner,
