@@ -9,6 +9,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import com.woody.cat.holic.R
 import com.woody.cat.holic.databinding.ActivityMyPhotoBinding
+import com.woody.cat.holic.framework.base.observeEvent
 import com.woody.cat.holic.presentation.main.like.viewmodel.LikeViewModel
 import com.woody.cat.holic.presentation.main.user.myphoto.viewmodel.MyPhotoViewModel
 import com.woody.cat.holic.presentation.main.user.myphoto.viewmodel.MyPhotoViewModelFactory
@@ -46,7 +47,7 @@ class MyPhotoActivity : AppCompatActivity() {
                 }
             }
 
-            eventRefreshData.observe(this@MyPhotoActivity, {
+            eventRefreshData.observeEvent(this@MyPhotoActivity, {
                 initPagingFlow()
             })
         }

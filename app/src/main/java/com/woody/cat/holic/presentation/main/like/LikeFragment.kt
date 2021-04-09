@@ -12,6 +12,7 @@ import androidx.paging.LoadState
 import androidx.paging.PagingData
 import com.woody.cat.holic.R
 import com.woody.cat.holic.databinding.FragmentLikeBinding
+import com.woody.cat.holic.framework.base.observeEvent
 import com.woody.cat.holic.framework.net.common.NotSignedInException
 import com.woody.cat.holic.presentation.main.MainPostingAdapter
 import com.woody.cat.holic.presentation.main.MainTab
@@ -51,7 +52,7 @@ class LikeFragment : Fragment() {
             binding.mainViewModel = this
             postingAdapter = MainPostingAdapter(viewLifecycleOwner, this)
 
-            eventChangeLikePostingOrder.observe(viewLifecycleOwner, {
+            eventChangeLikePostingOrder.observeEvent(viewLifecycleOwner, {
                 likeViewModel.changeToNextPostingOrder()
                 mainViewModel.refreshVisiblePostingOrder(MainTab.TAB_LIKE)
                 postingAdapter.refresh()
@@ -61,11 +62,11 @@ class LikeFragment : Fragment() {
         signViewModel = ViewModelProvider(activity, SignViewModelFactory()).get(SignViewModel::class.java).apply {
             binding.userViewModel = this
 
-            eventSignInSuccess.observe(viewLifecycleOwner, {
+            eventSignInSuccess.observeEvent(viewLifecycleOwner, {
                 likeViewModel.initPagingFlow()
             })
 
-            eventSignOutSuccess.observe(viewLifecycleOwner, {
+            eventSignOutSuccess.observeEvent(viewLifecycleOwner, {
                 likeViewModel.initPagingFlow()
             })
         }
@@ -95,7 +96,7 @@ class LikeFragment : Fragment() {
                     }
             }
 
-            eventRefreshData.observe(viewLifecycleOwner, {
+            eventRefreshData.observeEvent(viewLifecycleOwner, {
                 initPagingFlow()
             })
         }

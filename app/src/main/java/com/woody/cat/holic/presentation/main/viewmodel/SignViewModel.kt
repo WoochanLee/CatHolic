@@ -10,9 +10,7 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.woody.cat.holic.domain.User
-import com.woody.cat.holic.framework.base.BaseViewModel
-import com.woody.cat.holic.framework.base.CatHolicLogger
-import com.woody.cat.holic.framework.base.handleResourceResult
+import com.woody.cat.holic.framework.base.*
 import com.woody.cat.holic.framework.net.common.DataNotExistException
 import com.woody.cat.holic.usecase.user.AddUserProfile
 import com.woody.cat.holic.usecase.user.GetCurrentUserId
@@ -32,23 +30,23 @@ class SignViewModel(
 
     lateinit var gso: GoogleSignInOptions
 
-    private val _eventStartMyCatPhotos = MutableLiveData<Unit>()
-    val eventStartMyCatPhotos: LiveData<Unit> get() = _eventStartMyCatPhotos
+    private val _eventStartMyCatPhotos = MutableLiveData<Event<Unit>>()
+    val eventStartMyCatPhotos: LiveData<Event<Unit>> get() = _eventStartMyCatPhotos
 
-    private val _eventSignIn = MutableLiveData<Unit>()
-    val eventSignIn: LiveData<Unit> get() = _eventSignIn
+    private val _eventSignIn = MutableLiveData<Event<Unit>>()
+    val eventSignIn: LiveData<Event<Unit>> get() = _eventSignIn
 
-    private val _eventSignOut = MutableLiveData<Unit>()
-    val eventSignOut: LiveData<Unit> get() = _eventSignOut
+    private val _eventSignOut = MutableLiveData<Event<Unit>>()
+    val eventSignOut: LiveData<Event<Unit>> get() = _eventSignOut
 
-    private val _eventSignInSuccess = MutableLiveData<Unit>()
-    val eventSignInSuccess: LiveData<Unit> get() = _eventSignInSuccess
+    private val _eventSignInSuccess = MutableLiveData<Event<Unit>>()
+    val eventSignInSuccess: LiveData<Event<Unit>> get() = _eventSignInSuccess
 
-    private val _eventSignOutSuccess = MutableLiveData<Unit>()
-    val eventSignOutSuccess: LiveData<Unit> get() = _eventSignOutSuccess
+    private val _eventSignOutSuccess = MutableLiveData<Event<Unit>>()
+    val eventSignOutSuccess: LiveData<Event<Unit>> get() = _eventSignOutSuccess
 
-    private val _eventSignInFail = MutableLiveData<Unit>()
-    val eventSignInFail: LiveData<Unit> get() = _eventSignInFail
+    private val _eventSignInFail = MutableLiveData<Event<Unit>>()
+    val eventSignInFail: LiveData<Event<Unit>> get() = _eventSignInFail
 
     private val _isSignedIn = MutableLiveData<Boolean>()
     val isSignIn: LiveData<Boolean> get() = _isSignedIn
@@ -74,16 +72,16 @@ class SignViewModel(
                     if (user != null) {
                         getProfileOrMakeProfile(user)
                     } else {
-                        _eventSignInFail.postValue(Unit)
+                        _eventSignInFail.emit()
                     }
                 }
                 .addOnFailureListener {
                     CatHolicLogger.log("fail to firebase google sign in")
-                    _eventSignInFail.postValue(Unit)
+                    _eventSignInFail.emit()
                 }
         } catch (e: ApiException) {
             CatHolicLogger.log("fail to firebase google sign in")
-            _eventSignInFail.postValue(Unit)
+            _eventSignInFail.emit()
         }
     }
 
@@ -92,12 +90,12 @@ class SignViewModel(
             if (it != null) {
                 _isSignedIn.postValue(getIsSignedIn())
                 _userData.postValue(it)
-                _eventSignInSuccess.postValue(Unit)
+                _eventSignInSuccess.emit()
             } else {
                 makeProfile(user)
             }
         }, onError = {
-            _eventSignOut.postValue(Unit)
+            _eventSignOut.emit()
         })
     }
 
@@ -127,7 +125,7 @@ class SignViewModel(
                 handleResourceResult(result, onSuccess = {
                     getProfileOrMakeProfile(user)
                 }, onError = {
-                    _eventSignInFail.postValue(Unit)
+                    _eventSignInFail.emit()
                 })
             }
         }
@@ -150,24 +148,24 @@ class SignViewModel(
                 }
             })
         } else {
-            _eventSignOut.postValue(Unit)
+            _eventSignOut.emit()
         }
     }
 
     fun onClickMyCatPhotos() {
-        _eventStartMyCatPhotos.postValue(Unit)
+        _eventStartMyCatPhotos.emit()
     }
 
     fun onClickSignIn() {
-        _eventSignIn.postValue(Unit)
+        _eventSignIn.emit()
     }
 
     fun onClickSignOut() {
-        _eventSignOut.postValue(Unit)
+        _eventSignOut.emit()
     }
 
     fun onSignOutSuccess() {
-        _eventSignOutSuccess.postValue(Unit)
+        _eventSignOutSuccess.emit()
     }
 
     fun signOutFirbase() {

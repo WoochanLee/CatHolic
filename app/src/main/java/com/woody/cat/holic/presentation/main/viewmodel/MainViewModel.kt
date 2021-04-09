@@ -6,13 +6,15 @@ import androidx.lifecycle.viewModelScope
 import com.woody.cat.holic.R
 import com.woody.cat.holic.data.PostingOrder
 import com.woody.cat.holic.framework.base.BaseViewModel
+import com.woody.cat.holic.framework.base.Event
+import com.woody.cat.holic.framework.base.emit
 import com.woody.cat.holic.presentation.main.MainTab
 import com.woody.cat.holic.presentation.main.PostingItem
 import com.woody.cat.holic.usecase.posting.AddLikeInPosting
 import com.woody.cat.holic.usecase.posting.GetPostingOrder
+import com.woody.cat.holic.usecase.posting.RemoveLikeInPosting
 import com.woody.cat.holic.usecase.user.GetCurrentUserId
 import com.woody.cat.holic.usecase.user.GetIsSignedIn
-import com.woody.cat.holic.usecase.posting.RemoveLikeInPosting
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -27,17 +29,20 @@ class MainViewModel(
 
     var currentFragment = MainTab.TAB_GALLERY
 
-    private val _eventStartUploadActivity = MutableLiveData<Unit>()
-    val eventStartUploadActivity: LiveData<Unit> get() = _eventStartUploadActivity
+    private val _eventStartUploadActivity = MutableLiveData<Event<Unit>>()
+    val eventStartUploadActivity: LiveData<Event<Unit>> get() = _eventStartUploadActivity
 
-    private val _eventMoveToSignInTabWithToast = MutableLiveData<Unit>()
-    val eventMoveToSignInTabWithToast: LiveData<Unit> get() = _eventMoveToSignInTabWithToast
+    private val _eventMoveToSignInTabWithToast = MutableLiveData<Event<Unit>>()
+    val eventMoveToSignInTabWithToast: LiveData<Event<Unit>> get() = _eventMoveToSignInTabWithToast
 
-    private val _eventChangeGalleryPostingOrder = MutableLiveData<Unit>()
-    val eventChangeGalleryPostingOrder: LiveData<Unit> get() = _eventChangeGalleryPostingOrder
+    private val _eventChangeGalleryPostingOrder = MutableLiveData<Event<Unit>>()
+    val eventChangeGalleryPostingOrder: LiveData<Event<Unit>> get() = _eventChangeGalleryPostingOrder
 
-    private val _eventChangeLikePostingOrder = MutableLiveData<Unit>()
-    val eventChangeLikePostingOrder: LiveData<Unit> get() = _eventChangeLikePostingOrder
+    private val _eventChangeLikePostingOrder = MutableLiveData<Event<Unit>>()
+    val eventChangeLikePostingOrder: LiveData<Event<Unit>> get() = _eventChangeLikePostingOrder
+
+    private val _eventShowPostingDetail = MutableLiveData<Event<PostingItem>>()
+    val eventShowPostingDetail: LiveData<Event<PostingItem>> get() = _eventShowPostingDetail
 
     private val _toolbarTitle = MutableLiveData<String>()
     val toolbarTitle: LiveData<String> get() = _toolbarTitle
@@ -74,7 +79,7 @@ class MainViewModel(
     fun onClickLike(postingItem: PostingItem) {
         val userId = getCurrentUserId()
         if (userId == null) {
-            _eventMoveToSignInTabWithToast.postValue(Unit)
+            _eventMoveToSignInTabWithToast.emit()
             return
         }
 
@@ -96,18 +101,22 @@ class MainViewModel(
 
     fun onClickUploadFab() {
         if (getIsSignedIn()) {
-            _eventStartUploadActivity.postValue(Unit)
+            _eventStartUploadActivity.emit()
         } else {
-            _eventMoveToSignInTabWithToast.postValue(Unit)
+            _eventMoveToSignInTabWithToast.emit()
         }
     }
 
     fun onClickChangePostingOrder() {
         if (currentFragment == MainTab.TAB_GALLERY) {
-            _eventChangeGalleryPostingOrder.postValue(Unit)
+            _eventChangeGalleryPostingOrder.emit()
         } else if (currentFragment == MainTab.TAB_LIKE) {
-            _eventChangeLikePostingOrder.postValue(Unit)
+            _eventChangeLikePostingOrder.emit()
         }
+    }
+
+    fun onClickPostingImage(postingItem: PostingItem) {
+        _eventShowPostingDetail.emit(postingItem)
     }
 
     fun setVisibleUploadFab(isVisible: Boolean) {

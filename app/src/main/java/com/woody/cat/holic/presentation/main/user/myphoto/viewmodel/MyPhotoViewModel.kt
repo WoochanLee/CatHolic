@@ -6,9 +6,8 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
-import com.woody.cat.holic.framework.base.BaseViewModel
-import com.woody.cat.holic.framework.base.handleResourceResult
-import com.woody.cat.holic.framework.base.printStackTraceIfDebug
+import com.woody.cat.holic.framework.base.*
+
 import com.woody.cat.holic.framework.posting.UploadedPostingDataSource
 import com.woody.cat.holic.usecase.posting.GetUserUploadedPostings
 import com.woody.cat.holic.usecase.posting.RemoveUserPosting
@@ -29,8 +28,8 @@ class MyPhotoViewModel(
         const val PAGE_SIZE = 10
     }
 
-    private val _eventRefreshData = MutableLiveData<Unit>()
-    val eventRefreshData: LiveData<Unit> get() = _eventRefreshData
+    private val _eventRefreshData = MutableLiveData<Event<Unit>>()
+    val eventRefreshData: LiveData<Event<Unit>> get() = _eventRefreshData
 
     fun getUploadedPostings() = Pager(
         config = PagingConfig(pageSize = PAGE_SIZE),
@@ -51,7 +50,7 @@ class MyPhotoViewModel(
     }
 
     fun initData() {
-        _eventRefreshData.postValue(Unit)
+        _eventRefreshData.emit()
     }
 
     fun onClickDelete(postingId: String) {
@@ -60,7 +59,7 @@ class MyPhotoViewModel(
                 val result = removeUserPosting(postingId)
 
                 handleResourceResult(result, onSuccess = {
-                    _eventRefreshData.postValue(Unit)
+                    _eventRefreshData.emit()
                 }, onError = {
                     it.printStackTraceIfDebug()
                     //TODO : handle network error

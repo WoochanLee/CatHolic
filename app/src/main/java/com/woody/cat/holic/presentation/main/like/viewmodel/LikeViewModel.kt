@@ -5,17 +5,16 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
-import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.woody.cat.holic.data.PostingType
 import com.woody.cat.holic.framework.base.BaseViewModel
+import com.woody.cat.holic.framework.base.Event
+import com.woody.cat.holic.framework.base.emit
 import com.woody.cat.holic.framework.posting.LikePostingDataSource
-import com.woody.cat.holic.presentation.main.PostingItem
 import com.woody.cat.holic.usecase.posting.ChangeToNextPostingOrder
-import com.woody.cat.holic.usecase.user.GetCurrentUserId
 import com.woody.cat.holic.usecase.posting.GetUserLikePostings
+import com.woody.cat.holic.usecase.user.GetCurrentUserId
 import com.woody.cat.holic.usecase.user.GetUserProfile
-import kotlinx.coroutines.flow.Flow
 
 class LikeViewModel(
     private val changeToNextPostingOrder: ChangeToNextPostingOrder,
@@ -28,8 +27,8 @@ class LikeViewModel(
         const val PAGE_SIZE = 10
     }
 
-    private val _eventRefreshData = MutableLiveData<Unit>()
-    val eventRefreshData: LiveData<Unit> get() = _eventRefreshData
+    private val _eventRefreshData = MutableLiveData<Event<Unit>>()
+    val eventRefreshData: LiveData<Event<Unit>> get() = _eventRefreshData
 
     fun getLikedPostingFlow() = Pager(
         config = PagingConfig(pageSize = PAGE_SIZE),
@@ -50,7 +49,7 @@ class LikeViewModel(
     }
 
     fun initData() {
-        _eventRefreshData.postValue(Unit)
+        _eventRefreshData.emit()
     }
 
     fun changeToNextPostingOrder() {

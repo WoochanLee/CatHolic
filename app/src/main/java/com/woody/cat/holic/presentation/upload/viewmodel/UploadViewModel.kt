@@ -5,8 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.woody.cat.holic.R
 import com.woody.cat.holic.domain.Posting
-import com.woody.cat.holic.framework.base.BaseViewModel
-import com.woody.cat.holic.framework.base.handleResourceResult
+import com.woody.cat.holic.framework.base.*
 import com.woody.cat.holic.framework.net.common.NotSignedInException
 import com.woody.cat.holic.presentation.upload.UploadItem
 import com.woody.cat.holic.presentation.upload.UploadStatus
@@ -27,26 +26,26 @@ class UploadViewModel(
     private val addPosting: AddPosting
 ) : BaseViewModel() {
 
-    private val _eventSelectImage = MutableLiveData<Unit>()
-    val eventSelectImage: LiveData<Unit> get() = _eventSelectImage
+    private val _eventSelectImage = MutableLiveData<Event<Unit>>()
+    val eventSelectImage: LiveData<Event<Unit>> get() = _eventSelectImage
 
-    private val _eventMoveToNextPreviewPage = MutableLiveData<Unit>()
-    val eventMoveToNextPreviewPage: LiveData<Unit> get() = _eventMoveToNextPreviewPage
+    private val _eventMoveToNextPreviewPage = MutableLiveData<Event<Unit>>()
+    val eventMoveToNextPreviewPage: LiveData<Event<Unit>> get() = _eventMoveToNextPreviewPage
 
-    private val _eventMoveToPrevPreviewPage = MutableLiveData<Unit>()
-    val eventMoveToPrevPreviewPage: LiveData<Unit> get() = _eventMoveToPrevPreviewPage
+    private val _eventMoveToPrevPreviewPage = MutableLiveData<Event<Unit>>()
+    val eventMoveToPrevPreviewPage: LiveData<Event<Unit>> get() = _eventMoveToPrevPreviewPage
 
-    private val _eventMoveToTargetPreviewPage = MutableLiveData<Int>()
-    val eventMoveToTargetPreviewPage: LiveData<Int> get() = _eventMoveToTargetPreviewPage
+    private val _eventMoveToTargetPreviewPage = MutableLiveData<Event<Int>>()
+    val eventMoveToTargetPreviewPage: LiveData<Event<Int>> get() = _eventMoveToTargetPreviewPage
 
-    private val _eventRemoveTargetPreviewPage = MutableLiveData<Int>()
-    val eventRemoveTargetPreviewPage: LiveData<Int> get() = _eventRemoveTargetPreviewPage
+    private val _eventRemoveTargetPreviewPage = MutableLiveData<Event<Int>>()
+    val eventRemoveTargetPreviewPage: LiveData<Event<Int>> get() = _eventRemoveTargetPreviewPage
 
-    private val _eventCancel = MutableLiveData<Unit>()
-    val eventCancel: LiveData<Unit> get() = _eventCancel
+    private val _eventCancel = MutableLiveData<Event<Unit>>()
+    val eventCancel: LiveData<Event<Unit>> get() = _eventCancel
 
-    private val _eventShowPostingToast = MutableLiveData<Int>()
-    val eventShowToast: LiveData<Int> get() = _eventShowPostingToast
+    private val _eventShowPostingToast = MutableLiveData<Event<Int>>()
+    val eventShowToast: LiveData<Event<Int>> get() = _eventShowPostingToast
 
     private val _isLeftArrowButtonVisible = MutableLiveData(false)
     val isLeftArrowButtonVisible: LiveData<Boolean> get() = _isLeftArrowButtonVisible
@@ -93,23 +92,23 @@ class UploadViewModel(
     }
 
     fun onClickLeftArrow() {
-        _eventMoveToPrevPreviewPage.postValue(Unit)
+        _eventMoveToPrevPreviewPage.emit()
     }
 
     fun onClickRightArrow() {
-        _eventMoveToNextPreviewPage.postValue(Unit)
+        _eventMoveToNextPreviewPage.emit()
     }
 
     fun onClickSmallPreview(targetPage: Int) {
-        _eventMoveToTargetPreviewPage.postValue(targetPage)
+        _eventMoveToTargetPreviewPage.emit(targetPage)
     }
 
     fun onClickPreviewRemove(targetPage: Int) {
-        _eventRemoveTargetPreviewPage.postValue(targetPage)
+        _eventRemoveTargetPreviewPage.emit(targetPage)
     }
 
     fun onClickSelectImageButton() {
-        _eventSelectImage.postValue(Unit)
+        _eventSelectImage.emit()
     }
 
     fun onClickRetryUploadPhoto(position: Int) {
@@ -135,12 +134,12 @@ class UploadViewModel(
                 val result = addPosting(uploadPostingItemList)
 
                 handleResourceResult(result, onSuccess = {
-                    _eventShowPostingToast.postValue(R.string.success_to_posting)
-                    _eventCancel.postValue(Unit)
+                    _eventShowPostingToast.emit(R.string.success_to_posting)
+                    _eventCancel.emit()
                 }, onError = {
                     when (it) {
                         is NotSignedInException -> handleNotSignedInUser()
-                        else -> _eventShowPostingToast.postValue(R.string.fail_to_posting)
+                        else -> _eventShowPostingToast.emit(R.string.fail_to_posting)
                     }
                 })
             }
@@ -211,8 +210,8 @@ class UploadViewModel(
     }
 
     private fun handleNotSignedInUser() {
-        _eventShowPostingToast.postValue(R.string.need_to_sign_in)
-        _eventCancel.postValue(Unit)
+        _eventShowPostingToast.emit(R.string.need_to_sign_in)
+        _eventCancel.emit()
     }
 
     override fun onCleared() {

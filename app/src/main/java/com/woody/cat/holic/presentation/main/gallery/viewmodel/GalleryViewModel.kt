@@ -8,11 +8,12 @@ import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import com.woody.cat.holic.data.PostingType
 import com.woody.cat.holic.framework.base.BaseViewModel
+import com.woody.cat.holic.framework.base.Event
+import com.woody.cat.holic.framework.base.emit
 import com.woody.cat.holic.framework.posting.GalleryPostingDataSource
-import com.woody.cat.holic.framework.posting.LikePostingDataSource
 import com.woody.cat.holic.usecase.posting.ChangeToNextPostingOrder
-import com.woody.cat.holic.usecase.user.GetCurrentUserId
 import com.woody.cat.holic.usecase.posting.GetGalleryPostings
+import com.woody.cat.holic.usecase.user.GetCurrentUserId
 import com.woody.cat.holic.usecase.user.GetUserProfile
 
 class GalleryViewModel(
@@ -26,8 +27,8 @@ class GalleryViewModel(
         const val PAGE_SIZE = 10
     }
 
-    private val _eventRefreshData = MutableLiveData<Unit>()
-    val eventRefreshData: LiveData<Unit> get() = _eventRefreshData
+    private val _eventRefreshData = MutableLiveData<Event<Unit>>()
+    val eventRefreshData: LiveData<Event<Unit>> get() = _eventRefreshData
 
     fun getGalleryPostingFlow() = Pager(
         config = PagingConfig(pageSize = PAGE_SIZE),
@@ -48,7 +49,7 @@ class GalleryViewModel(
     }
 
     fun initData() {
-        _eventRefreshData.postValue(Unit)
+        _eventRefreshData.emit()
     }
 
     fun changeToNextPostingOrder() {

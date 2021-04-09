@@ -11,8 +11,10 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.tabs.TabLayout
 import com.woody.cat.holic.R
 import com.woody.cat.holic.databinding.ActivityMainBinding
+import com.woody.cat.holic.framework.base.observeEvent
 import com.woody.cat.holic.presentation.main.gallery.GalleryFragment
 import com.woody.cat.holic.presentation.main.like.LikeFragment
+import com.woody.cat.holic.presentation.main.posting.PostingDetailDialog
 import com.woody.cat.holic.presentation.main.user.UserFragment
 import com.woody.cat.holic.presentation.main.user.myphoto.MyPhotoActivity
 import com.woody.cat.holic.presentation.main.viewmodel.MainViewModel
@@ -43,19 +45,26 @@ class MainActivity : AppCompatActivity() {
             binding.mainViewModel = this
 
             //TODO: event be emitted when activity restored
-            eventStartUploadActivity.observe(this@MainActivity, {
+            eventStartUploadActivity.observeEvent(this@MainActivity, {
                 startActivity(Intent(this@MainActivity, UploadActivity::class.java))
             })
 
-            eventMoveToSignInTabWithToast.observe(this@MainActivity, {
+            eventMoveToSignInTabWithToast.observeEvent(this@MainActivity, {
                 binding.tlMain.getTabAt(MainTab.TAB_USER.position)?.select()
                 Toast.makeText(this@MainActivity, R.string.need_to_sign_in, Toast.LENGTH_LONG).show()
+            })
+
+            eventShowPostingDetail.observeEvent(this@MainActivity, {
+                PostingDetailDialog.Builder()
+                    .setPostingItem(it)
+                    .create()
+                    .show(supportFragmentManager, PostingDetailDialog::class.java.name)
             })
         }
 
         signViewModel = ViewModelProvider(this, SignViewModelFactory()).get(SignViewModel::class.java).apply {
             binding.userViewModel = this
-            eventStartMyCatPhotos.observe(this@MainActivity, {
+            eventStartMyCatPhotos.observeEvent(this@MainActivity, {
                 startActivity(Intent(this@MainActivity, MyPhotoActivity::class.java))
             })
         }
@@ -144,7 +153,6 @@ class MainActivity : AppCompatActivity() {
         galleryFragment = supportFragmentManager.findFragmentByTag(GalleryFragment::class.java.name) as GalleryFragment
         likeFragment = supportFragmentManager.findFragmentByTag(LikeFragment::class.java.name) as LikeFragment
         userFragment = supportFragmentManager.findFragmentByTag(UserFragment::class.java.name) as UserFragment
-        supportFragmentManager.fragments.size
 
         fragments = arrayOf(galleryFragment, likeFragment, userFragment)
     }

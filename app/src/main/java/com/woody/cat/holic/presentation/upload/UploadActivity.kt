@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
 import com.woody.cat.holic.R
 import com.woody.cat.holic.databinding.ActivityUploadBinding
+import com.woody.cat.holic.framework.base.observeEvent
 import com.woody.cat.holic.presentation.upload.viewmodel.UploadViewModel
 import com.woody.cat.holic.presentation.upload.viewmodel.UploadViewModelFactory
 import com.yanzhenjie.album.Album
@@ -41,31 +42,31 @@ class UploadActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this, UploadViewModelFactory()).get(UploadViewModel::class.java).apply {
             binding.viewModel = this
 
-            eventSelectImage.observe(this@UploadActivity, {
+            eventSelectImage.observeEvent(this@UploadActivity, {
                 getAlbumPhotos()
             })
 
-            eventMoveToNextPreviewPage.observe(this@UploadActivity, {
+            eventMoveToNextPreviewPage.observeEvent(this@UploadActivity, {
                 moveToNextPreviewPage()
             })
 
-            eventMoveToPrevPreviewPage.observe(this@UploadActivity, {
+            eventMoveToPrevPreviewPage.observeEvent(this@UploadActivity, {
                 moveToPrevPreviewPage()
             })
 
-            eventMoveToTargetPreviewPage.observe(this@UploadActivity, {
+            eventMoveToTargetPreviewPage.observeEvent(this@UploadActivity, {
                 moveToTargetPreviewPage(it)
             })
 
-            eventRemoveTargetPreviewPage.observe(this@UploadActivity, {
+            eventRemoveTargetPreviewPage.observeEvent(this@UploadActivity, {
                 removeTargetPreviewPage(it)
             })
 
-            eventShowToast.observe(this@UploadActivity, {
+            eventShowToast.observeEvent(this@UploadActivity, {
                 Toast.makeText(this@UploadActivity, it, Toast.LENGTH_LONG).show()
             })
 
-            eventCancel.observe(this@UploadActivity, {
+            eventCancel.observeEvent(this@UploadActivity, {
                 onBackPressed()
             })
         }

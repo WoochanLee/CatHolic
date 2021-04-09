@@ -16,14 +16,8 @@ class MyPhotoPostingAdapter(
     private val lifecycleOwner: LifecycleOwner,
     private val myPhotoViewModel: MyPhotoViewModel
 ) : PagingDataAdapter<PostingItem, BaseViewHolder<PostingItem, MyPhotoViewModel>>(object : DiffUtil.ItemCallback<PostingItem>() {
-
-    override fun areItemsTheSame(oldItem: PostingItem, newItem: PostingItem): Boolean {
-        return oldItem.postingId == newItem.postingId
-    }
-
-    override fun areContentsTheSame(oldItem: PostingItem, newItem: PostingItem): Boolean {
-        return oldItem == newItem
-    }
+    override fun areItemsTheSame(oldItem: PostingItem, newItem: PostingItem) = oldItem.postingId == newItem.postingId
+    override fun areContentsTheSame(oldItem: PostingItem, newItem: PostingItem) = oldItem == newItem
 }) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<PostingItem, MyPhotoViewModel> {
         val binding = DataBindingUtil.inflate<ItemMyPhotoPostingBinding>(LayoutInflater.from(parent.context), R.layout.item_my_photo_posting, parent, false)

@@ -16,6 +16,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.woody.cat.holic.R
 import com.woody.cat.holic.databinding.FragmentUserBinding
+import com.woody.cat.holic.framework.base.observeEvent
 import com.woody.cat.holic.presentation.main.user.viewmodel.UserViewModel
 import com.woody.cat.holic.presentation.main.user.viewmodel.UserViewModelFactory
 import com.woody.cat.holic.presentation.main.viewmodel.SignViewModel
@@ -60,17 +61,17 @@ class UserFragment : Fragment() {
 
             initFirebaseAuth(getString(R.string.default_web_client_id))
 
-            eventSignIn.observe(viewLifecycleOwner, {
+            eventSignIn.observeEvent(viewLifecycleOwner, {
                 signIn(startGoogleSignInForResult, requireActivity())
             })
 
-            eventSignOut.observe(viewLifecycleOwner, {
+            eventSignOut.observeEvent(viewLifecycleOwner, {
                 signOut()
                 refreshSignInStatus()
                 onSignOutSuccess()
             })
 
-            eventSignInFail.observe(viewLifecycleOwner, {
+            eventSignInFail.observeEvent(viewLifecycleOwner, {
                 Toast.makeText(activity, "fail to sign in", Toast.LENGTH_SHORT).show()
             })
         }
@@ -78,7 +79,7 @@ class UserFragment : Fragment() {
         userViewModel = ViewModelProvider(activity, UserViewModelFactory()).get(UserViewModel::class.java).apply {
             binding.userViewModel = this
 
-            eventChangeDarkMode.observe(viewLifecycleOwner, { isDarkMode ->
+            eventChangeDarkMode.observeEvent(viewLifecycleOwner, { isDarkMode ->
                 if (isDarkMode) {
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
                 } else {

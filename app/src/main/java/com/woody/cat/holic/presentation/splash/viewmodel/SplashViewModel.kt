@@ -4,15 +4,15 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.woody.cat.holic.framework.base.BaseViewModel
-import kotlinx.coroutines.Dispatchers
+import com.woody.cat.holic.framework.base.Event
+import com.woody.cat.holic.framework.base.emit
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class SplashViewModel : BaseViewModel() {
 
-    private val _eventStartMainActivity = MutableLiveData<Unit>()
-    val eventStartMainActivity: LiveData<Unit> get() = _eventStartMainActivity
+    private val _eventStartMainActivity = MutableLiveData<Event<Unit>>()
+    val eventStartMainActivity: LiveData<Event<Unit>> get() = _eventStartMainActivity
 
     init {
         delayStartMainActivity()
@@ -20,10 +20,8 @@ class SplashViewModel : BaseViewModel() {
 
     private fun delayStartMainActivity() {
         viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                delay(2000)
-                _eventStartMainActivity.postValue(Unit)
-            }
+            delay(2000)
+            _eventStartMainActivity.emit()
         }
     }
 }

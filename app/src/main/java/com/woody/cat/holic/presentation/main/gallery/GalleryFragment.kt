@@ -12,6 +12,7 @@ import androidx.paging.LoadState
 import androidx.paging.PagingData
 import com.woody.cat.holic.R
 import com.woody.cat.holic.databinding.FragmentGalleryBinding
+import com.woody.cat.holic.framework.base.observeEvent
 import com.woody.cat.holic.framework.net.common.NotSignedInException
 import com.woody.cat.holic.presentation.main.MainPostingAdapter
 import com.woody.cat.holic.presentation.main.MainTab
@@ -52,7 +53,7 @@ class GalleryFragment : Fragment() {
             binding.mainViewModel = this
             postingAdapter = MainPostingAdapter(viewLifecycleOwner, this)
 
-            eventChangeGalleryPostingOrder.observe(viewLifecycleOwner, {
+            eventChangeGalleryPostingOrder.observeEvent(viewLifecycleOwner, {
                 galleryViewModel.changeToNextPostingOrder()
                 mainViewModel.refreshVisiblePostingOrder(MainTab.TAB_GALLERY)
                 postingAdapter.refresh()
@@ -62,11 +63,11 @@ class GalleryFragment : Fragment() {
         signViewModel = ViewModelProvider(activity, SignViewModelFactory()).get(SignViewModel::class.java).apply {
             binding.userViewModel = this
 
-            eventSignInSuccess.observe(viewLifecycleOwner, {
+            eventSignInSuccess.observeEvent(viewLifecycleOwner, {
                 galleryViewModel.initPagingFlow()
             })
 
-            eventSignOutSuccess.observe(viewLifecycleOwner, {
+            eventSignOutSuccess.observeEvent(viewLifecycleOwner, {
                 galleryViewModel.initPagingFlow()
             })
         }
@@ -96,7 +97,7 @@ class GalleryFragment : Fragment() {
                     }
             }
 
-            eventRefreshData.observe(viewLifecycleOwner, {
+            eventRefreshData.observeEvent(viewLifecycleOwner, {
                 initPagingFlow()
             })
         }
