@@ -10,7 +10,7 @@ import com.woody.cat.holic.data.PostingType
 import com.woody.cat.holic.framework.base.BaseViewModel
 import com.woody.cat.holic.framework.base.Event
 import com.woody.cat.holic.framework.base.emit
-import com.woody.cat.holic.framework.posting.GalleryPostingDataSource
+import com.woody.cat.holic.framework.paging.GalleryPostingDataSource
 import com.woody.cat.holic.usecase.posting.ChangeToNextPostingOrder
 import com.woody.cat.holic.usecase.posting.GetGalleryPostings
 import com.woody.cat.holic.usecase.user.GetCurrentUserId
@@ -30,6 +30,9 @@ class GalleryViewModel(
     private val _eventRefreshData = MutableLiveData<Event<Unit>>()
     val eventRefreshData: LiveData<Event<Unit>> get() = _eventRefreshData
 
+    private val _isLoading = MutableLiveData<Boolean>()
+    val isLoading: LiveData<Boolean> get() = _isLoading
+
     fun getGalleryPostingFlow() = Pager(
         config = PagingConfig(pageSize = PAGE_SIZE),
         pagingSourceFactory = {
@@ -40,9 +43,6 @@ class GalleryViewModel(
             )
         }
     ).flow.cachedIn(viewModelScope)
-
-    private val _isLoading = MutableLiveData<Boolean>()
-    val isLoading: LiveData<Boolean> get() = _isLoading
 
     fun setLoading(isLoading: Boolean) {
         _isLoading.postValue(isLoading)

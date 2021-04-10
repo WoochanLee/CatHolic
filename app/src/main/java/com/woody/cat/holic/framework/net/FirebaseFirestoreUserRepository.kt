@@ -1,16 +1,16 @@
-package com.woody.cat.holic.framework.user
+package com.woody.cat.holic.framework.net
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.woody.cat.holic.data.UserRepository
 import com.woody.cat.holic.data.common.Resource
 import com.woody.cat.holic.domain.User
-import com.woody.cat.holic.framework.net.UserDto
 import com.woody.cat.holic.framework.net.common.DataNotExistException
-import com.woody.cat.holic.framework.net.mapToUser
+import com.woody.cat.holic.framework.net.dto.UserDto
+import com.woody.cat.holic.framework.net.dto.mapToUser
 import kotlinx.coroutines.CompletableDeferred
 
-class UserRepositoryImpl(private val db: FirebaseFirestore, private val firebaseAuth: FirebaseAuth) : UserRepository {
+class FirebaseFirestoreUserRepository(private val db: FirebaseFirestore, private val firebaseAuth: FirebaseAuth) : UserRepository {
 
     companion object {
         const val COLLECTION_PROFILE_PATH = "profile"

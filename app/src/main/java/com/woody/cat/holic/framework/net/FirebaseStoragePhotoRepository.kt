@@ -1,4 +1,4 @@
-package com.woody.cat.holic.framework.photo
+package com.woody.cat.holic.framework.net
 
 import android.net.Uri
 import com.google.firebase.storage.StorageReference
@@ -10,7 +10,7 @@ import com.woody.cat.holic.framework.base.getFileExtension
 import kotlinx.coroutines.CompletableDeferred
 import java.io.File
 
-class PhotoRepositoryImpl(private val storageRef: StorageReference) : PhotoRepository {
+class FirebaseStoragePhotoRepository(private val storageRef: StorageReference) : PhotoRepository {
 
     companion object {
         const val STORAGE_PATH = "cat"

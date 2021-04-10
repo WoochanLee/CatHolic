@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="commentViewModel"
+            type="com.woody.cat.holic.presentation.main.posting.comment.viewmodel.CommentViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/background_color_main">
+
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@id/lyt_posting_comment"
+            app:layout_constraintTop_toTopOf="parent"
+            app:onRefreshListener="@{() -> commentViewModel.initData()}"
+            app:refreshing="@{commentViewModel.isLoading()}">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_comment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/item_posting_comment" />
+
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+        <LinearLayout
+            android:id="@+id/lyt_posting_comment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/background_color_sub"
+            android:orientation="horizontal"
+            android:paddingVertical="10dp"
+            android:paddingStart="5dp"
+            android:paddingEnd="0dp"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                app:cardCornerRadius="20dp">
+
+                <com.vanniktech.emoji.EmojiEditText
+                    android:id="@+id/eet_posting_comment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:hint="@string/comment_your_emoji"
+                    android:imeOptions="actionSend"
+                    android:inputType="textCapSentences|textMultiLine"
+                    android:maxHeight="150dp"
+                    android:maxLength="100"
+                    android:minHeight="50dp"
+                    android:paddingVertical="10dp"
+                    android:paddingHorizontal="20dp"
+                    android:text="@{commentViewModel.writeEmojiStr}"
+                    android:textColor="@color/background_color_main"
+                    android:textColorHint="@color/red"
+                    app:layout_constraintBottom_toBottomOf="parent" />
+            </androidx.cardview.widget.CardView>
+
+            <ImageButton
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:background="@null"
+                android:clickable="@{commentViewModel.writeEmojiStr.length() > 0}"
+                android:onClick="@{() -> commentViewModel.onClickAddComment()}"
+                android:src="@drawable/ic_send"
+                app:tint="@color/background_color_main" />
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

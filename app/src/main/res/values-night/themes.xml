@@ -21,6 +21,17 @@
         <item name="android:windowIsFloating">false</item>
         <item name="android:windowFullscreen">false</item>
         <item name="android:windowBackground">@android:color/transparent</item>
+
+        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
     </style>
 
+    <style name="BottomSlideAnimation">
+        <item name="android:windowEnterAnimation">@anim/slide_in_from_bottom</item>
+        <item name="android:windowExitAnimation">@anim/slide_out_to_bottom</item>
+    </style>
+
+    <style name="CenterZoomAnimation">
+        <item name="android:windowEnterAnimation">@anim/zoom_in_from_center</item>
+        <item name="android:windowExitAnimation">@anim/zoom_out_to_center</item>
+    </style>
 </resources>

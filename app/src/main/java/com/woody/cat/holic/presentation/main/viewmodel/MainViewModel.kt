@@ -8,8 +8,8 @@ import com.woody.cat.holic.data.PostingOrder
 import com.woody.cat.holic.framework.base.BaseViewModel
 import com.woody.cat.holic.framework.base.Event
 import com.woody.cat.holic.framework.base.emit
+import com.woody.cat.holic.framework.paging.item.PostingItem
 import com.woody.cat.holic.presentation.main.MainTab
-import com.woody.cat.holic.presentation.main.PostingItem
 import com.woody.cat.holic.usecase.posting.AddLikeInPosting
 import com.woody.cat.holic.usecase.posting.GetPostingOrder
 import com.woody.cat.holic.usecase.posting.RemoveLikeInPosting
@@ -43,6 +43,9 @@ class MainViewModel(
 
     private val _eventShowPostingDetail = MutableLiveData<Event<PostingItem>>()
     val eventShowPostingDetail: LiveData<Event<PostingItem>> get() = _eventShowPostingDetail
+
+    private val _eventShowCommentDialog = MutableLiveData<Event<PostingItem>>()
+    val eventShowCommentDialog: LiveData<Event<PostingItem>> get() = _eventShowCommentDialog
 
     private val _toolbarTitle = MutableLiveData<String>()
     val toolbarTitle: LiveData<String> get() = _toolbarTitle
@@ -97,6 +100,10 @@ class MainViewModel(
                 }
             }
         }
+    }
+
+    fun onClickComment(postingItem: PostingItem) {
+        _eventShowCommentDialog.emit(postingItem)
     }
 
     fun onClickUploadFab() {

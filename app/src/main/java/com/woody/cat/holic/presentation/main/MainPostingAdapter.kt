@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.DiffUtil
 import com.woody.cat.holic.R
 import com.woody.cat.holic.databinding.ItemMainPostingBinding
 import com.woody.cat.holic.framework.base.BaseViewHolder
+import com.woody.cat.holic.framework.paging.item.PostingItem
 import com.woody.cat.holic.presentation.main.viewmodel.MainViewModel
 
 class MainPostingAdapter(
@@ -19,9 +20,7 @@ class MainPostingAdapter(
     override fun areContentsTheSame(oldItem: PostingItem, newItem: PostingItem) = oldItem == newItem
 }) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<PostingItem, MainViewModel> {
-        val binding = DataBindingUtil.inflate<ItemMainPostingBinding>(LayoutInflater.from(parent.context), R.layout.item_main_posting, parent, false).apply {
-            viewModel = mainViewModel
-        }
+        val binding = DataBindingUtil.inflate<ItemMainPostingBinding>(LayoutInflater.from(parent.context), R.layout.item_main_posting, parent, false)
 
         return BaseViewHolder(binding, lifecycleOwner)
     }

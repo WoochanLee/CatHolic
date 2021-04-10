@@ -8,7 +8,7 @@ import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import com.woody.cat.holic.framework.base.*
 
-import com.woody.cat.holic.framework.posting.UploadedPostingDataSource
+import com.woody.cat.holic.framework.paging.UploadedPostingDataSource
 import com.woody.cat.holic.usecase.posting.GetUserUploadedPostings
 import com.woody.cat.holic.usecase.posting.RemoveUserPosting
 import com.woody.cat.holic.usecase.user.GetCurrentUserId
@@ -31,6 +31,9 @@ class MyPhotoViewModel(
     private val _eventRefreshData = MutableLiveData<Event<Unit>>()
     val eventRefreshData: LiveData<Event<Unit>> get() = _eventRefreshData
 
+    private val _isLoading = MutableLiveData<Boolean>()
+    val isLoading: LiveData<Boolean> get() = _isLoading
+
     fun getUploadedPostings() = Pager(
         config = PagingConfig(pageSize = PAGE_SIZE),
         pagingSourceFactory = {
@@ -41,9 +44,6 @@ class MyPhotoViewModel(
             )
         }
     ).flow.cachedIn(viewModelScope)
-
-    private val _isLoading = MutableLiveData<Boolean>()
-    val isLoading: LiveData<Boolean> get() = _isLoading
 
     fun setLoading(isLoading: Boolean) {
         _isLoading.postValue(isLoading)

@@ -10,7 +10,7 @@ import com.woody.cat.holic.data.PostingType
 import com.woody.cat.holic.framework.base.BaseViewModel
 import com.woody.cat.holic.framework.base.Event
 import com.woody.cat.holic.framework.base.emit
-import com.woody.cat.holic.framework.posting.LikePostingDataSource
+import com.woody.cat.holic.framework.paging.LikePostingDataSource
 import com.woody.cat.holic.usecase.posting.ChangeToNextPostingOrder
 import com.woody.cat.holic.usecase.posting.GetUserLikePostings
 import com.woody.cat.holic.usecase.user.GetCurrentUserId
@@ -30,6 +30,9 @@ class LikeViewModel(
     private val _eventRefreshData = MutableLiveData<Event<Unit>>()
     val eventRefreshData: LiveData<Event<Unit>> get() = _eventRefreshData
 
+    private val _isLoading = MutableLiveData<Boolean>()
+    val isLoading: LiveData<Boolean> get() = _isLoading
+
     fun getLikedPostingFlow() = Pager(
         config = PagingConfig(pageSize = PAGE_SIZE),
         pagingSourceFactory = {
@@ -40,9 +43,6 @@ class LikeViewModel(
             )
         }
     ).flow.cachedIn(viewModelScope)
-
-    private val _isLoading = MutableLiveData<Boolean>()
-    val isLoading: LiveData<Boolean> get() = _isLoading
 
     fun setLoading(isLoading: Boolean) {
         _isLoading.postValue(isLoading)

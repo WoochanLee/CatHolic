@@ -15,5 +15,9 @@ fun getFileExtension(filePath: String): String {
 }
 
 fun Date?.makePostingDateString(): String {
-    return SimpleDateFormat("MM.dd, yyyy", Locale.getDefault()).format(this ?: return "")
+    return SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(this ?: return "")
+}
+
+fun Date?.makeCommentDateString(): String {
+    return SimpleDateFormat("yyyy-MM-dd, hh:mm:ss", Locale.getDefault()).format(this ?: return "")
 }

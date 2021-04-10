@@ -1,4 +1,4 @@
-package com.woody.cat.holic.framework.net
+package com.woody.cat.holic.framework.net.dto
 
 import com.google.firebase.firestore.ServerTimestamp
 import com.woody.cat.holic.domain.Posting
@@ -13,6 +13,8 @@ data class PostingDto(
     val likedUserIds: List<String> = listOf(),
     val reported: Int = 0,
     val reportedUserIds: List<String> = listOf(),
+    val commented: Int = 0,
+    val commentIds: List<String> = listOf(),
 
     @ServerTimestamp
     val created: Date? = null,
@@ -29,6 +31,8 @@ fun Posting.mapToPostingDto(): PostingDto {
         likedUserIds = likedUserIds,
         reported = reported,
         reportedUserIds = reportedUserIds,
+        commented = commented,
+        commentIds = commentIds,
         created = null,
         updated = null
     )
@@ -42,6 +46,8 @@ fun PostingDto.mapToPosting(postingId: String): Posting {
         likedUserIds = likedUserIds,
         reported = reported,
         reportedUserIds = reportedUserIds,
+        commented = commented,
+        commentIds = commentIds,
         postingId = postingId,
         created = created.makePostingDateString(),
         updated = updated.makePostingDateString()

@@ -1,4 +1,4 @@
-package com.woody.cat.holic.framework.posting
+package com.woody.cat.holic.framework.net
 
 import com.google.firebase.firestore.*
 import com.woody.cat.holic.data.PostingOrder
@@ -6,24 +6,21 @@ import com.woody.cat.holic.data.PostingRepository
 import com.woody.cat.holic.data.PostingType
 import com.woody.cat.holic.data.common.Resource
 import com.woody.cat.holic.domain.Posting
+import com.woody.cat.holic.framework.COLLECTION_POSTING_PATH
 import com.woody.cat.holic.framework.base.CatHolicLogger
-import com.woody.cat.holic.framework.net.PostingDto
-import com.woody.cat.holic.framework.net.mapToPosting
-import com.woody.cat.holic.framework.net.mapToPostingDto
+import com.woody.cat.holic.framework.net.dto.PostingDto
+import com.woody.cat.holic.framework.net.dto.mapToPosting
+import com.woody.cat.holic.framework.net.dto.mapToPostingDto
 import kotlinx.coroutines.CompletableDeferred
 
 
-class PostingRepositoryImpl(private val db: FirebaseFirestore) : PostingRepository {
-
-    companion object {
-        const val COLLECTION_POSTING_PATH = "posting"
-    }
+class FirebaseFirestorePostingRepository(private val db: FirebaseFirestore) : PostingRepository {
 
     override var currentGalleryPostingOrder = PostingOrder.LIKED
     override var currentLikePostingOrder = PostingOrder.CREATED
 
     override fun getPostingOrder(postingType: PostingType): PostingOrder {
-        return when(postingType) {
+        return when (postingType) {
             PostingType.GALLERY -> currentGalleryPostingOrder
             PostingType.LIKED -> currentLikePostingOrder
             PostingType.USER -> PostingOrder.LIKED
@@ -31,7 +28,7 @@ class PostingRepositoryImpl(private val db: FirebaseFirestore) : PostingReposito
     }
 
     override fun changeToNextPostingOrder(postingType: PostingType) {
-        when(postingType) {
+        when (postingType) {
             PostingType.GALLERY -> currentGalleryPostingOrder = currentGalleryPostingOrder.getNextPostingOrder()
             PostingType.LIKED -> currentLikePostingOrder = currentLikePostingOrder.getNextPostingOrder()
             PostingType.USER -> Unit
@@ -190,17 +187,10 @@ class PostingRepositoryImpl(private val db: FirebaseFirestore) : PostingReposito
                 dataDeferred.complete(Resource.Error(IllegalStateException()))
             }
 
-            it.update(
-                db.collection(COLLECTION_POSTING_PATH)
-                    .document(postingId),
-                Posting::likedUserIds.name, FieldValue.arrayUnion(userId)
-            )
+            val postingDocumentReference = db.collection(COLLECTION_POSTING_PATH).document(postingId)
 
-            it.update(
-                db.collection(COLLECTION_POSTING_PATH)
-                    .document(postingId),
-                Posting::liked.name, (postingDto?.likedUserIds?.size ?: 0) + 1
-            )
+            it.update(postingDocumentReference, Posting::likedUserIds.name, FieldValue.arrayUnion(userId))
+            it.update(postingDocumentReference, Posting::liked.name, (postingDto?.likedUserIds?.size ?: 0) + 1)
         }.addOnSuccessListener {
             dataDeferred.complete(Resource.Success(Unit))
             CatHolicLogger.log("success to add liked to posting")
@@ -225,17 +215,10 @@ class PostingRepositoryImpl(private val db: FirebaseFirestore) : PostingReposito
                 dataDeferred.complete(Resource.Error(IllegalStateException()))
             }
 
-            it.update(
-                db.collection(COLLECTION_POSTING_PATH)
-                    .document(postingId),
-                Posting::likedUserIds.name, FieldValue.arrayRemove(userId)
-            )
+            val postingDocumentReference = db.collection(COLLECTION_POSTING_PATH).document(postingId)
 
-            it.update(
-                db.collection(COLLECTION_POSTING_PATH)
-                    .document(postingId),
-                Posting::liked.name, (postingDto?.likedUserIds?.size ?: 0) - 1
-            )
+            it.update(postingDocumentReference, Posting::likedUserIds.name, FieldValue.arrayRemove(userId))
+            it.update(postingDocumentReference, Posting::liked.name, (postingDto?.likedUserIds?.size ?: 0) - 1)
         }.addOnSuccessListener {
             dataDeferred.complete(Resource.Success(Unit))
             CatHolicLogger.log("success to add liked to posting")

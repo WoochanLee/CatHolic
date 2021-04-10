@@ -22,9 +22,7 @@ class UploadBigPreviewAdapter(
             R.layout.item_upload_uploaded_image_big,
             parent,
             false
-        ).apply {
-            this.viewModel = viewModel
-        }
+        )
 
         return BaseViewHolder(binding, lifecycleOwner)
     }

@@ -30,9 +30,7 @@ class UploadSmallPreviewAdapter(
                     R.layout.item_upload_upload_image,
                     parent,
                     false
-                ).apply {
-                    viewModel = this@UploadSmallPreviewAdapter.viewModel
-                }
+                )
             }
             else -> {
                 DataBindingUtil.inflate<ItemUploadUploadedImageSmallBinding>(

@@ -15,6 +15,7 @@ import com.woody.cat.holic.framework.base.observeEvent
 import com.woody.cat.holic.presentation.main.gallery.GalleryFragment
 import com.woody.cat.holic.presentation.main.like.LikeFragment
 import com.woody.cat.holic.presentation.main.posting.PostingDetailDialog
+import com.woody.cat.holic.presentation.main.posting.comment.CommentDialog
 import com.woody.cat.holic.presentation.main.user.UserFragment
 import com.woody.cat.holic.presentation.main.user.myphoto.MyPhotoActivity
 import com.woody.cat.holic.presentation.main.viewmodel.MainViewModel
@@ -44,7 +45,6 @@ class MainActivity : AppCompatActivity() {
         mainViewModel = ViewModelProvider(this, MainViewModelFactory()).get(MainViewModel::class.java).apply {
             binding.mainViewModel = this
 
-            //TODO: event be emitted when activity restored
             eventStartUploadActivity.observeEvent(this@MainActivity, {
                 startActivity(Intent(this@MainActivity, UploadActivity::class.java))
             })
@@ -59,6 +59,13 @@ class MainActivity : AppCompatActivity() {
                     .setPostingItem(it)
                     .create()
                     .show(supportFragmentManager, PostingDetailDialog::class.java.name)
+            })
+
+            eventShowCommentDialog.observeEvent(this@MainActivity, { postingItem ->
+                CommentDialog.Builder()
+                    .setPostingItem(postingItem)
+                    .create()
+                    .show(supportFragmentManager, CommentDialog::class.java.name)
             })
         }
 

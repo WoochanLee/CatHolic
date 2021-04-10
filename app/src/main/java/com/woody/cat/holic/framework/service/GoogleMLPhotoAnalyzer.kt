@@ -1,4 +1,4 @@
-package com.woody.cat.holic.framework.photo
+package com.woody.cat.holic.framework.service
 
 import android.content.Context
 import androidx.core.net.toUri
@@ -12,7 +12,7 @@ import com.woody.cat.holic.framework.base.printStackTraceIfDebug
 import kotlinx.coroutines.CompletableDeferred
 import java.io.File
 
-class PhotoAnalyzerImpl(private val context: Context) : PhotoAnalyzer {
+class GoogleMLPhotoAnalyzer(private val context: Context) : PhotoAnalyzer {
 
     companion object {
         const val DETECT_CAT_TEXT = "Cat"

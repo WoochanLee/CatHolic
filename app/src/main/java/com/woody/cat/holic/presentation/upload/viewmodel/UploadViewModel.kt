@@ -128,7 +128,7 @@ class UploadViewModel(
             withContext(Dispatchers.IO) {
                 val uploadPostingItemList = previewData.value
                     ?.filter { it.imageDownloadUrl.isNotEmpty() }
-                    ?.map { Posting(userId, it.imageDownloadUrl) }
+                    ?.map { Posting(userId = userId, downloadUrl = it.imageDownloadUrl) }
                     ?: listOf()
 
                 val result = addPosting(uploadPostingItemList)

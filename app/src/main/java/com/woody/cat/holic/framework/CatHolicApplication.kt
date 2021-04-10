@@ -8,15 +8,19 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
+import com.vanniktech.emoji.EmojiManager
+import com.vanniktech.emoji.twitter.TwitterEmojiProvider
 import com.woody.cat.holic.framework.base.AlbumMediaLoader
-import com.woody.cat.holic.framework.db.SettingRepositoryImpl
-import com.woody.cat.holic.framework.photo.PhotoAnalyzerImpl
-import com.woody.cat.holic.framework.photo.PhotoRepositoryImpl
-import com.woody.cat.holic.framework.posting.PostingRepositoryImpl
-import com.woody.cat.holic.framework.user.UserRepositoryImpl
+import com.woody.cat.holic.framework.db.SharedPreferenceSettingRepository
+import com.woody.cat.holic.framework.service.GoogleMLPhotoAnalyzer
+import com.woody.cat.holic.framework.net.FirebaseStoragePhotoRepository
+import com.woody.cat.holic.framework.net.FirebaseFirestoreCommentRepository
+import com.woody.cat.holic.framework.net.FirebaseFirestorePostingRepository
+import com.woody.cat.holic.framework.net.FirebaseFirestoreUserRepository
 import com.yanzhenjie.album.Album
 import com.yanzhenjie.album.AlbumConfig
 import java.util.*
+
 
 class CatHolicApplication : Application() {
 
@@ -32,11 +36,12 @@ class CatHolicApplication : Application() {
     private lateinit var firebaseFirestore: FirebaseFirestore
     private lateinit var firebaseStorageReference: StorageReference
 
-    val settingRepository by lazy { SettingRepositoryImpl(settingSharedPreferences) }
-    val photoRepository by lazy { PhotoRepositoryImpl(firebaseStorageReference) }
-    val postingRepository by lazy { PostingRepositoryImpl(firebaseFirestore) }
-    val userRepository by lazy { UserRepositoryImpl(firebaseFirestore, firebaseAuth) }
-    val photoAnalyzer by lazy { PhotoAnalyzerImpl(this) }
+    val settingRepository by lazy { SharedPreferenceSettingRepository(settingSharedPreferences) }
+    val photoRepository by lazy { FirebaseStoragePhotoRepository(firebaseStorageReference) }
+    val postingRepository by lazy { FirebaseFirestorePostingRepository(firebaseFirestore) }
+    val userRepository by lazy { FirebaseFirestoreUserRepository(firebaseFirestore, firebaseAuth) }
+    val commentRepository by lazy { FirebaseFirestoreCommentRepository(firebaseFirestore) }
+    val photoAnalyzer by lazy { GoogleMLPhotoAnalyzer(this) }
 
     override fun onCreate() {
         super.onCreate()
@@ -46,6 +51,7 @@ class CatHolicApplication : Application() {
         initFirebase()
         initLibraryAlbum()
         initSetting()
+        initEmoji()
     }
 
     private fun initSharedPreference() {
@@ -56,8 +62,8 @@ class CatHolicApplication : Application() {
         firebaseAuth = FirebaseAuth.getInstance()
         firebaseFirestore = FirebaseFirestore.getInstance()
         firebaseStorageReference = FirebaseStorage.getInstance().apply {
-            maxDownloadRetryTimeMillis = PhotoRepositoryImpl.MAX_RETRY_TIME_MILLIS
-            maxUploadRetryTimeMillis = PhotoRepositoryImpl.MAX_RETRY_TIME_MILLIS
+            maxDownloadRetryTimeMillis = FirebaseStoragePhotoRepository.MAX_RETRY_TIME_MILLIS
+            maxUploadRetryTimeMillis = FirebaseStoragePhotoRepository.MAX_RETRY_TIME_MILLIS
         }.reference
     }
 
@@ -77,5 +83,9 @@ class CatHolicApplication : Application() {
         } else {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         }
+    }
+
+    private fun initEmoji() {
+        EmojiManager.install(TwitterEmojiProvider())
     }
 }

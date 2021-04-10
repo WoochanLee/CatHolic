@@ -1,4 +1,4 @@
-package com.woody.cat.holic.framework.net
+package com.woody.cat.holic.framework.net.dto
 
 import com.woody.cat.holic.domain.User
 

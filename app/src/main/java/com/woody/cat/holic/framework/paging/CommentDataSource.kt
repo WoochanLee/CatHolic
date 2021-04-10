@@ -1,41 +1,40 @@
-package com.woody.cat.holic.framework.posting
+package com.woody.cat.holic.framework.paging
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.woody.cat.holic.data.common.Resource
 import com.woody.cat.holic.framework.base.handleResourceResult
-import com.woody.cat.holic.presentation.main.PostingItem
-import com.woody.cat.holic.presentation.main.UserItem
-import com.woody.cat.holic.presentation.main.mapToPostingItem
-import com.woody.cat.holic.usecase.user.GetCurrentUserId
-import com.woody.cat.holic.usecase.posting.GetGalleryPostings
+import com.woody.cat.holic.framework.paging.item.CommentItem
+import com.woody.cat.holic.framework.paging.item.UserItem
+import com.woody.cat.holic.framework.paging.item.mapToCommentItem
+import com.woody.cat.holic.usecase.posting.comment.GetComments
 import com.woody.cat.holic.usecase.user.GetUserProfile
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class GalleryPostingDataSource(
-    private val getCurrentUserId: GetCurrentUserId,
-    private val getGalleryPostings: GetGalleryPostings,
+class CommentDataSource(
+    private val postingId: String,
+    private val getComments: GetComments,
     private val getUserProfile: GetUserProfile
-) : PagingSource<String, PostingItem>() {
+) : PagingSource<String, CommentItem>() {
 
-    override suspend fun load(params: LoadParams<String>): LoadResult<String, PostingItem> {
-        getGalleryPostings(params.key).let { result ->
+    override suspend fun load(params: LoadParams<String>): LoadResult<String, CommentItem> {
+        getComments(params.key, postingId).let { result ->
             return if (result is Resource.Success) {
                 result.data
-                    .map { mapToPostingItem(it, getCurrentUserId()) }
-                    .let { postingList ->
+                    .map { it.mapToCommentItem() }
+                    .let { commentList ->
 
-                        postingList.forEach {
+                        commentList.forEach {
                             getPostingUserProfile(it.user)
                         }
 
                         LoadResult.Page(
-                            data = postingList,
+                            data = commentList,
                             prevKey = null,
-                            nextKey = postingList.lastOrNull()?.postingId
+                            nextKey = commentList.lastOrNull()?.commentId
                         )
                     }
             } else {
@@ -55,7 +54,7 @@ class GalleryPostingDataSource(
         }
     }
 
-    override fun getRefreshKey(state: PagingState<String, PostingItem>): String? {
+    override fun getRefreshKey(state: PagingState<String, CommentItem>): String? {
         return null
     }
 }

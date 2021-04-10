@@ -3,7 +3,7 @@ package com.woody.cat.holic.framework.db
 import android.content.SharedPreferences
 import com.woody.cat.holic.data.SettingRepository
 
-class SettingRepositoryImpl(private val settingSharedPreferences: SharedPreferences) : SettingRepository {
+class SharedPreferenceSettingRepository(private val settingSharedPreferences: SharedPreferences) : SettingRepository {
     companion object {
         private const val KEY_DARK_MODE = "DARK_MODE"
     }

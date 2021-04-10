@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.DiffUtil
 import com.woody.cat.holic.R
 import com.woody.cat.holic.databinding.ItemMyPhotoPostingBinding
 import com.woody.cat.holic.framework.base.BaseViewHolder
-import com.woody.cat.holic.presentation.main.PostingItem
+import com.woody.cat.holic.framework.paging.item.PostingItem
 import com.woody.cat.holic.presentation.main.user.myphoto.viewmodel.MyPhotoViewModel
 
 class MyPhotoPostingAdapter(
@@ -21,7 +21,6 @@ class MyPhotoPostingAdapter(
 }) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<PostingItem, MyPhotoViewModel> {
         val binding = DataBindingUtil.inflate<ItemMyPhotoPostingBinding>(LayoutInflater.from(parent.context), R.layout.item_my_photo_posting, parent, false)
-            .apply { viewModel = myPhotoViewModel }
 
         return BaseViewHolder(binding, lifecycleOwner)
     }

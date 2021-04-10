@@ -1,16 +1,16 @@
-package com.woody.cat.holic.framework.posting
+package com.woody.cat.holic.framework.paging
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.woody.cat.holic.data.common.Resource
 import com.woody.cat.holic.framework.base.handleResourceResult
 import com.woody.cat.holic.framework.net.common.NotSignedInException
-import com.woody.cat.holic.presentation.main.PostingItem
-import com.woody.cat.holic.presentation.main.UserItem
-import com.woody.cat.holic.presentation.main.mapToPostingItem
+import com.woody.cat.holic.framework.paging.item.PostingItem
+import com.woody.cat.holic.framework.paging.item.UserItem
+import com.woody.cat.holic.framework.paging.item.mapToPostingItem
+import com.woody.cat.holic.usecase.posting.GetUserUploadedPostings
 import com.woody.cat.holic.usecase.user.GetCurrentUserId
 import com.woody.cat.holic.usecase.user.GetUserProfile
-import com.woody.cat.holic.usecase.posting.GetUserUploadedPostings
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -27,7 +27,7 @@ class UploadedPostingDataSource(
             getUserUploadedPostings(params.key, userId).let { result ->
                 return if (result is Resource.Success) {
                     result.data
-                        .map { mapToPostingItem(it, userId) }
+                        .map { it.mapToPostingItem(userId) }
                         .let { postingList ->
 
                             postingList.forEach {
