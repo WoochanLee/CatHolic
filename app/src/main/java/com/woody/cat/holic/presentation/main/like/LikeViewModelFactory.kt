@@ -1,21 +1,19 @@
-package com.woody.cat.holic.presentation.main.gallery.viewmodel
+package com.woody.cat.holic.presentation.main.like
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import com.woody.cat.holic.framework.CatHolicApplication
 import com.woody.cat.holic.framework.base.BaseViewModelFactory
 import com.woody.cat.holic.usecase.posting.ChangeToNextPostingOrder
+import com.woody.cat.holic.usecase.posting.GetUserLikePostings
 import com.woody.cat.holic.usecase.user.GetCurrentUserId
-import com.woody.cat.holic.usecase.posting.GetGalleryPostings
 import com.woody.cat.holic.usecase.user.GetUserProfile
 
-class GalleryViewModelFactory : BaseViewModelFactory() {
+class LikeViewModelFactory : BaseViewModelFactory() {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(GalleryViewModel::class.java)) {
-            return GalleryViewModel(
+        if (modelClass.isAssignableFrom(LikeViewModel::class.java)) {
+            return LikeViewModel(
                 ChangeToNextPostingOrder(postingRepository),
                 GetCurrentUserId(userRepository),
-                GetGalleryPostings(postingRepository),
+                GetUserLikePostings(postingRepository),
                 GetUserProfile(userRepository)
             ) as T
         } else {

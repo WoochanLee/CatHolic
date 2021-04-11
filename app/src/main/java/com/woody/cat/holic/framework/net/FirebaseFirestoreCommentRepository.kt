@@ -30,7 +30,7 @@ class FirebaseFirestoreCommentRepository(private val db: FirebaseFirestore) : Co
             val postingDto = it.get(postingDocumentReference).toObject(PostingDto::class.java)
 
             it.set(commentDocumentReference, commentDto)
-            it.update(postingDocumentReference, Posting::commentIds.name, FieldValue.arrayUnion(comment.userId))
+            it.update(postingDocumentReference, Posting::commentIds.name, FieldValue.arrayUnion(commentDocumentReference.id))
             it.update(postingDocumentReference, Posting::commented.name, (postingDto?.commentIds?.size ?: 0) + 1)
         }.addOnSuccessListener {
             dataDeferred.complete(Resource.Success(Unit))
@@ -43,7 +43,7 @@ class FirebaseFirestoreCommentRepository(private val db: FirebaseFirestore) : Co
         return dataDeferred.await()
     }
 
-    override suspend fun getComments(key: String?, postingId: String): Resource<List<Comment>> {
+    override suspend fun getComments(key: String?, postingId: String, size: Int): Resource<List<Comment>> {
         val lastDoc = getPagingKey(key)
 
         if (lastDoc !is Resource.Success) {
@@ -59,7 +59,7 @@ class FirebaseFirestoreCommentRepository(private val db: FirebaseFirestore) : Co
                 if (key != null && lastDoc.data != null) {
                     startAfter(lastDoc.data as DocumentSnapshot)
                 } else this
-            }
+            }.limit(size.toLong())
             .get()
             .addOnSuccessListener { querySnapshot ->
                 val commentList = querySnapshot.documents.mapNotNull {

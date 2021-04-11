@@ -9,7 +9,6 @@ import com.woody.cat.holic.R
 import com.woody.cat.holic.databinding.ItemUploadUploadImageBinding
 import com.woody.cat.holic.databinding.ItemUploadUploadedImageSmallBinding
 import com.woody.cat.holic.framework.base.BaseViewHolder
-import com.woody.cat.holic.presentation.upload.viewmodel.UploadViewModel
 
 class UploadSmallPreviewAdapter(
     private val lifecycleOwner: LifecycleOwner,
@@ -30,7 +29,9 @@ class UploadSmallPreviewAdapter(
                     R.layout.item_upload_upload_image,
                     parent,
                     false
-                )
+                ).apply {
+                    viewModel = this@UploadSmallPreviewAdapter.viewModel
+                }
             }
             else -> {
                 DataBindingUtil.inflate<ItemUploadUploadedImageSmallBinding>(

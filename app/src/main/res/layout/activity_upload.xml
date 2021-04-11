@@ -9,7 +9,7 @@
 
         <variable
             name="viewModel"
-            type="com.woody.cat.holic.presentation.upload.viewmodel.UploadViewModel" />
+            type="com.woody.cat.holic.presentation.upload.UploadViewModel" />
     </data>
 
     <LinearLayout
@@ -148,19 +148,19 @@
                 android:clickable="@{viewModel.isUploadButtonEnabled()}"
                 android:foreground="?android:selectableItemBackground"
                 android:onClick="@{() -> viewModel.onClickUploadPosting()}"
-                app:cardBackgroundColor="@color/background_color_sub"
+                app:cardBackgroundColor="@{viewModel.isUploadButtonEnabled() ? @color/background_color_sub : @color/gray}"
                 app:cardCornerRadius="10dp"
-                app:cardElevation="0dp">
+                app:cardElevation="0dp"
+                tools:cardBackgroundColor="@color/gray">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:text="@{viewModel.isUploadButtonEnabled() ? @string/post_these_photos : @string/please_upload_photos_first}"
-                    android:textColor="@{viewModel.isUploadButtonEnabled() ? @color/text_color_reverse : @color/gray}"
+                    android:textColor="@{viewModel.isUploadButtonEnabled() ? @color/text_color_reverse : @color/text_color}"
                     android:textSize="17dp"
                     android:textStyle="bold"
-                    tools:textColor="@color/gray"
                     tools:text="@string/please_upload_photos_first" />
             </androidx.cardview.widget.CardView>
         </LinearLayout>

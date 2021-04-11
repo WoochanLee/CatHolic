@@ -10,7 +10,6 @@ import com.woody.cat.holic.R
 import com.woody.cat.holic.databinding.ItemMyPhotoPostingBinding
 import com.woody.cat.holic.framework.base.BaseViewHolder
 import com.woody.cat.holic.framework.paging.item.PostingItem
-import com.woody.cat.holic.presentation.main.user.myphoto.viewmodel.MyPhotoViewModel
 
 class MyPhotoPostingAdapter(
     private val lifecycleOwner: LifecycleOwner,

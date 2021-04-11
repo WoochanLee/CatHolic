@@ -16,12 +16,9 @@ import com.woody.cat.holic.presentation.main.gallery.GalleryFragment
 import com.woody.cat.holic.presentation.main.like.LikeFragment
 import com.woody.cat.holic.presentation.main.posting.PostingDetailDialog
 import com.woody.cat.holic.presentation.main.posting.comment.CommentDialog
+import com.woody.cat.holic.presentation.main.posting.likelist.LikeListDialog
 import com.woody.cat.holic.presentation.main.user.UserFragment
 import com.woody.cat.holic.presentation.main.user.myphoto.MyPhotoActivity
-import com.woody.cat.holic.presentation.main.viewmodel.MainViewModel
-import com.woody.cat.holic.presentation.main.viewmodel.MainViewModelFactory
-import com.woody.cat.holic.presentation.main.viewmodel.SignViewModel
-import com.woody.cat.holic.presentation.main.viewmodel.SignViewModelFactory
 import com.woody.cat.holic.presentation.upload.UploadActivity
 
 class MainActivity : AppCompatActivity() {
@@ -66,6 +63,13 @@ class MainActivity : AppCompatActivity() {
                     .setPostingItem(postingItem)
                     .create()
                     .show(supportFragmentManager, CommentDialog::class.java.name)
+            })
+
+            eventShowLikeListDialog.observeEvent(this@MainActivity, { postingItem ->
+                LikeListDialog.Builder()
+                    .setLikeUserList(postingItem.likedUserIds)
+                    .create()
+                    .show(supportFragmentManager, LikeListDialog::class.java.name)
             })
         }
 

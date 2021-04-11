@@ -1,4 +1,4 @@
-package com.woody.cat.holic.presentation.main.viewmodel
+package com.woody.cat.holic.presentation.main
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -46,6 +46,9 @@ class MainViewModel(
 
     private val _eventShowCommentDialog = MutableLiveData<Event<PostingItem>>()
     val eventShowCommentDialog: LiveData<Event<PostingItem>> get() = _eventShowCommentDialog
+
+    private val _eventShowLikeListDialog = MutableLiveData<Event<PostingItem>>()
+    val eventShowLikeListDialog: LiveData<Event<PostingItem>> get() = _eventShowLikeListDialog
 
     private val _toolbarTitle = MutableLiveData<String>()
     val toolbarTitle: LiveData<String> get() = _toolbarTitle
@@ -124,6 +127,10 @@ class MainViewModel(
 
     fun onClickPostingImage(postingItem: PostingItem) {
         _eventShowPostingDetail.emit(postingItem)
+    }
+
+    fun onClickLikeList(postingItem: PostingItem) {
+        _eventShowLikeListDialog.emit(postingItem)
     }
 
     fun setVisibleUploadFab(isVisible: Boolean) {

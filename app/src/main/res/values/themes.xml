@@ -25,6 +25,8 @@
         <item name="android:statusBarColor">@color/black</item>
     </style>
 
+    <style name="dialog_fullscreen.dark" parent="dialog_fullscreen" />
+
     <style name="BottomSlideAnimation">
         <item name="android:windowEnterAnimation">@anim/slide_in_from_bottom</item>
         <item name="android:windowExitAnimation">@anim/slide_out_to_bottom</item>

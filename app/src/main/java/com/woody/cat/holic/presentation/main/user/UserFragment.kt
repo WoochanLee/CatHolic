@@ -17,10 +17,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.woody.cat.holic.R
 import com.woody.cat.holic.databinding.FragmentUserBinding
 import com.woody.cat.holic.framework.base.observeEvent
-import com.woody.cat.holic.presentation.main.user.viewmodel.UserViewModel
-import com.woody.cat.holic.presentation.main.user.viewmodel.UserViewModelFactory
-import com.woody.cat.holic.presentation.main.viewmodel.SignViewModel
-import com.woody.cat.holic.presentation.main.viewmodel.SignViewModelFactory
+import com.woody.cat.holic.presentation.main.SignViewModel
+import com.woody.cat.holic.presentation.main.SignViewModelFactory
 
 class UserFragment : Fragment() {
 

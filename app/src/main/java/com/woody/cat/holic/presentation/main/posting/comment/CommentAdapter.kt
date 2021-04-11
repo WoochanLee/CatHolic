@@ -10,10 +10,6 @@ import com.woody.cat.holic.R
 import com.woody.cat.holic.databinding.ItemPostingCommentBinding
 import com.woody.cat.holic.framework.base.BaseViewHolder
 import com.woody.cat.holic.framework.paging.item.CommentItem
-import com.woody.cat.holic.framework.paging.item.PostingItem
-import com.woody.cat.holic.presentation.main.posting.comment.viewmodel.CommentViewModel
-import com.woody.cat.holic.presentation.main.posting.viewmodel.PostingDetailViewModel
-import com.woody.cat.holic.presentation.main.viewmodel.MainViewModel
 
 class CommentAdapter(
     private val lifecycleOwner: LifecycleOwner,

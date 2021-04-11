@@ -1,4 +1,4 @@
-package com.woody.cat.holic.presentation.main.posting.comment.viewmodel
+package com.woody.cat.holic.presentation.main.posting.comment
 
 import androidx.lifecycle.ViewModel
 import com.woody.cat.holic.framework.base.BaseViewModelFactory

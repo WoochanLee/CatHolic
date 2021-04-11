@@ -6,7 +6,7 @@
 
         <variable
             name="viewModel"
-            type="com.woody.cat.holic.presentation.main.viewmodel.MainViewModel" />
+            type="com.woody.cat.holic.presentation.main.MainViewModel" />
 
         <variable
             name="position"
@@ -104,19 +104,19 @@
                         <androidx.constraintlayout.widget.ConstraintLayout
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
-                            android:layout_marginStart="15dp"
                             android:gravity="center_vertical"
+                            android:onClick="@{() -> viewModel.onClickLikeList(model)}"
+                            android:paddingHorizontal="15dp"
                             app:layout_constraintStart_toStartOf="parent">
 
                             <ImageView
                                 android:layout_width="20dp"
                                 android:layout_height="20dp"
-                                android:onClick="@{() -> viewModel.onClickLike(model)}"
                                 android:src="@drawable/ic_heart_fill"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toTopOf="parent"
-                                app:tint="@{model.currentUserLiked ? @color/red : @color/white}"
+                                app:tint="@{model.currentUserLiked ? @color/red : @color/text_color}"
                                 tools:tint="@color/red" />
 
                             <TextView
@@ -124,7 +124,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="25dp"
                                 android:text="@{String.valueOf(model.liked)}"
-                                android:textColor="@{model.currentUserLiked ? @color/red : @color/white}"
+                                android:textColor="@{model.currentUserLiked ? @color/red : @color/text_color}"
                                 android:textSize="17dp"
                                 android:textStyle="bold"
                                 app:layout_constraintBottom_toBottomOf="parent"
@@ -138,8 +138,9 @@
                         <androidx.constraintlayout.widget.ConstraintLayout
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
-                            android:layout_marginEnd="15dp"
                             android:gravity="center_vertical"
+                            android:onClick="@{() -> viewModel.onClickComment(model)}"
+                            android:paddingHorizontal="15dp"
                             app:layout_constraintEnd_toEndOf="parent">
 
                             <ImageView
@@ -155,13 +156,14 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="25dp"
-                                android:text="0"
+                                android:text="@{String.valueOf(model.commented)}"
                                 android:textColor="@color/text_color"
                                 android:textSize="17dp"
                                 android:textStyle="bold"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent" />
+                                app:layout_constraintTop_toTopOf="parent"
+                                tools:text="0" />
 
                         </androidx.constraintlayout.widget.ConstraintLayout>
                     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -193,7 +195,7 @@
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toTopOf="parent"
-                                app:tint="@{model.currentUserLiked ? @color/red : @color/white}"
+                                app:tint="@{model.currentUserLiked ? @color/red : @color/text_color}"
                                 tools:src="@drawable/ic_heart_fill"
                                 tools:tint="@color/red" />
 
@@ -201,7 +203,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/like"
-                                android:textColor="@{model.currentUserLiked ? @color/red : @color/white}"
+                                android:textColor="@{model.currentUserLiked ? @color/red : @color/text_color}"
                                 android:textSize="15dp"
                                 android:textStyle="bold"
                                 tools:textColor="@color/red" />

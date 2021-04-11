@@ -1,4 +1,4 @@
-package com.woody.cat.holic.presentation.main.user.myphoto.viewmodel
+package com.woody.cat.holic.presentation.main.user.myphoto
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -9,6 +9,7 @@ import androidx.paging.cachedIn
 import com.woody.cat.holic.framework.base.*
 
 import com.woody.cat.holic.framework.paging.UploadedPostingDataSource
+import com.woody.cat.holic.framework.paging.item.PostingItem
 import com.woody.cat.holic.usecase.posting.GetUserUploadedPostings
 import com.woody.cat.holic.usecase.posting.RemoveUserPosting
 import com.woody.cat.holic.usecase.user.GetCurrentUserId
@@ -30,6 +31,12 @@ class MyPhotoViewModel(
 
     private val _eventRefreshData = MutableLiveData<Event<Unit>>()
     val eventRefreshData: LiveData<Event<Unit>> get() = _eventRefreshData
+
+    private val _eventShowCommentDialog = MutableLiveData<Event<PostingItem>>()
+    val eventShowCommentDialog: LiveData<Event<PostingItem>> get() = _eventShowCommentDialog
+
+    private val _eventShowLikeListDialog = MutableLiveData<Event<PostingItem>>()
+    val eventShowLikeListDialog: LiveData<Event<PostingItem>> get() = _eventShowLikeListDialog
 
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> get() = _isLoading
@@ -66,5 +73,13 @@ class MyPhotoViewModel(
                 })
             }
         }
+    }
+
+    fun onClickComment(postingItem: PostingItem) {
+        _eventShowCommentDialog.emit(postingItem)
+    }
+
+    fun onClickLikeList(postingItem: PostingItem) {
+        _eventShowLikeListDialog.emit(postingItem)
     }
 }

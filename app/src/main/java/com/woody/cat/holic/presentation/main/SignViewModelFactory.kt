@@ -1,4 +1,4 @@
-package com.woody.cat.holic.presentation.main.viewmodel
+package com.woody.cat.holic.presentation.main
 
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseAuth

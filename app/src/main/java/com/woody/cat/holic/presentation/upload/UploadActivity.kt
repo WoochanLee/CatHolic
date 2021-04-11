@@ -11,8 +11,6 @@ import androidx.viewpager2.widget.ViewPager2
 import com.woody.cat.holic.R
 import com.woody.cat.holic.databinding.ActivityUploadBinding
 import com.woody.cat.holic.framework.base.observeEvent
-import com.woody.cat.holic.presentation.upload.viewmodel.UploadViewModel
-import com.woody.cat.holic.presentation.upload.viewmodel.UploadViewModelFactory
 import com.yanzhenjie.album.Album
 import com.yanzhenjie.album.api.widget.Widget
 

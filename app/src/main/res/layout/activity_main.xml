@@ -7,11 +7,11 @@
 
         <variable
             name="mainViewModel"
-            type="com.woody.cat.holic.presentation.main.viewmodel.MainViewModel" />
+            type="com.woody.cat.holic.presentation.main.MainViewModel" />
 
         <variable
             name="userViewModel"
-            type="com.woody.cat.holic.presentation.main.viewmodel.SignViewModel" />
+            type="com.woody.cat.holic.presentation.main.SignViewModel" />
 
         <import type="android.view.View" />
     </data>

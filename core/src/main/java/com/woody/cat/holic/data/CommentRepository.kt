@@ -7,5 +7,5 @@ interface CommentRepository {
 
     suspend fun addComment(comment: Comment): Resource<Unit>
 
-    suspend fun getComments(key: String?, postingId: String): Resource<List<Comment>>
+    suspend fun getComments(key: String?, postingId: String, size: Int): Resource<List<Comment>>
 }

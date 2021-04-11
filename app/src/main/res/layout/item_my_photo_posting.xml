@@ -6,7 +6,7 @@
 
         <variable
             name="viewModel"
-            type="com.woody.cat.holic.presentation.main.user.myphoto.viewmodel.MyPhotoViewModel" />
+            type="com.woody.cat.holic.presentation.main.user.myphoto.MyPhotoViewModel" />
 
         <variable
             name="position"
@@ -105,6 +105,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center"
+                        android:onClick="@{() -> viewModel.onClickLikeList(model)}"
                         android:orientation="horizontal">
 
                         <ImageView
@@ -141,6 +142,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center"
+                        android:onClick="@{() -> viewModel.onClickComment(model)}"
                         android:orientation="horizontal">
 
                         <ImageView
@@ -156,7 +158,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="0"
+                            android:text="@{String.valueOf(model.commented)}"
                             android:textColor="@color/text_color"
                             android:textSize="17dp"
                             android:textStyle="bold"

@@ -7,11 +7,11 @@
 
         <variable
             name="mainViewModel"
-            type="com.woody.cat.holic.presentation.main.viewmodel.MainViewModel" />
+            type="com.woody.cat.holic.presentation.main.MainViewModel" />
 
         <variable
             name="postingDetailViewModel"
-            type="com.woody.cat.holic.presentation.main.posting.viewmodel.PostingDetailViewModel" />
+            type="com.woody.cat.holic.presentation.main.posting.PostingDetailViewModel" />
 
         <import type="android.view.View" />
 
@@ -31,38 +31,60 @@
             app:imageUrl="@{postingDetailViewModel.postingItem.downloadUrl}"
             tools:src="@drawable/ic_toyger_cat" />
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:gravity="center_vertical"
             android:orientation="horizontal"
             android:visibility="@{postingDetailViewModel.isMenuVisible() ? View.VISIBLE : View.GONE}"
             app:layout_constraintTop_toTopOf="parent">
 
-            <androidx.cardview.widget.CardView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="5dp"
-                app:cardBackgroundColor="@color/gray"
-                app:cardCornerRadius="14dp"
-                app:cardElevation="0dp">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:imageUrl="@{postingDetailViewModel.postingItem.user.userPhotoUrl}" />
-
-            </androidx.cardview.widget.CardView>
-
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{postingDetailViewModel.postingItem.user.displayName}"
+                android:layout_marginStart="15dp"
+                android:text="@{postingDetailViewModel.postingItem.created}"
                 android:textColor="@color/white"
-                android:textSize="15dp"
-                tools:text="Woody" />
-        </LinearLayout>
+                android:textSize="18dp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="2021-04-11" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:gravity="center"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginEnd="5dp"
+                    app:cardBackgroundColor="@color/gray"
+                    app:cardCornerRadius="14dp"
+                    app:cardElevation="0dp">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:imageUrl="@{postingDetailViewModel.postingItem.user.userPhotoUrl}" />
+
+                </androidx.cardview.widget.CardView>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{postingDetailViewModel.postingItem.user.displayName}"
+                    android:textColor="@color/white"
+                    android:textSize="15dp"
+                    tools:text="Woody" />
+            </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -79,14 +101,14 @@
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_marginStart="15dp"
                     android:gravity="center_vertical"
+                    android:onClick="@{() -> mainViewModel.onClickLikeList(postingDetailViewModel.postingItem)}"
+                    android:paddingHorizontal="15dp"
                     app:layout_constraintStart_toStartOf="parent">
 
                     <ImageView
                         android:layout_width="20dp"
                         android:layout_height="20dp"
-                        android:onClick="@{() -> mainViewModel.onClickLike(postingDetailViewModel.postingItem)}"
                         android:src="@drawable/ic_heart_fill"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -113,8 +135,9 @@
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_marginEnd="15dp"
                     android:gravity="center_vertical"
+                    android:onClick="@{() -> postingDetailViewModel.onClickComment()}"
+                    android:paddingHorizontal="15dp"
                     app:layout_constraintEnd_toEndOf="parent">
 
                     <ImageView
@@ -130,13 +153,14 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="25dp"
-                        android:text="0"
+                        android:text="@{String.valueOf(postingDetailViewModel.postingItem.commented)}"
                         android:textColor="@color/white"
                         android:textSize="17dp"
                         android:textStyle="bold"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:text="0" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>

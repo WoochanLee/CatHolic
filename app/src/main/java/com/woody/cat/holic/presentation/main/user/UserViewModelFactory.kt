@@ -1,8 +1,6 @@
-package com.woody.cat.holic.presentation.main.user.viewmodel
+package com.woody.cat.holic.presentation.main.user
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import com.woody.cat.holic.framework.CatHolicApplication
 import com.woody.cat.holic.framework.base.BaseViewModelFactory
 
 class UserViewModelFactory : BaseViewModelFactory() {

@@ -25,4 +25,6 @@
     <string name="dark_mode">Dark Mode</string>
     <string name="we_didn_t_find_any_cats_in_this_photo">"We didn't find any cats in this photo."</string>
     <string name="comment_your_emoji">Comment Your Emoji 😋</string>
+    <string name="emoji_comment">EMOJI COMMENT</string>
+    <string name="liked_users">LIKED USERS</string>
 </resources>

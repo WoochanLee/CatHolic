@@ -1,4 +1,4 @@
-package com.woody.cat.holic.presentation.main.posting.comment.viewmodel
+package com.woody.cat.holic.presentation.main.posting.comment
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -10,7 +10,6 @@ import com.woody.cat.holic.domain.Comment
 import com.woody.cat.holic.framework.base.*
 import com.woody.cat.holic.framework.paging.CommentDataSource
 import com.woody.cat.holic.framework.paging.item.PostingItem
-import com.woody.cat.holic.presentation.main.posting.viewmodel.PostingDetailViewModel
 import com.woody.cat.holic.usecase.posting.comment.AddComment
 import com.woody.cat.holic.usecase.posting.comment.GetComments
 import com.woody.cat.holic.usecase.user.GetCurrentUserId
@@ -64,20 +63,31 @@ class CommentViewModel(
     }
 
     fun onClickAddComment() {
-
         val currentUserId = getCurrentUserId() ?: return
 
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                val result = addComment(Comment(
-                    userId = currentUserId,
-                    postingId = postingItem.postingId,
-                    commentEmojis = writeEmojiStr.value ?: ""
-                ))
+                setLoading(true)
+
+                val commentEmojis = writeEmojiStr.value ?: ""
+
+                _writingEmojiStr.postValue("")
+
+                val result = addComment(
+                    Comment(
+                        userId = currentUserId,
+                        postingId = postingItem.postingId,
+                        commentEmojis = commentEmojis
+                    )
+                )
+
+                _writingEmojiStr.postValue("")
+
+                setLoading(false)
 
                 handleResourceResult(result, onSuccess = {
-                    _writingEmojiStr.postValue("")
                     initData()
+                    postingItem.commented.apply { postValue((value ?: 0) + 1) }
                     //_eventShowToast.emit("success to add comment")
                 }, onError = {
                     //TODO: handle network

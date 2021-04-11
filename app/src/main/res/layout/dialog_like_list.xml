@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
         <variable
-            name="viewModel"
-            type="com.woody.cat.holic.presentation.main.user.myphoto.MyPhotoViewModel" />
+            name="likeListViewModel"
+            type="com.woody.cat.holic.presentation.main.posting.likelist.LikeListViewModel" />
     </data>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/background_color_main"
@@ -30,7 +29,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/my_cat_photo"
+                    android:text="@string/liked_users"
                     android:textAllCaps="true"
                     android:textColor="@color/text_color"
                     android:textSize="20dp"
@@ -42,23 +41,17 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.appcompat.widget.Toolbar>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/gray" />
 
-        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_like"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:onRefreshListener="@{() -> viewModel.initData()}"
-            app:refreshing="@{viewModel.isLoading()}">
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_main_gallery"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/background_color_main"
-                android:scrollbars="none"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                tools:listitem="@layout/item_my_photo_posting" />
-
-        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/item_like_list" />
 
     </LinearLayout>
 </layout>

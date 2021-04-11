@@ -5,7 +5,7 @@
 
         <variable
             name="commentViewModel"
-            type="com.woody.cat.holic.presentation.main.posting.comment.viewmodel.CommentViewModel" />
+            type="com.woody.cat.holic.presentation.main.posting.comment.CommentViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -14,11 +14,50 @@
         android:layout_height="match_parent"
         android:background="@color/background_color_main">
 
+        <LinearLayout
+            android:id="@+id/lyt_posting_comment_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/tb_my_cat_photos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/background_color_main"
+                app:contentInsetStartWithNavigation="0dp">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/emoji_comment"
+                        android:textAllCaps="true"
+                        android:textColor="@color/text_color"
+                        android:textSize="20dp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.appcompat.widget.Toolbar>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/gray" />
+        </LinearLayout>
+
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layout_constraintBottom_toTopOf="@id/lyt_posting_comment"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/lyt_posting_comment_toolbar"
             app:onRefreshListener="@{() -> commentViewModel.initData()}"
             app:refreshing="@{commentViewModel.isLoading()}">
 
@@ -35,7 +74,7 @@
             android:id="@+id/lyt_posting_comment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/background_color_sub"
+            android:background="@color/background_color_main"
             android:orientation="horizontal"
             android:paddingVertical="10dp"
             android:paddingStart="5dp"
@@ -46,24 +85,25 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                app:cardCornerRadius="20dp">
+                app:cardBackgroundColor="@color/gray"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="0dp">
 
                 <com.vanniktech.emoji.EmojiEditText
                     android:id="@+id/eet_posting_comment"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@null"
-                    android:hint="@string/comment_your_emoji"
                     android:imeOptions="actionSend"
                     android:inputType="textCapSentences|textMultiLine"
                     android:maxHeight="150dp"
                     android:maxLength="100"
                     android:minHeight="50dp"
-                    android:paddingVertical="10dp"
                     android:paddingHorizontal="20dp"
+                    android:paddingVertical="10dp"
                     android:text="@{commentViewModel.writeEmojiStr}"
                     android:textColor="@color/background_color_main"
-                    android:textColorHint="@color/red"
+                    android:textColorHint="@color/white"
                     app:layout_constraintBottom_toBottomOf="parent" />
             </androidx.cardview.widget.CardView>
 
@@ -74,7 +114,7 @@
                 android:clickable="@{commentViewModel.writeEmojiStr.length() > 0}"
                 android:onClick="@{() -> commentViewModel.onClickAddComment()}"
                 android:src="@drawable/ic_send"
-                app:tint="@color/background_color_main" />
+                app:tint="@color/background_color_sub" />
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

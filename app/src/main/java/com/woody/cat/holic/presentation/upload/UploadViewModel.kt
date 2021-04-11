@@ -1,4 +1,4 @@
-package com.woody.cat.holic.presentation.upload.viewmodel
+package com.woody.cat.holic.presentation.upload
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -7,8 +7,6 @@ import com.woody.cat.holic.R
 import com.woody.cat.holic.domain.Posting
 import com.woody.cat.holic.framework.base.*
 import com.woody.cat.holic.framework.net.common.NotSignedInException
-import com.woody.cat.holic.presentation.upload.UploadItem
-import com.woody.cat.holic.presentation.upload.UploadStatus
 import com.woody.cat.holic.usecase.photo.DetectCatFromPhoto
 import com.woody.cat.holic.usecase.photo.UploadPhoto
 import com.woody.cat.holic.usecase.posting.AddPosting

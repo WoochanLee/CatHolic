@@ -19,8 +19,6 @@ import com.woody.cat.holic.databinding.DialogPostingCommentBinding
 import com.woody.cat.holic.framework.base.observeEvent
 import com.woody.cat.holic.framework.net.common.NotSignedInException
 import com.woody.cat.holic.framework.paging.item.PostingItem
-import com.woody.cat.holic.presentation.main.posting.comment.viewmodel.CommentViewModel
-import com.woody.cat.holic.presentation.main.posting.comment.viewmodel.CommentViewModelFactory
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChangedBy

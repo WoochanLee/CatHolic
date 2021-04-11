@@ -14,16 +14,8 @@ import com.woody.cat.holic.R
 import com.woody.cat.holic.databinding.FragmentGalleryBinding
 import com.woody.cat.holic.framework.base.observeEvent
 import com.woody.cat.holic.framework.net.common.NotSignedInException
-import com.woody.cat.holic.presentation.main.MainPostingAdapter
-import com.woody.cat.holic.presentation.main.MainTab
-import com.woody.cat.holic.presentation.main.gallery.viewmodel.GalleryViewModel
-import com.woody.cat.holic.presentation.main.gallery.viewmodel.GalleryViewModelFactory
-import com.woody.cat.holic.presentation.main.viewmodel.MainViewModel
-import com.woody.cat.holic.presentation.main.viewmodel.MainViewModelFactory
-import com.woody.cat.holic.presentation.main.viewmodel.SignViewModel
-import com.woody.cat.holic.presentation.main.viewmodel.SignViewModelFactory
+import com.woody.cat.holic.presentation.main.*
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.launch

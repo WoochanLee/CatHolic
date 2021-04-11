@@ -11,11 +11,9 @@ import com.woody.cat.holic.R
 import com.woody.cat.holic.databinding.DialogPostingDetailBinding
 import com.woody.cat.holic.framework.base.observeEvent
 import com.woody.cat.holic.framework.paging.item.PostingItem
+import com.woody.cat.holic.presentation.main.MainViewModel
+import com.woody.cat.holic.presentation.main.MainViewModelFactory
 import com.woody.cat.holic.presentation.main.posting.comment.CommentDialog
-import com.woody.cat.holic.presentation.main.posting.viewmodel.PostingDetailViewModel
-import com.woody.cat.holic.presentation.main.posting.viewmodel.PostingDetailViewModelFactory
-import com.woody.cat.holic.presentation.main.viewmodel.MainViewModel
-import com.woody.cat.holic.presentation.main.viewmodel.MainViewModelFactory
 
 class PostingDetailDialog : DialogFragment() {
 
@@ -27,7 +25,7 @@ class PostingDetailDialog : DialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setStyle(STYLE_NO_TITLE, R.style.dialog_fullscreen)
+        setStyle(STYLE_NO_TITLE, R.style.dialog_fullscreen_dark)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

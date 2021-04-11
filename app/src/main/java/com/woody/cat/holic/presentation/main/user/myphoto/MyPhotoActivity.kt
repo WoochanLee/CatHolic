@@ -10,9 +10,8 @@ import androidx.paging.LoadState
 import com.woody.cat.holic.R
 import com.woody.cat.holic.databinding.ActivityMyPhotoBinding
 import com.woody.cat.holic.framework.base.observeEvent
-import com.woody.cat.holic.presentation.main.like.viewmodel.LikeViewModel
-import com.woody.cat.holic.presentation.main.user.myphoto.viewmodel.MyPhotoViewModel
-import com.woody.cat.holic.presentation.main.user.myphoto.viewmodel.MyPhotoViewModelFactory
+import com.woody.cat.holic.presentation.main.posting.comment.CommentDialog
+import com.woody.cat.holic.presentation.main.posting.likelist.LikeListDialog
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -41,7 +40,7 @@ class MyPhotoActivity : AppCompatActivity() {
                 postingAdapter.loadStateFlow.collectLatest { loadStates ->
                     setLoading(loadStates.refresh is LoadState.Loading)
 
-                    if(loadStates.refresh is LoadState.Error) {
+                    if (loadStates.refresh is LoadState.Error) {
                         //TODO: handle network error
                     }
                 }
@@ -49,6 +48,20 @@ class MyPhotoActivity : AppCompatActivity() {
 
             eventRefreshData.observeEvent(this@MyPhotoActivity, {
                 initPagingFlow()
+            })
+
+            eventShowCommentDialog.observeEvent(this@MyPhotoActivity, { postingItem ->
+                CommentDialog.Builder()
+                    .setPostingItem(postingItem)
+                    .create()
+                    .show(supportFragmentManager, CommentDialog::class.java.name)
+            })
+
+            eventShowLikeListDialog.observeEvent(this@MyPhotoActivity, { postingItem ->
+                LikeListDialog.Builder()
+                    .setLikeUserList(postingItem.likedUserIds)
+                    .create()
+                    .show(supportFragmentManager, LikeListDialog::class.java.name)
             })
         }
 

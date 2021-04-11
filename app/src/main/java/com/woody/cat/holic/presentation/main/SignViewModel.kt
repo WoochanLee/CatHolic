@@ -1,4 +1,4 @@
-package com.woody.cat.holic.presentation.main.viewmodel
+package com.woody.cat.holic.presentation.main
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

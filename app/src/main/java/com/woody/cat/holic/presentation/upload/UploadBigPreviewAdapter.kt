@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.woody.cat.holic.R
 import com.woody.cat.holic.databinding.ItemUploadUploadedImageBigBinding
 import com.woody.cat.holic.framework.base.BaseViewHolder
-import com.woody.cat.holic.presentation.upload.viewmodel.UploadViewModel
 
 class UploadBigPreviewAdapter(
     private val lifecycleOwner: LifecycleOwner,

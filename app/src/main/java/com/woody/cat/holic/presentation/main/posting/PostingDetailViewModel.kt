@@ -1,8 +1,10 @@
-package com.woody.cat.holic.presentation.main.posting.viewmodel
+package com.woody.cat.holic.presentation.main.posting
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.woody.cat.holic.framework.base.*
+import com.woody.cat.holic.framework.base.BaseViewModel
+import com.woody.cat.holic.framework.base.Event
+import com.woody.cat.holic.framework.base.emit
 import com.woody.cat.holic.framework.paging.item.PostingItem
 
 class PostingDetailViewModel(val postingItem: PostingItem) : BaseViewModel() {
