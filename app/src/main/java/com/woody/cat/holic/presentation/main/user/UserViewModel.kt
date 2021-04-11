@@ -2,12 +2,15 @@ package com.woody.cat.holic.presentation.main.user
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.woody.cat.holic.BuildConfig
 import com.woody.cat.holic.data.SettingRepository
 import com.woody.cat.holic.framework.base.BaseViewModel
 import com.woody.cat.holic.framework.base.Event
 import com.woody.cat.holic.framework.base.emit
 
 class UserViewModel(private val settingRepository: SettingRepository): BaseViewModel() {
+
+    val versionName = BuildConfig.VERSION_NAME
 
     private val _isDarkMode = MutableLiveData(settingRepository.getDarkMode())
     val isDarkMode: LiveData<Boolean> get() = _isDarkMode

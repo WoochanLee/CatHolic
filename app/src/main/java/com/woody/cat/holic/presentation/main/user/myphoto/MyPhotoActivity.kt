@@ -70,7 +70,7 @@ class MyPhotoActivity : AppCompatActivity() {
         initToolbar()
     }
 
-    var pagingJob: Job? = null
+    private var pagingJob: Job? = null
 
     private fun MyPhotoViewModel.initPagingFlow() {
         pagingJob?.cancel()

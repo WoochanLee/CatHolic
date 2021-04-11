@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.auth.api.signin.GoogleSignInStatusCodes
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
@@ -51,6 +52,9 @@ class SignViewModel(
     private val _isSignedIn = MutableLiveData<Boolean>()
     val isSignIn: LiveData<Boolean> get() = _isSignedIn
 
+    private val _isLoading = MutableLiveData<Boolean>()
+    val isLoading: LiveData<Boolean> get() = _isLoading
+
     private val _userData = MutableLiveData<User>()
     val userData: LiveData<User> get() = _userData
 
@@ -62,11 +66,13 @@ class SignViewModel(
     }
 
     fun handleGoogleSignInResult(task: Task<GoogleSignInAccount>) {
+        _isLoading.postValue(true)
         try {
             val account = task.getResult(ApiException::class.java)
-            val credential = GoogleAuthProvider.getCredential(account?.idToken, null)
+            val credential = GoogleAuthProvider.getCredential(account.idToken, null)
             firebaseAuth.signInWithCredential(credential)
                 .addOnSuccessListener {
+                    _isLoading.postValue(false)
                     CatHolicLogger.log("success to firebase google sign in")
                     val user = it.user?.run { User(uid, displayName ?: "Unknown", photoUrl?.toString() ?: "") }
                     if (user != null) {
@@ -76,12 +82,18 @@ class SignViewModel(
                     }
                 }
                 .addOnFailureListener {
+                    _isLoading.postValue(false)
                     CatHolicLogger.log("fail to firebase google sign in")
                     _eventSignInFail.emit()
                 }
         } catch (e: ApiException) {
-            CatHolicLogger.log("fail to firebase google sign in")
-            _eventSignInFail.emit()
+            _isLoading.postValue(false)
+            if (e.statusCode == GoogleSignInStatusCodes.SIGN_IN_CANCELLED) {
+                CatHolicLogger.log("cancel to firebase google sign in")
+            } else {
+                CatHolicLogger.log("fail to firebase google sign in")
+                _eventSignInFail.emit()
+            }
         }
     }
 
@@ -102,8 +114,9 @@ class SignViewModel(
     private fun getProfile(userId: String, onResult: (User?) -> Unit, onError: ((Exception) -> Unit)? = null) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
+                _isLoading.postValue(true)
                 val result = getUserProfile(userId)
-
+                _isLoading.postValue(false)
                 handleResourceResult(result, onSuccess = {
                     onResult(it)
                 }, onError = {
@@ -120,8 +133,9 @@ class SignViewModel(
     private fun makeProfile(user: User) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
+                _isLoading.postValue(true)
                 val result = addUserProfile(user)
-
+                _isLoading.postValue(false)
                 handleResourceResult(result, onSuccess = {
                     getProfileOrMakeProfile(user)
                 }, onError = {

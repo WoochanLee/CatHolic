@@ -7,16 +7,16 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import com.woody.cat.holic.data.PostingType
-import com.woody.cat.holic.framework.base.BaseViewModel
-import com.woody.cat.holic.framework.base.Event
-import com.woody.cat.holic.framework.base.emit
+import com.woody.cat.holic.framework.base.*
 import com.woody.cat.holic.framework.paging.GalleryPostingDataSource
 import com.woody.cat.holic.usecase.posting.ChangeToNextPostingOrder
 import com.woody.cat.holic.usecase.posting.GetGalleryPostings
 import com.woody.cat.holic.usecase.user.GetCurrentUserId
 import com.woody.cat.holic.usecase.user.GetUserProfile
+import kotlinx.coroutines.launch
 
 class GalleryViewModel(
+    private val refreshEventBus: RefreshEventBus,
     private val changeToNextPostingOrder: ChangeToNextPostingOrder,
     private val getCurrentUserId: GetCurrentUserId,
     private val getGalleryPostings: GetGalleryPostings,
@@ -25,6 +25,10 @@ class GalleryViewModel(
 
     companion object {
         const val PAGE_SIZE = 10
+    }
+
+    init {
+        initEventBusSubscribe()
     }
 
     private val _eventRefreshData = MutableLiveData<Event<Unit>>()
@@ -54,5 +58,13 @@ class GalleryViewModel(
 
     fun changeToNextPostingOrder() {
         changeToNextPostingOrder(PostingType.GALLERY)
+    }
+
+    private fun initEventBusSubscribe() {
+        viewModelScope.launch {
+            refreshEventBus.subscribeEvent(GlobalRefreshEvent.UploadPostingEvent) {
+                initData()
+            }
+        }
     }
 }

@@ -18,6 +18,7 @@ import java.io.File
 
 
 class UploadViewModel(
+    private val refreshEventBus: RefreshEventBus,
     private val getCurrentUserId: GetCurrentUserId,
     private val detectCatFromPhoto: DetectCatFromPhoto,
     private val uploadPhoto: UploadPhoto,
@@ -39,8 +40,8 @@ class UploadViewModel(
     private val _eventRemoveTargetPreviewPage = MutableLiveData<Event<Int>>()
     val eventRemoveTargetPreviewPage: LiveData<Event<Int>> get() = _eventRemoveTargetPreviewPage
 
-    private val _eventCancel = MutableLiveData<Event<Unit>>()
-    val eventCancel: LiveData<Event<Unit>> get() = _eventCancel
+    private val _eventFinish = MutableLiveData<Event<Unit>>()
+    val eventFinish: LiveData<Event<Unit>> get() = _eventFinish
 
     private val _eventShowPostingToast = MutableLiveData<Event<Int>>()
     val eventShowToast: LiveData<Event<Int>> get() = _eventShowPostingToast
@@ -110,7 +111,6 @@ class UploadViewModel(
     }
 
     fun onClickRetryUploadPhoto(position: Int) {
-
         val userId = getCurrentUserId() ?: return handleNotSignedInUser()
 
         val uploadingPhoto = previewData.value?.get(position) ?: return
@@ -118,7 +118,6 @@ class UploadViewModel(
     }
 
     fun onClickUploadPosting() {
-
         val userId = getCurrentUserId() ?: return handleNotSignedInUser()
 
         //TODO: Loading Progress
@@ -133,7 +132,8 @@ class UploadViewModel(
 
                 handleResourceResult(result, onSuccess = {
                     _eventShowPostingToast.emit(R.string.success_to_posting)
-                    _eventCancel.emit()
+                    _eventFinish.emit()
+                    refreshEventBus.produceEvent(GlobalRefreshEvent.UploadPostingEvent)
                 }, onError = {
                     when (it) {
                         is NotSignedInException -> handleNotSignedInUser()
@@ -209,7 +209,7 @@ class UploadViewModel(
 
     private fun handleNotSignedInUser() {
         _eventShowPostingToast.emit(R.string.need_to_sign_in)
-        _eventCancel.emit()
+        _eventFinish.emit()
     }
 
     override fun onCleared() {

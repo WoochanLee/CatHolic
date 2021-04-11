@@ -3,7 +3,6 @@ package com.woody.cat.holic.framework.base
 import java.text.SimpleDateFormat
 import java.util.*
 
-
 fun getFileExtension(filePath: String): String {
     var extension = "";
 

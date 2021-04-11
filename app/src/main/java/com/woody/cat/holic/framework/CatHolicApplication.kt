@@ -11,12 +11,13 @@ import com.google.firebase.storage.StorageReference
 import com.vanniktech.emoji.EmojiManager
 import com.vanniktech.emoji.twitter.TwitterEmojiProvider
 import com.woody.cat.holic.framework.base.AlbumMediaLoader
+import com.woody.cat.holic.framework.base.RefreshEventBus
 import com.woody.cat.holic.framework.db.SharedPreferenceSettingRepository
-import com.woody.cat.holic.framework.service.GoogleMLPhotoAnalyzer
-import com.woody.cat.holic.framework.net.FirebaseStoragePhotoRepository
 import com.woody.cat.holic.framework.net.FirebaseFirestoreCommentRepository
 import com.woody.cat.holic.framework.net.FirebaseFirestorePostingRepository
 import com.woody.cat.holic.framework.net.FirebaseFirestoreUserRepository
+import com.woody.cat.holic.framework.net.FirebaseStoragePhotoRepository
+import com.woody.cat.holic.framework.service.GoogleMLPhotoAnalyzer
 import com.yanzhenjie.album.Album
 import com.yanzhenjie.album.AlbumConfig
 import java.util.*
@@ -42,6 +43,8 @@ class CatHolicApplication : Application() {
     val userRepository by lazy { FirebaseFirestoreUserRepository(firebaseFirestore, firebaseAuth) }
     val commentRepository by lazy { FirebaseFirestoreCommentRepository(firebaseFirestore) }
     val photoAnalyzer by lazy { GoogleMLPhotoAnalyzer(this) }
+
+    val eventBus by lazy { RefreshEventBus() }
 
     override fun onCreate() {
         super.onCreate()

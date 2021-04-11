@@ -23,7 +23,7 @@ import com.woody.cat.holic.presentation.main.SignViewModelFactory
 class UserFragment : Fragment() {
 
     private lateinit var binding: FragmentUserBinding
-    private var signViewModel: SignViewModel? = null
+    private lateinit var signViewModel: SignViewModel
     private lateinit var userViewModel: UserViewModel
 
     private lateinit var startGoogleSignInForResult: ActivityResultLauncher<Intent>
@@ -36,17 +36,10 @@ class UserFragment : Fragment() {
 
         startGoogleSignInForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             val task = GoogleSignIn.getSignedInAccountFromIntent(it.data)
-            signViewModel?.handleGoogleSignInResult(task)
+            signViewModel.handleGoogleSignInResult(task)
         }
 
         return view
-    }
-
-    override fun onHiddenChanged(hidden: Boolean) {
-        super.onHiddenChanged(hidden)
-        if (!hidden) {
-            signViewModel?.refreshSignInStatus()
-        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -88,14 +81,14 @@ class UserFragment : Fragment() {
     }
 
     private fun signIn(activityResultLauncher: ActivityResultLauncher<Intent>, activity: Activity) {
-        signViewModel?.let { signViewModel ->
+        signViewModel.let { signViewModel ->
             val googleSignInClient = GoogleSignIn.getClient(activity, signViewModel.gso)
             activityResultLauncher.launch(googleSignInClient.signInIntent)
         }
     }
 
     private fun signOut() {
-        signViewModel?.let { signViewModel ->
+        signViewModel.let { signViewModel ->
             GoogleSignIn.getClient(requireActivity(), signViewModel.gso).signOut()
             signViewModel.signOutFirbase()
         }

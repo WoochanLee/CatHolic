@@ -18,7 +18,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 29
         versionCode 1
-        versionName "1.0"
+        versionName "0.1.0"
         multiDexEnabled true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -70,6 +70,7 @@ dependencies {
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
     implementation 'com.vanniktech:emoji-twitter:0.7.0'
     implementation 'com.vdurmont:emoji-java:5.1.1'
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.7'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.12.0'
     testImplementation 'junit:junit:4.+'
     testImplementation "androidx.paging:paging-common-ktx:$paging_version"

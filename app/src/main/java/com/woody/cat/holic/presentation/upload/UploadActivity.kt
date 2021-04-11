@@ -64,7 +64,7 @@ class UploadActivity : AppCompatActivity() {
                 Toast.makeText(this@UploadActivity, it, Toast.LENGTH_LONG).show()
             })
 
-            eventCancel.observeEvent(this@UploadActivity, {
+            eventFinish.observeEvent(this@UploadActivity, {
                 onBackPressed()
             })
         }

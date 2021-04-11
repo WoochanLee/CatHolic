@@ -97,7 +97,7 @@ class GalleryFragment : Fragment() {
         binding.rvMainGallery.adapter = postingAdapter
     }
 
-    var pagingJob: Job? = null
+    private var pagingJob: Job? = null
 
     private fun GalleryViewModel.initPagingFlow() {
         pagingJob?.cancel()

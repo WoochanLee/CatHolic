@@ -6,6 +6,7 @@ import com.woody.cat.holic.framework.CatHolicApplication
 abstract class BaseViewModelFactory: ViewModelProvider.Factory {
 
     private val application = CatHolicApplication.application
+    protected val eventBus = application.eventBus
     protected val settingRepository = application.settingRepository
     protected val photoRepository = application.photoRepository
     protected val postingRepository = application.postingRepository

@@ -104,6 +104,7 @@
                     android:text="@{commentViewModel.writeEmojiStr}"
                     android:textColor="@color/background_color_main"
                     android:textColorHint="@color/white"
+                    android:textCursorDrawable="@drawable/cursor_color"
                     app:layout_constraintBottom_toBottomOf="parent" />
             </androidx.cardview.widget.CardView>
 

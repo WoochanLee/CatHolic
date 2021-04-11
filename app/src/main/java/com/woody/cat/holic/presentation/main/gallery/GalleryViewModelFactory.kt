@@ -11,6 +11,7 @@ class GalleryViewModelFactory : BaseViewModelFactory() {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(GalleryViewModel::class.java)) {
             return GalleryViewModel(
+                eventBus,
                 ChangeToNextPostingOrder(postingRepository),
                 GetCurrentUserId(userRepository),
                 GetGalleryPostings(postingRepository),

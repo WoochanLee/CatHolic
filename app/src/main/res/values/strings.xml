@@ -27,4 +27,5 @@
     <string name="comment_your_emoji">Comment Your Emoji 😋</string>
     <string name="emoji_comment">EMOJI COMMENT</string>
     <string name="liked_users">LIKED USERS</string>
+    <string name="app_version">App Version</string>
 </resources>

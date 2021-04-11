@@ -14,7 +14,8 @@ fun ImageView.bindImage(imageUrl: String?) {
     if (!imageUrl.isNullOrEmpty()) {
         Glide.with(context)
             .load(imageUrl)
-            .error(ContextCompat.getDrawable(context, R.drawable.congshu_cat))
+            .placeholder(ContextCompat.getDrawable(context, R.drawable.congshu_cat))
+            .error(ContextCompat.getDrawable(context, R.drawable.woody_cat))
             .into(this)
     }
 }
@@ -30,7 +31,7 @@ fun ImageButton.setOnClickDeleteMenu(onClickDelete: () -> Unit) {
         val popup = PopupMenu(context, this)
         popup.inflate(R.menu.posting_menu)
         popup.setOnMenuItemClickListener {
-            when(it.itemId) {
+            when (it.itemId) {
                 R.id.menu_delete -> {
                     onClickDelete()
                     return@setOnMenuItemClickListener true

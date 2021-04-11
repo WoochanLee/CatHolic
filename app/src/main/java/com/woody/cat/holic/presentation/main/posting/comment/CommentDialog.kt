@@ -111,7 +111,7 @@ class CommentDialog : DialogFragment() {
         this.postingItem = postingItem
     }
 
-    var pagingJob: Job? = null
+    private var pagingJob: Job? = null
 
     private fun CommentViewModel.initPagingFlow() {
         pagingJob?.cancel()
