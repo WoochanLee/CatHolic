@@ -19,6 +19,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class MyPhotoViewModel(
+    private val refreshEventBus: RefreshEventBus,
     private val getCurrentUserId: GetCurrentUserId,
     private val getUserUploadedPostings: GetUserUploadedPostings,
     private val removeUserPosting: RemoveUserPosting,
@@ -38,8 +39,18 @@ class MyPhotoViewModel(
     private val _eventShowLikeListDialog = MutableLiveData<Event<PostingItem>>()
     val eventShowLikeListDialog: LiveData<Event<PostingItem>> get() = _eventShowLikeListDialog
 
+    private val _eventStartUploadActivity = MutableLiveData<Event<Unit>>()
+    val eventStartUploadActivity: LiveData<Event<Unit>> get() = _eventStartUploadActivity
+
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> get() = _isLoading
+
+    private val _isListEmpty = MutableLiveData<Boolean>()
+    val isListEmpty: LiveData<Boolean> get() = _isListEmpty
+
+    init {
+        initEventBusSubscribe()
+    }
 
     fun getUploadedPostings() = Pager(
         config = PagingConfig(pageSize = PAGE_SIZE),
@@ -60,13 +71,13 @@ class MyPhotoViewModel(
         _eventRefreshData.emit()
     }
 
-    fun onClickDelete(postingId: String) {
+    fun onClickDelete(postingItem: PostingItem) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                val result = removeUserPosting(postingId)
+                val result = removeUserPosting(postingItem.postingId)
 
                 handleResourceResult(result, onSuccess = {
-                    _eventRefreshData.emit()
+                    refreshEventBus.emitEvent(GlobalRefreshEvent.DeletePostingEvent)
                 }, onError = {
                     it.printStackTraceIfDebug()
                     //TODO : handle network error
@@ -75,11 +86,30 @@ class MyPhotoViewModel(
         }
     }
 
+    fun setIsListEmpty(isListEmpty: Boolean) {
+        _isListEmpty.postValue(isListEmpty)
+    }
+
     fun onClickComment(postingItem: PostingItem) {
         _eventShowCommentDialog.emit(postingItem)
     }
 
     fun onClickLikeList(postingItem: PostingItem) {
         _eventShowLikeListDialog.emit(postingItem)
+    }
+
+    fun onClickUploadFab() {
+        _eventStartUploadActivity.emit()
+    }
+
+    private fun initEventBusSubscribe() {
+        viewModelScope.launch {
+            refreshEventBus.subscribeEvent(
+                GlobalRefreshEvent.UploadPostingEvent,
+                GlobalRefreshEvent.DeletePostingEvent
+            ) {
+                initData()
+            }
+        }
     }
 }

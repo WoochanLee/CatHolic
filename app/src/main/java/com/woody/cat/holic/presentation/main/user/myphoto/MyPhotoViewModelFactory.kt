@@ -11,6 +11,7 @@ class MyPhotoViewModelFactory : BaseViewModelFactory() {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(MyPhotoViewModel::class.java)) {
             return MyPhotoViewModel(
+                refreshEventBus,
                 GetCurrentUserId(userRepository),
                 GetUserUploadedPostings(postingRepository),
                 RemoveUserPosting(postingRepository),

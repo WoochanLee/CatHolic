@@ -39,6 +39,9 @@ class CommentViewModel(
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> get() = _isLoading
 
+    private val _isListEmpty = MutableLiveData<Boolean>()
+    val isListEmpty: LiveData<Boolean> get() = _isListEmpty
+
     fun getCommentFlow() = Pager(
         config = PagingConfig(pageSize = PAGE_SIZE),
         pagingSourceFactory = {
@@ -60,6 +63,10 @@ class CommentViewModel(
 
     fun setWritingEmojiStr(str: String) {
         _writingEmojiStr.postValue(str)
+    }
+
+    fun setIsListEmpty(isListEmpty: Boolean) {
+        _isListEmpty.postValue(isListEmpty)
     }
 
     fun onClickAddComment() {

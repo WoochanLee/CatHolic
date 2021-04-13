@@ -78,6 +78,8 @@ class UserFragment : Fragment() {
                 }
             })
         }
+
+        signViewModel.refreshSignInStatus()
     }
 
     private fun signIn(activityResultLauncher: ActivityResultLauncher<Intent>, activity: Activity) {

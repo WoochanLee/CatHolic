@@ -62,7 +62,10 @@ class GalleryViewModel(
 
     private fun initEventBusSubscribe() {
         viewModelScope.launch {
-            refreshEventBus.subscribeEvent(GlobalRefreshEvent.UploadPostingEvent) {
+            refreshEventBus.subscribeEvent(
+                GlobalRefreshEvent.UploadPostingEvent,
+                GlobalRefreshEvent.DeletePostingEvent
+            ) {
                 initData()
             }
         }

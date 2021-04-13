@@ -133,7 +133,7 @@ class UploadViewModel(
                 handleResourceResult(result, onSuccess = {
                     _eventShowPostingToast.emit(R.string.success_to_posting)
                     _eventFinish.emit()
-                    refreshEventBus.produceEvent(GlobalRefreshEvent.UploadPostingEvent)
+                    refreshEventBus.emitEvent(GlobalRefreshEvent.UploadPostingEvent)
                 }, onError = {
                     when (it) {
                         is NotSignedInException -> handleNotSignedInUser()

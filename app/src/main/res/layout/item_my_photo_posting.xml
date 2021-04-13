@@ -15,6 +15,8 @@
         <variable
             name="model"
             type="com.woody.cat.holic.framework.paging.item.PostingItem" />
+
+        <import type="android.view.View" />
     </data>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -83,7 +85,7 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:onClickDelete="@{() -> viewModel.onClickDelete(model.postingId)}" />
+                        app:onClickDelete="@{() -> viewModel.onClickDelete(model)}" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 

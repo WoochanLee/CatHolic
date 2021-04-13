@@ -44,7 +44,7 @@ class CatHolicApplication : Application() {
     val commentRepository by lazy { FirebaseFirestoreCommentRepository(firebaseFirestore) }
     val photoAnalyzer by lazy { GoogleMLPhotoAnalyzer(this) }
 
-    val eventBus by lazy { RefreshEventBus() }
+    val refreshEventBus by lazy { RefreshEventBus() }
 
     override fun onCreate() {
         super.onCreate()

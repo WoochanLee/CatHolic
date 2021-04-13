@@ -1,5 +1,6 @@
 package com.woody.cat.holic.presentation.main.user.myphoto
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
@@ -12,6 +13,7 @@ import com.woody.cat.holic.databinding.ActivityMyPhotoBinding
 import com.woody.cat.holic.framework.base.observeEvent
 import com.woody.cat.holic.presentation.main.posting.comment.CommentDialog
 import com.woody.cat.holic.presentation.main.posting.likelist.LikeListDialog
+import com.woody.cat.holic.presentation.upload.UploadActivity
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -38,10 +40,15 @@ class MyPhotoActivity : AppCompatActivity() {
 
             lifecycleScope.launch {
                 postingAdapter.loadStateFlow.collectLatest { loadStates ->
-                    setLoading(loadStates.refresh is LoadState.Loading)
+                    val refreshState = loadStates.refresh
+                    setLoading(refreshState is LoadState.Loading)
 
-                    if (loadStates.refresh is LoadState.Error) {
+                    if (refreshState is LoadState.Error) {
                         //TODO: handle network error
+                    }
+
+                    if (refreshState is LoadState.NotLoading) {
+                        setIsListEmpty(postingAdapter.itemCount == 0)
                     }
                 }
             }
@@ -62,6 +69,10 @@ class MyPhotoActivity : AppCompatActivity() {
                     .setLikeUserList(postingItem.likedUserIds)
                     .create()
                     .show(supportFragmentManager, LikeListDialog::class.java.name)
+            })
+
+            eventStartUploadActivity.observeEvent(this@MyPhotoActivity, {
+                startActivity(Intent(this@MyPhotoActivity, UploadActivity::class.java))
             })
         }
 

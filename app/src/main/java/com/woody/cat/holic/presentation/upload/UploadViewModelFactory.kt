@@ -11,7 +11,7 @@ class UploadViewModelFactory : BaseViewModelFactory() {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(UploadViewModel::class.java)) {
             return UploadViewModel(
-                eventBus,
+                refreshEventBus,
                 GetCurrentUserId(userRepository),
                 DetectCatFromPhoto(photoAnalyzer),
                 UploadPhoto(photoRepository),

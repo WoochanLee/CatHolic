@@ -5,11 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.woody.cat.holic.R
 import com.woody.cat.holic.data.PostingOrder
-import com.woody.cat.holic.framework.base.BaseViewModel
-import com.woody.cat.holic.framework.base.Event
-import com.woody.cat.holic.framework.base.emit
+import com.woody.cat.holic.framework.base.*
 import com.woody.cat.holic.framework.paging.item.PostingItem
-import com.woody.cat.holic.presentation.main.MainTab
 import com.woody.cat.holic.usecase.posting.AddLikeInPosting
 import com.woody.cat.holic.usecase.posting.GetPostingOrder
 import com.woody.cat.holic.usecase.posting.RemoveLikeInPosting
@@ -20,6 +17,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class MainViewModel(
+    private val refreshEventBus: RefreshEventBus,
     private val getPostingOrder: GetPostingOrder,
     private val getIsSignedIn: GetIsSignedIn,
     private val getCurrentUserId: GetCurrentUserId,
@@ -101,6 +99,7 @@ class MainViewModel(
                 } else {
                     addLikeInPosting(userId, postingItem.postingId)
                 }
+                refreshEventBus.emitEvent(GlobalRefreshEvent.PostingLikedChangeEvent)
             }
         }
     }

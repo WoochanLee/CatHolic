@@ -2,7 +2,6 @@ package com.woody.cat.holic.framework.net.dto
 
 import com.google.firebase.firestore.ServerTimestamp
 import com.woody.cat.holic.domain.Posting
-import com.woody.cat.holic.domain.User
 import com.woody.cat.holic.framework.base.makePostingDateString
 import java.util.*
 
@@ -15,6 +14,7 @@ data class PostingDto(
     val reportedUserIds: List<String> = listOf(),
     val commented: Int = 0,
     val commentIds: List<String> = listOf(),
+    val deleted: Boolean = false,
 
     @ServerTimestamp
     val created: Date? = null,

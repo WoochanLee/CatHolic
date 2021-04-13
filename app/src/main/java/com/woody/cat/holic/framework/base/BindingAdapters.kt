@@ -14,7 +14,6 @@ fun ImageView.bindImage(imageUrl: String?) {
     if (!imageUrl.isNullOrEmpty()) {
         Glide.with(context)
             .load(imageUrl)
-            .placeholder(ContextCompat.getDrawable(context, R.drawable.congshu_cat))
             .error(ContextCompat.getDrawable(context, R.drawable.woody_cat))
             .into(this)
     }

@@ -9,18 +9,19 @@ import kotlinx.coroutines.launch
 class RefreshEventBus {
     private val events = MutableSharedFlow<GlobalRefreshEvent>()
 
-    fun produceEvent(event: GlobalRefreshEvent) {
+    fun emitEvent(event: GlobalRefreshEvent) {
         GlobalScope.launch {
             events.emit(event)
         }
     }
 
-    suspend fun subscribeEvent(globalRefreshEvent: GlobalRefreshEvent, onEvent: () -> Unit) {
-        events.filter { it == globalRefreshEvent }.collect { onEvent() }
+    suspend fun subscribeEvent(vararg globalRefreshEvents: GlobalRefreshEvent, onEvent: () -> Unit) {
+        events.filter { globalRefreshEvents.contains(it) }.collect { onEvent() }
     }
 }
 
 enum class GlobalRefreshEvent {
-    LikedPostingChangeEvent,
-    UploadPostingEvent
+    PostingLikedChangeEvent,
+    UploadPostingEvent,
+    DeletePostingEvent
 }

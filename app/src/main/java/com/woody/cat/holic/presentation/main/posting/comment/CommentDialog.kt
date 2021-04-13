@@ -83,6 +83,10 @@ class CommentDialog : DialogFragment() {
                         if (loadState is LoadState.NotLoading) {
                             binding.rvComment.scrollToPosition(0)
                         }
+
+                        if (loadStates.refresh is LoadState.NotLoading) {
+                            setIsListEmpty(commentAdapter.itemCount == 0)
+                        }
                     }
             }
 

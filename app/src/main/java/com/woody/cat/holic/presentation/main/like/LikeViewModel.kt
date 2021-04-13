@@ -7,16 +7,16 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import com.woody.cat.holic.data.PostingType
-import com.woody.cat.holic.framework.base.BaseViewModel
-import com.woody.cat.holic.framework.base.Event
-import com.woody.cat.holic.framework.base.emit
+import com.woody.cat.holic.framework.base.*
 import com.woody.cat.holic.framework.paging.LikePostingDataSource
 import com.woody.cat.holic.usecase.posting.ChangeToNextPostingOrder
 import com.woody.cat.holic.usecase.posting.GetUserLikePostings
 import com.woody.cat.holic.usecase.user.GetCurrentUserId
 import com.woody.cat.holic.usecase.user.GetUserProfile
+import kotlinx.coroutines.launch
 
 class LikeViewModel(
+    private val refreshEventBus: RefreshEventBus,
     private val changeToNextPostingOrder: ChangeToNextPostingOrder,
     private val getCurrentUserId: GetCurrentUserId,
     private val getUserLikePostings: GetUserLikePostings,
@@ -33,6 +33,13 @@ class LikeViewModel(
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> get() = _isLoading
 
+    private val _isListEmpty = MutableLiveData<Boolean>()
+    val isListEmpty: LiveData<Boolean> get() = _isListEmpty
+
+    init {
+        initEventBusSubscribe()
+    }
+
     fun getLikedPostingFlow() = Pager(
         config = PagingConfig(pageSize = PAGE_SIZE),
         pagingSourceFactory = {
@@ -44,15 +51,30 @@ class LikeViewModel(
         }
     ).flow.cachedIn(viewModelScope)
 
-    fun setLoading(isLoading: Boolean) {
-        _isLoading.postValue(isLoading)
-    }
-
     fun initData() {
         _eventRefreshData.emit()
     }
 
+    fun setLoading(isLoading: Boolean) {
+        _isLoading.postValue(isLoading)
+    }
+
+    fun setIsListEmpty(isListEmpty: Boolean) {
+        _isListEmpty.postValue(isListEmpty)
+    }
+
     fun changeToNextPostingOrder() {
         changeToNextPostingOrder(PostingType.LIKED)
+    }
+
+    private fun initEventBusSubscribe() {
+        viewModelScope.launch {
+            refreshEventBus.subscribeEvent(
+                GlobalRefreshEvent.PostingLikedChangeEvent,
+                GlobalRefreshEvent.DeletePostingEvent
+            ) {
+                initData()
+            }
+        }
     }
 }

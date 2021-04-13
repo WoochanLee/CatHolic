@@ -11,6 +11,7 @@ class LikeViewModelFactory : BaseViewModelFactory() {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(LikeViewModel::class.java)) {
             return LikeViewModel(
+                refreshEventBus,
                 ChangeToNextPostingOrder(postingRepository),
                 GetCurrentUserId(userRepository),
                 GetUserLikePostings(postingRepository),

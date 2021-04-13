@@ -1,6 +1,9 @@
 package com.woody.cat.holic.framework.net
 
-import com.google.firebase.firestore.*
+import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.woody.cat.holic.data.PostingOrder
 import com.woody.cat.holic.data.PostingRepository
 import com.woody.cat.holic.data.PostingType
@@ -58,7 +61,7 @@ class FirebaseFirestorePostingRepository(private val db: FirebaseFirestore) : Po
 
         db.collection(COLLECTION_POSTING_PATH)
             .document(postingId)
-            .delete()
+            .update(PostingDto::deleted.name, true)
             .addOnSuccessListener {
                 dataDeferred.complete(Resource.Success(Unit))
             }.addOnFailureListener {
@@ -79,6 +82,7 @@ class FirebaseFirestorePostingRepository(private val db: FirebaseFirestore) : Po
         val dataDeferred = CompletableDeferred<Resource<List<Posting>>>()
 
         db.collection(COLLECTION_POSTING_PATH)
+            .whereEqualTo(PostingDto::deleted.name, false)
             .run {
                 when (currentGalleryPostingOrder) {
                     PostingOrder.CREATED,
@@ -116,6 +120,7 @@ class FirebaseFirestorePostingRepository(private val db: FirebaseFirestore) : Po
         val dataDeferred = CompletableDeferred<Resource<List<Posting>>>()
 
         db.collection(COLLECTION_POSTING_PATH)
+            .whereEqualTo(PostingDto::deleted.name, false)
             .whereArrayContains(PostingDto::likedUserIds.name, userId)
             .run {
                 when (currentLikePostingOrder) {
@@ -153,6 +158,7 @@ class FirebaseFirestorePostingRepository(private val db: FirebaseFirestore) : Po
         val dataDeferred = CompletableDeferred<Resource<List<Posting>>>()
 
         db.collection(COLLECTION_POSTING_PATH)
+            .whereEqualTo(PostingDto::deleted.name, false)
             .whereEqualTo(PostingDto::userId.name, userId)
             .orderBy(PostingOrder.CREATED.fieldName, Query.Direction.DESCENDING)
             .run {

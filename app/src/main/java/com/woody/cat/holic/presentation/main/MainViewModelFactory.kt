@@ -12,6 +12,7 @@ class MainViewModelFactory : BaseViewModelFactory() {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(MainViewModel::class.java)) {
             return MainViewModel(
+                refreshEventBus,
                 GetPostingOrder(postingRepository),
                 GetIsSignedIn(userRepository),
                 GetCurrentUserId(userRepository),
