@@ -178,7 +178,7 @@ class UploadViewModel(
             withContext(Dispatchers.IO) {
                 uploadItem.uploadStatus.postValue(UploadStatus.UPLOADING)
 
-                val result = uploadPhoto(userId, File(uploadItem.imageUri)) { progress ->
+                val result = uploadPhoto.uploadCatPhoto(userId, File(uploadItem.imageUri)) { progress ->
                     uploadItem.currentProgress.postValue(progress)
                 }
 

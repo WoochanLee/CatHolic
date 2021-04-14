@@ -1,7 +1,6 @@
 package com.woody.cat.holic.framework.net
 
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.woody.cat.holic.data.UserRepository
 import com.woody.cat.holic.data.common.Resource
@@ -56,45 +55,22 @@ class FirebaseFirestoreUserRepository(
         return dataDeferred.await()
     }
 
-    override suspend fun followUser(myUserId: String, targetUserId: String): Resource<Unit> {
-        val dataDeferred = CompletableDeferred<Resource<Unit>>()
-
-        db.runTransaction {
-            it.update(db.collection(COLLECTION_PROFILE_PATH).document(targetUserId), UserDto::followerUserIds.name, FieldValue.arrayUnion(myUserId))
-            it.update(db.collection(COLLECTION_PROFILE_PATH).document(targetUserId), UserDto::followerCount.name, FieldValue.increment(1))
-        }.addOnSuccessListener {
-            dataDeferred.complete(Resource.Success(Unit))
-        }.addOnFailureListener {
-            dataDeferred.complete(Resource.Error(it))
-        }
-
-        return dataDeferred.await()
+    override suspend fun updateDisplayName(userId: String, displayName: String): Resource<Unit> {
+        TODO("Not yet implemented")
     }
 
-    override suspend fun unfollowUser(myUserId: String, targetUserId: String): Resource<Unit> {
-        val dataDeferred = CompletableDeferred<Resource<Unit>>()
-
-        db.runTransaction {
-            it.update(db.collection(COLLECTION_PROFILE_PATH).document(targetUserId), UserDto::followerUserIds.name, FieldValue.arrayRemove(myUserId))
-            it.update(db.collection(COLLECTION_PROFILE_PATH).document(targetUserId), UserDto::followerCount.name, FieldValue.increment(-1))
-        }.addOnSuccessListener {
-            dataDeferred.complete(Resource.Success(Unit))
-        }.addOnFailureListener {
-            dataDeferred.complete(Resource.Error(it))
-        }
-
-        return dataDeferred.await()
+    override suspend fun updateUserPhotoUrl(userId: String, userPhotoUrl: String): Resource<Unit> {
+        TODO("Not yet implemented")
     }
 
-    override suspend fun getFollowers(userId: String): Resource<List<String>> {
-        val dataDeferred = CompletableDeferred<Resource<List<String>>>()
+    override suspend fun updateBackgroundPhotoUrl(userId: String, userBackgroundPhotoUrl: String): Resource<Unit> {
+        val dataDeferred = CompletableDeferred<Resource<Unit>>()
 
         db.collection(COLLECTION_PROFILE_PATH)
             .document(userId)
-            .get()
+            .update(UserDto::userBackgroundPhotoUrl.name, userBackgroundPhotoUrl)
             .addOnSuccessListener {
-                val userDto = it.toObject(UserDto::class.java)
-                dataDeferred.complete(Resource.Success(userDto?.followerUserIds ?: emptyList()))
+                dataDeferred.complete(Resource.Success(Unit))
             }.addOnFailureListener {
                 dataDeferred.complete(Resource.Error(it))
             }
@@ -102,20 +78,8 @@ class FirebaseFirestoreUserRepository(
         return dataDeferred.await()
     }
 
-    override suspend fun getFollowings(userId: String): Resource<List<String>> {
-        val dataDeferred = CompletableDeferred<Resource<List<String>>>()
-
-        db.collection(COLLECTION_PROFILE_PATH)
-            .document(userId)
-            .get()
-            .addOnSuccessListener {
-                val userDto = it.toObject(UserDto::class.java)
-                dataDeferred.complete(Resource.Success(userDto?.followingUserIds ?: emptyList()))
-            }.addOnFailureListener {
-                dataDeferred.complete(Resource.Error(it))
-            }
-
-        return dataDeferred.await()
+    override suspend fun updateGreetings(userId: String, greetings: String): Resource<Unit> {
+        TODO("Not yet implemented")
     }
 
     override fun isSignedIn(): Boolean {

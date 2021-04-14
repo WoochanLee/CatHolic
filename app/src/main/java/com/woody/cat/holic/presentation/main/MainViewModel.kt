@@ -7,9 +7,8 @@ import com.woody.cat.holic.R
 import com.woody.cat.holic.data.PostingOrder
 import com.woody.cat.holic.framework.base.*
 import com.woody.cat.holic.framework.paging.item.PostingItem
-import com.woody.cat.holic.usecase.posting.AddLikeInPosting
 import com.woody.cat.holic.usecase.posting.GetPostingOrder
-import com.woody.cat.holic.usecase.posting.RemoveLikeInPosting
+import com.woody.cat.holic.usecase.posting.UpdateLikedPosting
 import com.woody.cat.holic.usecase.user.GetCurrentUserId
 import com.woody.cat.holic.usecase.user.GetIsSignedIn
 import kotlinx.coroutines.Dispatchers
@@ -21,8 +20,7 @@ class MainViewModel(
     private val getPostingOrder: GetPostingOrder,
     private val getIsSignedIn: GetIsSignedIn,
     private val getCurrentUserId: GetCurrentUserId,
-    private val addLikeInPosting: AddLikeInPosting,
-    private val removeLikeInPosting: RemoveLikeInPosting
+    private val updateLikedPosting: UpdateLikedPosting
 ) : BaseViewModel() {
 
     var currentFragment = MainTab.TAB_GALLERY
@@ -98,9 +96,9 @@ class MainViewModel(
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 if (currentUserLiked) {
-                    removeLikeInPosting(userId, postingItem.postingId)
+                    updateLikedPosting.unlikePosting(userId, postingItem.postingId)
                 } else {
-                    addLikeInPosting(userId, postingItem.postingId)
+                    updateLikedPosting.likePosting(userId, postingItem.postingId)
                 }
                 refreshEventBus.emitEvent(GlobalRefreshEvent.PostingLikedChangeEvent)
             }

@@ -8,6 +8,10 @@ import androidx.lifecycle.ViewModelProvider
 import com.woody.cat.holic.R
 import com.woody.cat.holic.databinding.ActivityProfileBinding
 import com.woody.cat.holic.framework.base.BaseActivity
+import com.woody.cat.holic.framework.base.makeCustomAlbumWidget
+import com.woody.cat.holic.framework.base.observeEvent
+import com.woody.cat.holic.presentation.upload.UploadActivity
+import com.yanzhenjie.album.Album
 
 class ProfileActivity : BaseActivity() {
 
@@ -39,6 +43,10 @@ class ProfileActivity : BaseActivity() {
         viewModel = ViewModelProvider(this, ProfileViewModelFactory()).get(ProfileViewModel::class.java).apply {
             binding.viewModel = this
             getProfile(userId)
+
+            eventSelectBackgroundPhoto.observeEvent(this@ProfileActivity, {
+                getUserBackgroundPhotoFromAlbum()
+            })
         }
         initToolbar()
     }
@@ -49,5 +57,21 @@ class ProfileActivity : BaseActivity() {
             setDisplayHomeAsUpEnabled(true)
             setDisplayShowTitleEnabled(false)
         }
+    }
+
+    private fun getUserBackgroundPhotoFromAlbum() {
+        Album.image(this)
+            .singleChoice()
+            .widget(makeCustomAlbumWidget())
+            .camera(true)
+            .columnCount(UploadActivity.ALBUM_COLUMN_COUNT)
+            .onResult breaker@{ checkedList ->
+                if (checkedList.size == 0) {
+                    return@breaker
+                }
+
+                viewModel.uploadUserBackgroundPhoto(checkedList[0].path)
+            }
+            .start()
     }
 }

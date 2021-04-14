@@ -13,10 +13,7 @@ import com.vanniktech.emoji.twitter.TwitterEmojiProvider
 import com.woody.cat.holic.framework.base.AlbumMediaLoader
 import com.woody.cat.holic.framework.base.RefreshEventBus
 import com.woody.cat.holic.framework.db.SharedPreferenceSettingRepository
-import com.woody.cat.holic.framework.net.FirebaseFirestoreCommentRepository
-import com.woody.cat.holic.framework.net.FirebaseFirestorePostingRepository
-import com.woody.cat.holic.framework.net.FirebaseFirestoreUserRepository
-import com.woody.cat.holic.framework.net.FirebaseStoragePhotoRepository
+import com.woody.cat.holic.framework.net.*
 import com.woody.cat.holic.framework.service.GoogleMLPhotoAnalyzer
 import com.yanzhenjie.album.Album
 import com.yanzhenjie.album.AlbumConfig
@@ -40,8 +37,10 @@ class CatHolicApplication : Application() {
     val settingRepository by lazy { SharedPreferenceSettingRepository(settingSharedPreferences) }
     val photoRepository by lazy { FirebaseStoragePhotoRepository(firebaseStorageReference) }
     val postingRepository by lazy { FirebaseFirestorePostingRepository(firebaseFirestore) }
+    val likePostingRepository by lazy { FirebaseFirestoreLikePostingRepository(firebaseFirestore) }
     val userRepository by lazy { FirebaseFirestoreUserRepository(firebaseFirestore, firebaseAuth) }
     val commentRepository by lazy { FirebaseFirestoreCommentRepository(firebaseFirestore) }
+    val followRepository by lazy { FirebaseFirestoreFollowRepository(firebaseFirestore) }
     val photoAnalyzer by lazy { GoogleMLPhotoAnalyzer(this) }
 
     val refreshEventBus by lazy { RefreshEventBus() }

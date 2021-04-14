@@ -13,11 +13,11 @@ interface UserRepository {
 
     suspend fun getUserProfile(userId: String): Resource<User>
 
-    suspend fun followUser(myUserId: String, targetUserId: String): Resource<Unit>
+    suspend fun updateDisplayName(userId: String, displayName: String): Resource<Unit>
 
-    suspend fun unfollowUser(myUserId: String, targetUserId: String): Resource<Unit>
+    suspend fun updateUserPhotoUrl(userId: String, userPhotoUrl: String): Resource<Unit>
 
-    suspend fun getFollowers(userId: String): Resource<List<String>>
+    suspend fun updateBackgroundPhotoUrl(userId: String, userBackgroundPhotoUrl: String): Resource<Unit>
 
-    suspend fun getFollowings(userId: String): Resource<List<String>>
+    suspend fun updateGreetings(userId: String, greetings: String): Resource<Unit>
 }

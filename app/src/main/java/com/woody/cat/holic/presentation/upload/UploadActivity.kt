@@ -1,6 +1,5 @@
 package com.woody.cat.holic.presentation.upload
 
-import android.graphics.Color
 import android.os.Bundle
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
@@ -9,9 +8,9 @@ import androidx.viewpager2.widget.ViewPager2
 import com.woody.cat.holic.R
 import com.woody.cat.holic.databinding.ActivityUploadBinding
 import com.woody.cat.holic.framework.base.BaseActivity
+import com.woody.cat.holic.framework.base.makeCustomAlbumWidget
 import com.woody.cat.holic.framework.base.observeEvent
 import com.yanzhenjie.album.Album
-import com.yanzhenjie.album.api.widget.Widget
 
 
 class UploadActivity : BaseActivity() {
@@ -129,15 +128,6 @@ class UploadActivity : BaseActivity() {
                 refreshAdapterStatus()
             }
             .start()
-    }
-
-    private fun makeCustomAlbumWidget(): Widget {
-        return Widget.newDarkBuilder(this)
-            .title(getString(R.string.select_cats))
-            .statusBarColor(Color.BLACK)
-            .toolBarColor(Color.BLACK)
-            .navigationBarColor(Color.BLACK)
-            .build()
     }
 
     private fun refreshAdapterStatus() {

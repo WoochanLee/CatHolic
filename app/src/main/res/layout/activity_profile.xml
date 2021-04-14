@@ -59,6 +59,7 @@
                     android:layout_height="0dp"
                     android:background="@color/background_color_main"
                     android:clickable="@{viewModel.isMyProfile() ? true : false}"
+                    android:onClick="@{() -> viewModel.onClickUserBackgroundPhoto()}"
                     android:scaleType="centerCrop"
                     android:src="@drawable/woody_cat"
                     app:imageUrl="@{viewModel.userProfile.userBackgroundPhotoUrl}"

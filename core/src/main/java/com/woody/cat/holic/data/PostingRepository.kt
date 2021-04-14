@@ -21,10 +21,6 @@ interface PostingRepository {
     suspend fun getUserLikePostings(key: String?, userId: String, size: Int): Resource<List<Posting>>
 
     suspend fun getUserUploadedPostings(key: String?, userId: String, size: Int): Resource<List<Posting>>
-
-    suspend fun addLikedInPosting(userId: String, postingId: String): Resource<Unit>
-
-    suspend fun removeLikedInPosting(userId: String, postingId: String): Resource<Unit>
 }
 
 enum class PostingType {

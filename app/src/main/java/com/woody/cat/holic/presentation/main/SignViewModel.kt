@@ -187,7 +187,7 @@ class SignViewModel(
         _eventSignOutSuccess.emit()
     }
 
-    fun signOutFirbase() {
+    fun signOutFirebase() {
         firebaseAuth.signOut()
     }
 

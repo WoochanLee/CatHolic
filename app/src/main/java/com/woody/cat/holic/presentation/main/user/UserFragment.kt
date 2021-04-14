@@ -92,7 +92,7 @@ class UserFragment : Fragment() {
     private fun signOut() {
         signViewModel.let { signViewModel ->
             GoogleSignIn.getClient(requireActivity(), signViewModel.gso).signOut()
-            signViewModel.signOutFirbase()
+            signViewModel.signOutFirebase()
         }
     }
 }

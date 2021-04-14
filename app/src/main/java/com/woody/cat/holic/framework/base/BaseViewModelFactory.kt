@@ -10,7 +10,9 @@ abstract class BaseViewModelFactory: ViewModelProvider.Factory {
     protected val settingRepository = application.settingRepository
     protected val photoRepository = application.photoRepository
     protected val postingRepository = application.postingRepository
+    protected val likePostingRepository = application.likePostingRepository
     protected val userRepository = application.userRepository
     protected val commentRepository = application.commentRepository
+    protected val followReportFragment = application.followRepository
     protected val photoAnalyzer = application.photoAnalyzer
 }

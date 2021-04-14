@@ -2,9 +2,8 @@ package com.woody.cat.holic.presentation.main
 
 import androidx.lifecycle.ViewModel
 import com.woody.cat.holic.framework.base.BaseViewModelFactory
-import com.woody.cat.holic.usecase.posting.AddLikeInPosting
 import com.woody.cat.holic.usecase.posting.GetPostingOrder
-import com.woody.cat.holic.usecase.posting.RemoveLikeInPosting
+import com.woody.cat.holic.usecase.posting.UpdateLikedPosting
 import com.woody.cat.holic.usecase.user.GetCurrentUserId
 import com.woody.cat.holic.usecase.user.GetIsSignedIn
 
@@ -16,8 +15,7 @@ class MainViewModelFactory : BaseViewModelFactory() {
                 GetPostingOrder(postingRepository),
                 GetIsSignedIn(userRepository),
                 GetCurrentUserId(userRepository),
-                AddLikeInPosting(postingRepository),
-                RemoveLikeInPosting(postingRepository)
+                UpdateLikedPosting(likePostingRepository)
             ) as T
         } else {
             throw IllegalStateException()
