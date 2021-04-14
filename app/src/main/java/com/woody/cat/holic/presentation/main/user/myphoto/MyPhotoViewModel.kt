@@ -72,9 +72,11 @@ class MyPhotoViewModel(
     }
 
     fun onClickDelete(postingItem: PostingItem) {
+        val userId = getCurrentUserId() ?: return
+
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                val result = removeUserPosting(postingItem.postingId)
+                val result = removeUserPosting(userId, postingItem.postingId)
 
                 handleResourceResult(result, onSuccess = {
                     refreshEventBus.emitEvent(GlobalRefreshEvent.DeletePostingEvent)

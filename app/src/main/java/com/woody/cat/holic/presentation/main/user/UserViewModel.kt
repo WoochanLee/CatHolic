@@ -8,7 +8,7 @@ import com.woody.cat.holic.framework.base.BaseViewModel
 import com.woody.cat.holic.framework.base.Event
 import com.woody.cat.holic.framework.base.emit
 
-class UserViewModel(private val settingRepository: SettingRepository): BaseViewModel() {
+class UserViewModel(private val settingRepository: SettingRepository) : BaseViewModel() {
 
     val versionName = BuildConfig.VERSION_NAME
 

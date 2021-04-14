@@ -4,5 +4,5 @@ import com.woody.cat.holic.data.PostingRepository
 
 class RemoveUserPosting(private val postingRepository: PostingRepository) {
 
-    suspend operator fun invoke(postingId: String) = postingRepository.removePosting(postingId)
+    suspend operator fun invoke(userId: String, postingId: String) = postingRepository.removePosting(userId, postingId)
 }

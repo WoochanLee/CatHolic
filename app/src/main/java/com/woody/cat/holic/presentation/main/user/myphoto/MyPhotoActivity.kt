@@ -2,14 +2,13 @@ package com.woody.cat.holic.presentation.main.user.myphoto
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.MenuItem
-import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import com.woody.cat.holic.R
 import com.woody.cat.holic.databinding.ActivityMyPhotoBinding
+import com.woody.cat.holic.framework.base.BaseActivity
 import com.woody.cat.holic.framework.base.observeEvent
 import com.woody.cat.holic.presentation.main.posting.comment.CommentDialog
 import com.woody.cat.holic.presentation.main.posting.likelist.LikeListDialog
@@ -18,7 +17,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-class MyPhotoActivity : AppCompatActivity() {
+class MyPhotoActivity : BaseActivity() {
 
     private lateinit var binding: ActivityMyPhotoBinding
     private lateinit var viewModel: MyPhotoViewModel
@@ -98,16 +97,5 @@ class MyPhotoActivity : AppCompatActivity() {
             setDisplayHomeAsUpEnabled(true)
             setDisplayShowTitleEnabled(false)
         }
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            android.R.id.home -> {
-                onBackPressed()
-                return true
-            }
-        }
-
-        return super.onOptionsItemSelected(item)
     }
 }

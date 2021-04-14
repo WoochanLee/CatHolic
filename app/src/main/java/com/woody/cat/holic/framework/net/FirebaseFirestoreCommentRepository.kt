@@ -31,7 +31,7 @@ class FirebaseFirestoreCommentRepository(private val db: FirebaseFirestore) : Co
 
             it.set(commentDocumentReference, commentDto)
             it.update(postingDocumentReference, Posting::commentIds.name, FieldValue.arrayUnion(commentDocumentReference.id))
-            it.update(postingDocumentReference, Posting::commented.name, (postingDto?.commentIds?.size ?: 0) + 1)
+            it.update(postingDocumentReference, Posting::commentCount.name, (postingDto?.commentIds?.size ?: 0) + 1)
         }.addOnSuccessListener {
             dataDeferred.complete(Resource.Success(Unit))
             CatHolicLogger.log("success to add comment to posting")

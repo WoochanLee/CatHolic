@@ -32,4 +32,13 @@
     <string name="you_haven_t_uploaded_any_photos_yet_nupload_your_first_cat_photo">You haven\'t uploaded any photos yet 🐱\nUpload your first cat photo !</string>
     <string name="no_one_has_left_a_comment_yet_nwould_you_leave_the_first_comment">No one has left a comment yet.\nWould you leave the first comment?👇</string>
     <string name="leave_your_emoji_comment">Leave your emoji comment !</string>
+    <string name="postings">Postings</string>
+    <string name="followers">Followers</string>
+    <string name="following">Following</string>
+    <string name="follow">FOLLOW</string>
+    <string name="open_source_license">Open Source License</string>
+    <string name="my_profile">MY PROFILE</string>
+    <string name="cat_holic">CAT HOLIC</string>
+    <string name="upload_cat_photo">UPLOAD CAT PHOTO</string>
+    <string name="user_profile">USER PROFILE</string>
 </resources>

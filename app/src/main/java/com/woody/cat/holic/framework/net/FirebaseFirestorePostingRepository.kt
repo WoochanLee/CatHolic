@@ -10,8 +10,10 @@ import com.woody.cat.holic.data.PostingType
 import com.woody.cat.holic.data.common.Resource
 import com.woody.cat.holic.domain.Posting
 import com.woody.cat.holic.framework.COLLECTION_POSTING_PATH
+import com.woody.cat.holic.framework.COLLECTION_PROFILE_PATH
 import com.woody.cat.holic.framework.base.CatHolicLogger
 import com.woody.cat.holic.framework.net.dto.PostingDto
+import com.woody.cat.holic.framework.net.dto.UserDto
 import com.woody.cat.holic.framework.net.dto.mapToPosting
 import com.woody.cat.holic.framework.net.dto.mapToPostingDto
 import kotlinx.coroutines.CompletableDeferred
@@ -38,14 +40,15 @@ class FirebaseFirestorePostingRepository(private val db: FirebaseFirestore) : Po
         }
     }
 
-    override suspend fun addPosting(postings: List<Posting>): Resource<Unit> {
+    override suspend fun addPosting(userId: String, postings: List<Posting>): Resource<Unit> {
         val dataDeferred = CompletableDeferred<Resource<Unit>>()
 
-        val batch = db.batch()
-        postings.forEach {
-            batch.set(db.collection(COLLECTION_POSTING_PATH).document(), it.mapToPostingDto())
-        }
-        batch.commit().addOnSuccessListener {
+        db.runTransaction {
+            it.update(db.collection(COLLECTION_PROFILE_PATH).document(userId), UserDto::postingCount.name, FieldValue.increment(1))
+            postings.forEach { posting ->
+                it.set(db.collection(COLLECTION_POSTING_PATH).document(), posting.mapToPostingDto())
+            }
+        }.addOnSuccessListener {
             dataDeferred.complete(Resource.Success(Unit))
             CatHolicLogger.log("success to add posting")
         }.addOnFailureListener {
@@ -56,17 +59,17 @@ class FirebaseFirestorePostingRepository(private val db: FirebaseFirestore) : Po
         return dataDeferred.await()
     }
 
-    override suspend fun removePosting(postingId: String): Resource<Unit> {
+    override suspend fun removePosting(userId: String, postingId: String): Resource<Unit> {
         val dataDeferred = CompletableDeferred<Resource<Unit>>()
 
-        db.collection(COLLECTION_POSTING_PATH)
-            .document(postingId)
-            .update(PostingDto::deleted.name, true)
-            .addOnSuccessListener {
-                dataDeferred.complete(Resource.Success(Unit))
-            }.addOnFailureListener {
-                dataDeferred.complete(Resource.Error(it))
-            }
+        db.runTransaction {
+            it.update(db.collection(COLLECTION_PROFILE_PATH).document(userId), UserDto::postingCount.name, FieldValue.increment(-1))
+            it.update(db.collection(COLLECTION_POSTING_PATH).document(postingId), PostingDto::deleted.name, true)
+        }.addOnSuccessListener {
+            dataDeferred.complete(Resource.Success(Unit))
+        }.addOnFailureListener {
+            dataDeferred.complete(Resource.Error(it))
+        }
 
         return dataDeferred.await()
     }
@@ -85,8 +88,8 @@ class FirebaseFirestorePostingRepository(private val db: FirebaseFirestore) : Po
             .whereEqualTo(PostingDto::deleted.name, false)
             .run {
                 when (currentGalleryPostingOrder) {
-                    PostingOrder.CREATED,
-                    PostingOrder.LIKED -> orderBy(currentGalleryPostingOrder.fieldName, Query.Direction.DESCENDING)
+                    PostingOrder.CREATED -> orderBy(PostingDto::created.name, Query.Direction.DESCENDING)
+                    PostingOrder.LIKED -> orderBy(PostingDto::likeCount.name, Query.Direction.DESCENDING)
                     PostingOrder.RANDOM -> this
                 }
             }.run {
@@ -124,8 +127,8 @@ class FirebaseFirestorePostingRepository(private val db: FirebaseFirestore) : Po
             .whereArrayContains(PostingDto::likedUserIds.name, userId)
             .run {
                 when (currentLikePostingOrder) {
-                    PostingOrder.CREATED,
-                    PostingOrder.LIKED -> orderBy(currentLikePostingOrder.fieldName, Query.Direction.DESCENDING)
+                    PostingOrder.CREATED -> orderBy(PostingDto::created.name, Query.Direction.DESCENDING)
+                    PostingOrder.LIKED -> orderBy(PostingDto::likeCount.name, Query.Direction.DESCENDING)
                     PostingOrder.RANDOM -> this
                 }
             }.run {
@@ -160,7 +163,7 @@ class FirebaseFirestorePostingRepository(private val db: FirebaseFirestore) : Po
         db.collection(COLLECTION_POSTING_PATH)
             .whereEqualTo(PostingDto::deleted.name, false)
             .whereEqualTo(PostingDto::userId.name, userId)
-            .orderBy(PostingOrder.CREATED.fieldName, Query.Direction.DESCENDING)
+            .orderBy(PostingDto::created.name, Query.Direction.DESCENDING)
             .run {
                 if (key != null && lastDoc.data != null) {
                     startAfter(lastDoc.data as DocumentSnapshot)
@@ -196,7 +199,7 @@ class FirebaseFirestorePostingRepository(private val db: FirebaseFirestore) : Po
             val postingDocumentReference = db.collection(COLLECTION_POSTING_PATH).document(postingId)
 
             it.update(postingDocumentReference, Posting::likedUserIds.name, FieldValue.arrayUnion(userId))
-            it.update(postingDocumentReference, Posting::liked.name, (postingDto?.likedUserIds?.size ?: 0) + 1)
+            it.update(postingDocumentReference, Posting::likeCount.name, FieldValue.increment(1))
         }.addOnSuccessListener {
             dataDeferred.complete(Resource.Success(Unit))
             CatHolicLogger.log("success to add liked to posting")
@@ -224,7 +227,7 @@ class FirebaseFirestorePostingRepository(private val db: FirebaseFirestore) : Po
             val postingDocumentReference = db.collection(COLLECTION_POSTING_PATH).document(postingId)
 
             it.update(postingDocumentReference, Posting::likedUserIds.name, FieldValue.arrayRemove(userId))
-            it.update(postingDocumentReference, Posting::liked.name, (postingDto?.likedUserIds?.size ?: 0) - 1)
+            it.update(postingDocumentReference, Posting::likeCount.name, FieldValue.increment(-1))
         }.addOnSuccessListener {
             dataDeferred.complete(Resource.Success(Unit))
             CatHolicLogger.log("success to add liked to posting")

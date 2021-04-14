@@ -48,6 +48,9 @@ class MainViewModel(
     private val _eventShowLikeListDialog = MutableLiveData<Event<PostingItem>>()
     val eventShowLikeListDialog: LiveData<Event<PostingItem>> get() = _eventShowLikeListDialog
 
+    private val _eventShowProfileMenuPopup = MutableLiveData<Event<String>>()
+    val eventShowProfileMenuPopup: LiveData<Event<String>> get() = _eventShowProfileMenuPopup
+
     private val _toolbarTitle = MutableLiveData<String>()
     val toolbarTitle: LiveData<String> get() = _toolbarTitle
 
@@ -90,7 +93,7 @@ class MainViewModel(
         val currentUserLiked = postingItem.currentUserLiked.value == true
 
         postingItem.currentUserLiked.postValue(!currentUserLiked)
-        postingItem.liked.postValue((postingItem.liked.value ?: 0) + if (currentUserLiked) -1 else 1)
+        postingItem.likeCount.postValue((postingItem.likeCount.value ?: 0) + if (currentUserLiked) -1 else 1)
 
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
@@ -130,6 +133,10 @@ class MainViewModel(
 
     fun onClickLikeList(postingItem: PostingItem) {
         _eventShowLikeListDialog.emit(postingItem)
+    }
+
+    fun onClickProfileMenu(userId: String) {
+        _eventShowProfileMenuPopup.emit(userId)
     }
 
     fun setVisibleUploadFab(isVisible: Boolean) {

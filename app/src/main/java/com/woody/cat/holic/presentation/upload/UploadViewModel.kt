@@ -128,7 +128,7 @@ class UploadViewModel(
                     ?.map { Posting(userId = userId, downloadUrl = it.imageDownloadUrl) }
                     ?: listOf()
 
-                val result = addPosting(uploadPostingItemList)
+                val result = addPosting(userId, uploadPostingItemList)
 
                 handleResourceResult(result, onSuccess = {
                     _eventShowPostingToast.emit(R.string.success_to_posting)

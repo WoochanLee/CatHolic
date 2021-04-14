@@ -3,7 +3,7 @@ package com.woody.cat.holic.presentation.main
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.PopupMenu
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.tabs.TabLayout
 import com.woody.cat.holic.R
 import com.woody.cat.holic.databinding.ActivityMainBinding
+import com.woody.cat.holic.framework.base.BaseActivity
 import com.woody.cat.holic.framework.base.observeEvent
 import com.woody.cat.holic.presentation.main.gallery.GalleryFragment
 import com.woody.cat.holic.presentation.main.like.LikeFragment
@@ -19,9 +20,10 @@ import com.woody.cat.holic.presentation.main.posting.comment.CommentDialog
 import com.woody.cat.holic.presentation.main.posting.likelist.LikeListDialog
 import com.woody.cat.holic.presentation.main.user.UserFragment
 import com.woody.cat.holic.presentation.main.user.myphoto.MyPhotoActivity
+import com.woody.cat.holic.presentation.main.user.profile.ProfileActivity
 import com.woody.cat.holic.presentation.upload.UploadActivity
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var mainViewModel: MainViewModel
@@ -51,9 +53,9 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this@MainActivity, R.string.need_to_sign_in, Toast.LENGTH_LONG).show()
             })
 
-            eventShowPostingDetail.observeEvent(this@MainActivity, {
+            eventShowPostingDetail.observeEvent(this@MainActivity, { postingItem ->
                 PostingDetailDialog.Builder()
-                    .setPostingItem(it)
+                    .setPostingItem(postingItem)
                     .create()
                     .show(supportFragmentManager, PostingDetailDialog::class.java.name)
             })
@@ -71,10 +73,14 @@ class MainActivity : AppCompatActivity() {
                     .create()
                     .show(supportFragmentManager, LikeListDialog::class.java.name)
             })
+
+            eventShowProfileMenuPopup.observeEvent(this@MainActivity, { userId ->
+                showProfileMenuPopup(userId)
+            })
         }
 
         signViewModel = ViewModelProvider(this, SignViewModelFactory()).get(SignViewModel::class.java).apply {
-            binding.userViewModel = this
+            binding.signViewModel = this
             eventStartMyCatPhotos.observeEvent(this@MainActivity, {
                 startActivity(Intent(this@MainActivity, MyPhotoActivity::class.java))
             })
@@ -169,7 +175,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showFragment(fragment: Fragment) {
-
         fragments.forEach {
             supportFragmentManager.beginTransaction()
                 .hide(it)
@@ -179,5 +184,20 @@ class MainActivity : AppCompatActivity() {
         supportFragmentManager.beginTransaction()
             .show(fragment)
             .commit()
+    }
+
+    private fun showProfileMenuPopup(userId: String) {
+        val popup = PopupMenu(this, binding.ibProfileMenu)
+        popup.inflate(R.menu.my_profile_menu)
+        popup.setOnMenuItemClickListener {
+            when (it.itemId) {
+                R.id.menu_my_profile -> {
+                    startActivity(ProfileActivity.getIntent(this, userId))
+                    return@setOnMenuItemClickListener true
+                }
+            }
+            false
+        }
+        popup.show()
     }
 }

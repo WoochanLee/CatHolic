@@ -12,4 +12,12 @@ interface UserRepository {
     suspend fun addUserProfile(user: User): Resource<Unit>
 
     suspend fun getUserProfile(userId: String): Resource<User>
+
+    suspend fun followUser(myUserId: String, targetUserId: String): Resource<Unit>
+
+    suspend fun unfollowUser(myUserId: String, targetUserId: String): Resource<Unit>
+
+    suspend fun getFollowers(userId: String): Resource<List<String>>
+
+    suspend fun getFollowings(userId: String): Resource<List<String>>
 }

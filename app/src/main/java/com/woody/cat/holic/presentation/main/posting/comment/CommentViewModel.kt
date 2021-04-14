@@ -94,7 +94,7 @@ class CommentViewModel(
 
                 handleResourceResult(result, onSuccess = {
                     initData()
-                    postingItem.commented.apply { postValue((value ?: 0) + 1) }
+                    postingItem.commentCount.apply { postValue((value ?: 0) + 1) }
                     //_eventShowToast.emit("success to add comment")
                 }, onError = {
                     //TODO: handle network

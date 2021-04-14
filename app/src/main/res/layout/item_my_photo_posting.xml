@@ -123,7 +123,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@{String.valueOf(model.liked)}"
+                            android:text="@{String.valueOf(model.likeCount)}"
                             android:textColor="@color/text_color"
                             android:textSize="17dp"
                             android:textStyle="bold"
@@ -160,7 +160,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@{String.valueOf(model.commented)}"
+                            android:text="@{String.valueOf(model.commentCount)}"
                             android:textColor="@color/text_color"
                             android:textSize="17dp"
                             android:textStyle="bold"

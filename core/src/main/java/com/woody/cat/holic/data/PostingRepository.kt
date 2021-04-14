@@ -12,9 +12,9 @@ interface PostingRepository {
 
     fun changeToNextPostingOrder(postingType: PostingType)
 
-    suspend fun addPosting(postings: List<Posting>): Resource<Unit>
+    suspend fun addPosting(userId: String, postings: List<Posting>): Resource<Unit>
 
-    suspend fun removePosting(postingId: String): Resource<Unit>
+    suspend fun removePosting(userId: String, postingId: String): Resource<Unit>
 
     suspend fun getGalleryPostings(key: String?, size: Int): Resource<List<Posting>>
 
@@ -33,10 +33,10 @@ enum class PostingType {
     USER
 }
 
-enum class PostingOrder(val fieldName: String) {
-    CREATED("created"),
-    LIKED("liked"),
-    RANDOM("random"); //TODO: need more logic. (randomly combine order, value, etc..)
+enum class PostingOrder {
+    CREATED,
+    LIKED,
+    RANDOM; //TODO: need more logic. (randomly combine order, value, etc..)
 
     fun getNextPostingOrder(): PostingOrder {
         return when (this) {

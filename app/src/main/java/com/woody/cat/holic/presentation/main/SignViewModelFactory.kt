@@ -12,6 +12,7 @@ class SignViewModelFactory : BaseViewModelFactory() {
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(SignViewModel::class.java)) {
             return SignViewModel(
+                refreshEventBus,
                 FirebaseAuth.getInstance(),
                 GetIsSignedIn(userRepository),
                 GetCurrentUserId(userRepository),

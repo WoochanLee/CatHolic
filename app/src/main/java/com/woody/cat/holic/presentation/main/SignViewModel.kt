@@ -22,6 +22,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class SignViewModel(
+    private val refreshEventBus: RefreshEventBus,
     private val firebaseAuth: FirebaseAuth,
     private val getIsSignedIn: GetIsSignedIn,
     private val getCurrentUserId: GetCurrentUserId,
@@ -57,6 +58,10 @@ class SignViewModel(
 
     private val _userData = MutableLiveData<User>()
     val userData: LiveData<User> get() = _userData
+
+    init {
+        initEventBusSubscribe()
+    }
 
     fun initFirebaseAuth(clientId: String) {
         gso = GoogleSignInOptions
@@ -184,5 +189,16 @@ class SignViewModel(
 
     fun signOutFirbase() {
         firebaseAuth.signOut()
+    }
+
+    private fun initEventBusSubscribe() {
+        viewModelScope.launch {
+            refreshEventBus.subscribeEvent(
+                GlobalRefreshEvent.UploadPostingEvent,
+                GlobalRefreshEvent.DeletePostingEvent
+            ) {
+                refreshSignInStatus()
+            }
+        }
     }
 }

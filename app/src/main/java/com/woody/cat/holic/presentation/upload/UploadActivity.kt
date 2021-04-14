@@ -2,20 +2,19 @@ package com.woody.cat.holic.presentation.upload
 
 import android.graphics.Color
 import android.os.Bundle
-import android.view.MenuItem
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
 import com.woody.cat.holic.R
 import com.woody.cat.holic.databinding.ActivityUploadBinding
+import com.woody.cat.holic.framework.base.BaseActivity
 import com.woody.cat.holic.framework.base.observeEvent
 import com.yanzhenjie.album.Album
 import com.yanzhenjie.album.api.widget.Widget
 
 
-class UploadActivity : AppCompatActivity() {
+class UploadActivity : BaseActivity() {
 
     companion object {
         const val ALBUM_COLUMN_COUNT = 3
@@ -145,16 +144,5 @@ class UploadActivity : AppCompatActivity() {
         uploadSmallPreviewAdapter.notifyDataSetChanged()
         uploadBigPreviewAdapter.notifyDataSetChanged()
         uploadBigPreviewAdapter.changeArrowButtonStatus(binding.vpUploadBig.currentItem)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            android.R.id.home -> {
-                onBackPressed()
-                return true
-            }
-        }
-
-        return super.onOptionsItemSelected(item)
     }
 }
