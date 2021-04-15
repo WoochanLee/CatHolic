@@ -22,11 +22,18 @@ class UserViewModel(
     private val _eventChangeDarkMode = MutableLiveData<Event<Boolean>>()
     val eventChangeDarkMode: LiveData<Event<Boolean>> get() = _eventChangeDarkMode
 
+    private val _eventStartProfileActivity = MutableLiveData<Event<String>>()
+    val eventStartProfileActivity: LiveData<Event<String>> get() = _eventStartProfileActivity
+
     fun changeDarkMode() {
         val changedDarkMode = isDarkMode.value != true
         updateAppSetting.setDarkMode(changedDarkMode)
         _isDarkMode.postValue(changedDarkMode)
 
         _eventChangeDarkMode.emit(changedDarkMode)
+    }
+
+    fun onClickProfile(userId: String) {
+        _eventStartProfileActivity.emit(userId)
     }
 }

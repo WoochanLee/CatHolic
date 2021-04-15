@@ -133,7 +133,7 @@ class MainViewModel(
         _eventShowLikeListDialog.emit(postingItem)
     }
 
-    fun onClickProfileEdit(userId: String) {
+    fun onClickProfile(userId: String) {
         _eventStartProfileActivity.emit(userId)
     }
 

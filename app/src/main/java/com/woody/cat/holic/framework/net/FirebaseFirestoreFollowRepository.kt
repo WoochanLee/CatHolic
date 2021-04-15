@@ -14,6 +14,19 @@ class FirebaseFirestoreFollowRepository(private val db: FirebaseFirestore) : Fol
         val dataDeferred = CompletableDeferred<Resource<Unit>>()
 
         db.runTransaction {
+            val myUserDto = it.get(db.collection(COLLECTION_PROFILE_PATH).document(myUserId)).toObject(UserDto::class.java)
+            val targetUserDto = it.get(db.collection(COLLECTION_PROFILE_PATH).document(targetUserId)).toObject(UserDto::class.java)
+
+            val isMyUserAlreadyFollowing = myUserDto?.followingUserIds?.contains(targetUserId) == true
+            val isTargetUserAlreadyFollowed = targetUserDto?.followerUserIds?.contains(myUserId) == true
+
+            if (isMyUserAlreadyFollowing || isTargetUserAlreadyFollowed) {
+                dataDeferred.complete(Resource.Error(IllegalStateException()))
+                return@runTransaction
+            }
+
+            it.update(db.collection(COLLECTION_PROFILE_PATH).document(myUserId), UserDto::followingUserIds.name, FieldValue.arrayUnion(targetUserId))
+            it.update(db.collection(COLLECTION_PROFILE_PATH).document(myUserId), UserDto::followingCount.name, FieldValue.increment(1))
             it.update(db.collection(COLLECTION_PROFILE_PATH).document(targetUserId), UserDto::followerUserIds.name, FieldValue.arrayUnion(myUserId))
             it.update(db.collection(COLLECTION_PROFILE_PATH).document(targetUserId), UserDto::followerCount.name, FieldValue.increment(1))
         }.addOnSuccessListener {
@@ -29,6 +42,19 @@ class FirebaseFirestoreFollowRepository(private val db: FirebaseFirestore) : Fol
         val dataDeferred = CompletableDeferred<Resource<Unit>>()
 
         db.runTransaction {
+            val myUserDto = it.get(db.collection(COLLECTION_PROFILE_PATH).document(myUserId)).toObject(UserDto::class.java)
+            val targetUserDto = it.get(db.collection(COLLECTION_PROFILE_PATH).document(targetUserId)).toObject(UserDto::class.java)
+
+            val isMyUserAlreadyFollowing = myUserDto?.followingUserIds?.contains(targetUserId) == true
+            val isTargetUserAlreadyFollowed = targetUserDto?.followerUserIds?.contains(myUserId) == true
+
+            if (!isMyUserAlreadyFollowing || !isTargetUserAlreadyFollowed) {
+                dataDeferred.complete(Resource.Error(IllegalStateException()))
+                return@runTransaction
+            }
+
+            it.update(db.collection(COLLECTION_PROFILE_PATH).document(myUserId), UserDto::followingUserIds.name, FieldValue.arrayRemove(targetUserId))
+            it.update(db.collection(COLLECTION_PROFILE_PATH).document(myUserId), UserDto::followingCount.name, FieldValue.increment(-1))
             it.update(db.collection(COLLECTION_PROFILE_PATH).document(targetUserId), UserDto::followerUserIds.name, FieldValue.arrayRemove(myUserId))
             it.update(db.collection(COLLECTION_PROFILE_PATH).document(targetUserId), UserDto::followerCount.name, FieldValue.increment(-1))
         }.addOnSuccessListener {

@@ -23,6 +23,7 @@ class FirebaseFirestoreLikePostingRepository(private val db: FirebaseFirestore) 
 
             if (isUserAlreadyLiked) {
                 dataDeferred.complete(Resource.Error(IllegalStateException()))
+                return@runTransaction
             }
 
             val postingDocumentReference = db.collection(COLLECTION_POSTING_PATH).document(postingId)
@@ -51,6 +52,7 @@ class FirebaseFirestoreLikePostingRepository(private val db: FirebaseFirestore) 
 
             if (!isUserAlreadyLiked) {
                 dataDeferred.complete(Resource.Error(IllegalStateException()))
+                return@runTransaction
             }
 
             val postingDocumentReference = db.collection(COLLECTION_POSTING_PATH).document(postingId)

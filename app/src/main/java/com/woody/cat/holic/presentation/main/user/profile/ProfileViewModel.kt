@@ -5,14 +5,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.woody.cat.holic.R
 import com.woody.cat.holic.domain.User
-import com.woody.cat.holic.framework.base.BaseViewModel
-import com.woody.cat.holic.framework.base.Event
-import com.woody.cat.holic.framework.base.emit
-import com.woody.cat.holic.framework.base.handleResourceResult
+import com.woody.cat.holic.framework.base.*
 import com.woody.cat.holic.usecase.photo.UploadPhoto
 import com.woody.cat.holic.usecase.setting.GetAppSetting
 import com.woody.cat.holic.usecase.user.GetCurrentUserId
 import com.woody.cat.holic.usecase.user.GetUserProfile
+import com.woody.cat.holic.usecase.user.UpdateFollowUser
 import com.woody.cat.holic.usecase.user.UpdateUserProfile
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -20,11 +18,13 @@ import kotlinx.coroutines.withContext
 import java.io.File
 
 class ProfileViewModel(
+    private val refreshEventBus: RefreshEventBus,
     private val getCurrentUserId: GetCurrentUserId,
     private val getUserProfile: GetUserProfile,
     private val getAppSetting: GetAppSetting,
     private val uploadPhoto: UploadPhoto,
-    private val updateUserProfile: UpdateUserProfile
+    private val updateUserProfile: UpdateUserProfile,
+    private val updateFollowUser: UpdateFollowUser,
 ) : BaseViewModel() {
 
     val isDarkMode = getAppSetting.getDarkMode()
@@ -53,14 +53,18 @@ class ProfileViewModel(
     private val _isMyProfile = MutableLiveData(false)
     val isMyProfile: LiveData<Boolean> get() = _isMyProfile
 
-    fun getProfile(userId: String) {
+    private val _isUserFollowed = MutableLiveData<Boolean>()
+    val isUserFollowed: LiveData<Boolean> get() = _isUserFollowed
+
+    fun getProfile(targetUserId: String) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                val result = getUserProfile(userId)
+                val result = getUserProfile(targetUserId)
 
-                handleResourceResult(result, onSuccess = {
-                    _userProfile.postValue(it)
-                    checkIsMyProfile(it.userId)
+                handleResourceResult(result, onSuccess = { targetUser ->
+                    _userProfile.postValue(targetUser)
+                    checkIsMyProfile(targetUser.userId)
+                    refreshIsUserFollowed(targetUser)
                 }, onError = {
                     _eventShowToast.emit(R.string.network_fail)
                     _eventFinishActivity.emit()
@@ -117,6 +121,47 @@ class ProfileViewModel(
         _eventShowEditGreetingsDialog.emit()
     }
 
+    fun onClickFollowButton() {
+        val myUserId = getCurrentUserId()
+        val targetUserId = userProfile.value?.userId
+        if (myUserId == null) {
+            _eventShowToast.emit(R.string.need_to_sign_in)
+            return
+        }
+
+        if (targetUserId == null) {
+            _eventShowToast.emit(R.string.something_went_wrong)
+            return
+        }
+
+        val currentUserFollowed = isUserFollowed.value == true
+
+        _isUserFollowed.postValue(isUserFollowed.value != true)
+
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                val result = if (currentUserFollowed) {
+                    updateFollowUser.unfollowUser(myUserId, targetUserId)
+                } else {
+                    updateFollowUser.followUser(myUserId, targetUserId)
+                }
+
+                handleResourceResult(result, onSuccess = {
+                    refreshEventBus.emitEvent(GlobalRefreshEvent.FollowUserEvent)
+                    getProfile(targetUserId)
+                }, onError = {
+                    _eventShowToast.emit(R.string.something_went_wrong)
+                })
+            }
+        }
+    }
+
+    private fun refreshIsUserFollowed(targetUser: User) {
+        val myUserId = getCurrentUserId()
+
+        _isUserFollowed.postValue(targetUser.followerUserIds.contains(myUserId))
+    }
+
     private fun updateUserBackgroundPhotoUrl(userId: String, imageUrl: String) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
@@ -137,6 +182,7 @@ class ProfileViewModel(
                 val result = updateUserProfile.updateUserProfilePhotoUrl(userId, imageUrl)
 
                 handleResourceResult(result, onSuccess = {
+                    refreshEventBus.emitEvent(GlobalRefreshEvent.UpdateUserProfileEvent)
                     getProfile(userId)
                 }, onError = {
                     _eventShowToast.emit(R.string.network_fail)
@@ -153,6 +199,7 @@ class ProfileViewModel(
                 val result = updateUserProfile.updateDisplayName(userId, displayName)
 
                 handleResourceResult(result, onSuccess = {
+                    refreshEventBus.emitEvent(GlobalRefreshEvent.UpdateUserProfileEvent)
                     getProfile(userId)
                 }, onError = {
                     _eventShowToast.emit(R.string.network_fail)

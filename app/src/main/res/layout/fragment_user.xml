@@ -157,6 +157,7 @@
                                 android:layout_width="100dp"
                                 android:layout_height="100dp"
                                 android:layout_marginTop="30dp"
+                                android:onClick="@{() -> userViewModel.onClickProfile(signViewModel.userData.userId)}"
                                 app:cardBackgroundColor="@color/gray"
                                 app:cardCornerRadius="50dp"
                                 app:cardElevation="0dp">
@@ -175,6 +176,7 @@
                                 android:layout_marginTop="10dp"
                                 android:layout_marginBottom="20dp"
                                 android:maxLength="15"
+                                android:onClick="@{() -> userViewModel.onClickProfile(signViewModel.userData.userId)}"
                                 android:singleLine="true"
                                 android:text="@{signViewModel.userData.displayName}"
                                 android:textColor="@color/text_color"

@@ -19,6 +19,7 @@ import com.woody.cat.holic.databinding.FragmentUserBinding
 import com.woody.cat.holic.framework.base.observeEvent
 import com.woody.cat.holic.presentation.main.SignViewModel
 import com.woody.cat.holic.presentation.main.SignViewModelFactory
+import com.woody.cat.holic.presentation.main.user.profile.ProfileActivity
 
 class UserFragment : Fragment() {
 
@@ -76,6 +77,10 @@ class UserFragment : Fragment() {
                 } else {
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
                 }
+            })
+
+            eventStartProfileActivity.observeEvent(viewLifecycleOwner, { userId ->
+                startActivity(ProfileActivity.getIntent(activity, userId))
             })
         }
 

@@ -195,7 +195,9 @@ class SignViewModel(
         viewModelScope.launch {
             refreshEventBus.subscribeEvent(
                 GlobalRefreshEvent.UploadPostingEvent,
-                GlobalRefreshEvent.DeletePostingEvent
+                GlobalRefreshEvent.DeletePostingEvent,
+                GlobalRefreshEvent.FollowUserEvent,
+                GlobalRefreshEvent.UpdateUserProfileEvent
             ) {
                 refreshSignInStatus()
             }

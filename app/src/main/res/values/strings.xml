@@ -35,7 +35,8 @@
     <string name="postings">Postings</string>
     <string name="followers">Followers</string>
     <string name="following">Following</string>
-    <string name="follow">FOLLOW</string>
+    <string name="follow">follow</string>
+    <string name="unfollow">unfollow</string>
     <string name="open_source_license">Open Source License</string>
     <string name="my_profile">MY PROFILE</string>
     <string name="cat_holic">CAT HOLIC</string>
@@ -48,4 +49,5 @@
     <string name="edit_nickname">Edit Nickname</string>
     <string name="edit_greetings">Edit Greetings</string>
     <string name="enter_your_nickname">enter your nickname !</string>
+    <string name="something_went_wrong">Something went wrong !\nPlease try again.</string>
 </resources>
