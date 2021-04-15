@@ -41,4 +41,11 @@
     <string name="cat_holic">CAT HOLIC</string>
     <string name="upload_cat_photo">UPLOAD CAT PHOTO</string>
     <string name="user_profile">USER PROFILE</string>
+    <string name="network_fail">network fail😢</string>
+    <string name="ok">OK</string>
+    <string name="cancel">CANCEL</string>
+    <string name="greetings_are_empty">Greetings are empty !</string>
+    <string name="edit_nickname">Edit Nickname</string>
+    <string name="edit_greetings">Edit Greetings</string>
+    <string name="enter_your_nickname">enter your nickname !</string>
 </resources>

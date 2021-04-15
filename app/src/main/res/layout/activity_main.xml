@@ -56,8 +56,7 @@
                     app:cardElevation="0dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:visibility="gone">
+                    app:layout_constraintTop_toTopOf="parent">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -85,19 +84,19 @@
 
                 <ImageButton
                     android:id="@+id/ib_profile_menu"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_marginEnd="5dp"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
                     android:background="@null"
-                    android:onClick="@{() -> mainViewModel.onClickProfileMenu(signViewModel.userData.userId)}"
+                    android:onClick="@{() -> mainViewModel.onClickProfileEdit(signViewModel.userData.userId)}"
                     android:padding="10dp"
                     android:scaleType="centerInside"
-                    android:src="@drawable/ic_menu"
+                    android:src="@drawable/ic_edit"
                     android:tint="@color/background_color_sub"
                     android:visibility="@{mainViewModel.isVisibleOrderSwitch() ? View.GONE : View.VISIBLE}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:visibility="gone" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.appcompat.widget.Toolbar>
 

@@ -33,9 +33,10 @@
             app:cardElevation="5dp">
 
             <ImageView
-                imageUrl="@{model.user.userPhotoUrl}"
+                imageUrl="@{model.user.userProfilePhotoUrl}"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop" />
 
         </androidx.cardview.widget.CardView>
 

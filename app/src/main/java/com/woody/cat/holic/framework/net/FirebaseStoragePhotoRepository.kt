@@ -7,6 +7,7 @@ import com.woody.cat.holic.data.common.Resource
 import com.woody.cat.holic.domain.Photo
 import com.woody.cat.holic.framework.STORAGE_CAT_PHOTO_PATH
 import com.woody.cat.holic.framework.STORAGE_USER_BACKGROUND_PHOTO_PATH
+import com.woody.cat.holic.framework.STORAGE_USER_PROFILE_PHOTO_PATH
 import com.woody.cat.holic.framework.base.CatHolicLogger
 import com.woody.cat.holic.framework.base.getFileExtension
 import kotlinx.coroutines.CompletableDeferred
@@ -56,7 +57,31 @@ class FirebaseStoragePhotoRepository(private val storageRef: StorageReference) :
     }
 
     override suspend fun uploadUserProfilePhoto(userId: String, file: File): Resource<Photo> {
-        TODO("Not yet implemented")
+        val dataDeferred = CompletableDeferred<Resource<Photo>>()
+
+        val catsRef = storageRef.child(makeFirebaseStorageUploadFilePath(file, STORAGE_USER_PROFILE_PHOTO_PATH, userId))
+        val task = catsRef.putFile(Uri.fromFile(file))
+            .addOnSuccessListener {
+                CatHolicLogger.log("success to upload")
+                catsRef.downloadUrl.addOnSuccessListener {
+                    CatHolicLogger.log("success to get download url")
+                    dataDeferred.complete(Resource.Success(Photo(userId, it.toString())))
+                }.addOnFailureListener {
+                    CatHolicLogger.log("fail to get download url")
+                    dataDeferred.complete(Resource.Error(it))
+                }
+            }
+            .addOnFailureListener {
+                CatHolicLogger.log("fail to upload")
+                dataDeferred.complete(Resource.Error(it))
+            }
+
+        return try {
+            dataDeferred.await()
+        } catch (e: Exception) {
+            task.cancel()
+            Resource.Error(e)
+        }
     }
 
     override suspend fun uploadUserBackgroundPhoto(userId: String, file: File): Resource<Photo> {

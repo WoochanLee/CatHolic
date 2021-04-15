@@ -56,14 +56,40 @@ class FirebaseFirestoreUserRepository(
     }
 
     override suspend fun updateDisplayName(userId: String, displayName: String): Resource<Unit> {
-        TODO("Not yet implemented")
+        if (displayName.isEmpty()) {
+            return Resource.Error(IllegalStateException())
+        }
+
+        val dataDeferred = CompletableDeferred<Resource<Unit>>()
+
+        db.collection(COLLECTION_PROFILE_PATH)
+            .document(userId)
+            .update(UserDto::displayName.name, displayName)
+            .addOnSuccessListener {
+                dataDeferred.complete(Resource.Success(Unit))
+            }.addOnFailureListener {
+                dataDeferred.complete(Resource.Error(it))
+            }
+
+        return dataDeferred.await()
     }
 
-    override suspend fun updateUserPhotoUrl(userId: String, userPhotoUrl: String): Resource<Unit> {
-        TODO("Not yet implemented")
+    override suspend fun updateUserProfilePhotoUrl(userId: String, userProfilePhotoUrl: String): Resource<Unit> {
+        val dataDeferred = CompletableDeferred<Resource<Unit>>()
+
+        db.collection(COLLECTION_PROFILE_PATH)
+            .document(userId)
+            .update(UserDto::userProfilePhotoUrl.name, userProfilePhotoUrl)
+            .addOnSuccessListener {
+                dataDeferred.complete(Resource.Success(Unit))
+            }.addOnFailureListener {
+                dataDeferred.complete(Resource.Error(it))
+            }
+
+        return dataDeferred.await()
     }
 
-    override suspend fun updateBackgroundPhotoUrl(userId: String, userBackgroundPhotoUrl: String): Resource<Unit> {
+    override suspend fun updateUserBackgroundPhotoUrl(userId: String, userBackgroundPhotoUrl: String): Resource<Unit> {
         val dataDeferred = CompletableDeferred<Resource<Unit>>()
 
         db.collection(COLLECTION_PROFILE_PATH)
@@ -79,7 +105,18 @@ class FirebaseFirestoreUserRepository(
     }
 
     override suspend fun updateGreetings(userId: String, greetings: String): Resource<Unit> {
-        TODO("Not yet implemented")
+        val dataDeferred = CompletableDeferred<Resource<Unit>>()
+
+        db.collection(COLLECTION_PROFILE_PATH)
+            .document(userId)
+            .update(UserDto::greetings.name, greetings)
+            .addOnSuccessListener {
+                dataDeferred.complete(Resource.Success(Unit))
+            }.addOnFailureListener {
+                dataDeferred.complete(Resource.Error(it))
+            }
+
+        return dataDeferred.await()
     }
 
     override fun isSignedIn(): Boolean {

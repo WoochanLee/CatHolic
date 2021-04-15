@@ -3,7 +3,6 @@ package com.woody.cat.holic.presentation.main
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
-import androidx.appcompat.widget.PopupMenu
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -74,8 +73,8 @@ class MainActivity : BaseActivity() {
                     .show(supportFragmentManager, LikeListDialog::class.java.name)
             })
 
-            eventShowProfileMenuPopup.observeEvent(this@MainActivity, { userId ->
-                showProfileMenuPopup(userId)
+            eventStartProfileActivity.observeEvent(this@MainActivity, { userId ->
+                startActivity(ProfileActivity.getIntent(this@MainActivity, userId))
             })
         }
 
@@ -185,7 +184,7 @@ class MainActivity : BaseActivity() {
             .show(fragment)
             .commit()
     }
-
+/*
     private fun showProfileMenuPopup(userId: String) {
         val popup = PopupMenu(this, binding.ibProfileMenu)
         popup.inflate(R.menu.my_profile_menu)
@@ -199,5 +198,5 @@ class MainActivity : BaseActivity() {
             false
         }
         popup.show()
-    }
+    }*/
 }

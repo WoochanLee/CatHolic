@@ -8,8 +8,8 @@ import com.woody.cat.holic.framework.net.common.NotSignedInException
 import com.woody.cat.holic.framework.paging.item.PostingItem
 import com.woody.cat.holic.framework.paging.item.UserItem
 import com.woody.cat.holic.framework.paging.item.mapToPostingItem
-import com.woody.cat.holic.usecase.user.GetCurrentUserId
 import com.woody.cat.holic.usecase.posting.GetUserLikePostings
+import com.woody.cat.holic.usecase.user.GetCurrentUserId
 import com.woody.cat.holic.usecase.user.GetUserProfile
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -52,7 +52,7 @@ class LikePostingDataSource(
             withContext(Dispatchers.IO) {
                 handleResourceResult(getUserProfile(userItem.userId), onSuccess = {
                     userItem.displayName.postValue(it.displayName)
-                    userItem.userPhotoUrl.postValue(it.userPhotoUrl)
+                    userItem.userProfilePhotoUrl.postValue(it.userProfilePhotoUrl)
                 })
             }
         }

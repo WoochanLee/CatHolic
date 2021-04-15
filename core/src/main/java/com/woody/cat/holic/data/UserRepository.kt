@@ -15,9 +15,9 @@ interface UserRepository {
 
     suspend fun updateDisplayName(userId: String, displayName: String): Resource<Unit>
 
-    suspend fun updateUserPhotoUrl(userId: String, userPhotoUrl: String): Resource<Unit>
+    suspend fun updateUserProfilePhotoUrl(userId: String, userProfilePhotoUrl: String): Resource<Unit>
 
-    suspend fun updateBackgroundPhotoUrl(userId: String, userBackgroundPhotoUrl: String): Resource<Unit>
+    suspend fun updateUserBackgroundPhotoUrl(userId: String, userBackgroundPhotoUrl: String): Resource<Unit>
 
     suspend fun updateGreetings(userId: String, greetings: String): Resource<Unit>
 }

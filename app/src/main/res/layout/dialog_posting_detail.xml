@@ -72,7 +72,7 @@
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        app:imageUrl="@{postingDetailViewModel.postingItem.user.userPhotoUrl}" />
+                        app:imageUrl="@{postingDetailViewModel.postingItem.user.userProfilePhotoUrl}" />
 
                 </androidx.cardview.widget.CardView>
 

@@ -2,6 +2,9 @@ package com.woody.cat.holic.framework.base
 
 import android.content.Context
 import android.graphics.Color
+import android.util.TypedValue
+import android.view.View
+import android.view.inputmethod.InputMethodManager
 import com.woody.cat.holic.R
 import com.yanzhenjie.album.api.widget.Widget
 import java.text.SimpleDateFormat
@@ -32,4 +35,13 @@ fun Context.makeCustomAlbumWidget(): Widget {
         .toolBarColor(Color.BLACK)
         .navigationBarColor(Color.BLACK)
         .build()
+}
+
+fun hideKeyboard(context: Context, focusView: View) {
+    val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+    imm.hideSoftInputFromWindow(focusView.windowToken, 0)
+}
+
+fun Context.dpToPx(dp: Float): Float {
+    return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, resources.displayMetrics)
 }

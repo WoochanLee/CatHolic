@@ -48,7 +48,7 @@ class CommentDataSource(
             withContext(Dispatchers.IO) {
                 handleResourceResult(getUserProfile(userItem.userId), onSuccess = {
                     userItem.displayName.postValue(it.displayName)
-                    userItem.userPhotoUrl.postValue(it.userPhotoUrl)
+                    userItem.userProfilePhotoUrl.postValue(it.userProfilePhotoUrl)
                 })
             }
         }
