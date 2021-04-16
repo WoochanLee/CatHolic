@@ -26,7 +26,7 @@ class MyPhotoPostingAdapter(
 
     override fun onBindViewHolder(holder: BaseViewHolder<PostingItem, MyPhotoViewModel>, position: Int) {
         getItem(position)?.let { item ->
-            holder.bind(position, item, myPhotoViewModel)
+            holder.bind(position, item)
         }
     }
 }

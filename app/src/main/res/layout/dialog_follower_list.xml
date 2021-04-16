@@ -4,8 +4,8 @@
     <data>
 
         <variable
-            name="likeListViewModel"
-            type="com.woody.cat.holic.presentation.main.posting.likelist.LikeListViewModel" />
+            name="followerListViewModel"
+            type="com.woody.cat.holic.presentation.main.user.profile.follower.FollowerListViewModel" />
     </data>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -16,7 +16,6 @@
         android:orientation="vertical">
 
         <androidx.appcompat.widget.Toolbar
-            android:id="@+id/tb_my_cat_photos"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/background_color_main"
@@ -29,7 +28,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/liked_users"
+                    android:text="@string/followers"
                     android:textAllCaps="true"
                     android:textColor="@color/text_color"
                     android:textSize="20dp"
@@ -47,7 +46,7 @@
             android:background="@color/gray" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_like"
+            android:id="@+id/rv_follower"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"

@@ -49,7 +49,7 @@ class MainActivity : BaseActivity() {
 
             eventMoveToSignInTabWithToast.observeEvent(this@MainActivity, {
                 binding.tlMain.getTabAt(MainTab.TAB_USER.position)?.select()
-                Toast.makeText(this@MainActivity, R.string.need_to_sign_in, Toast.LENGTH_LONG).show()
+                Toast.makeText(applicationContext, R.string.need_to_sign_in, Toast.LENGTH_LONG).show()
             })
 
             eventShowPostingDetail.observeEvent(this@MainActivity, { postingItem ->

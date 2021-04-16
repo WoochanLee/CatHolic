@@ -5,10 +5,11 @@ import android.graphics.Color
 import android.util.TypedValue
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import com.woody.cat.holic.R
+import androidx.annotation.StringRes
 import com.yanzhenjie.album.api.widget.Widget
 import java.text.SimpleDateFormat
 import java.util.*
+
 
 fun getFileExtension(filePath: String): String {
     var extension = "";
@@ -28,9 +29,9 @@ fun Date?.makeCommentDateString(): String {
     return SimpleDateFormat("yyyy-MM-dd, hh:mm:ss", Locale.getDefault()).format(this ?: return "")
 }
 
-fun Context.makeCustomAlbumWidget(): Widget {
+fun Context.makeCustomAlbumWidget(@StringRes title: Int): Widget {
     return Widget.newDarkBuilder(this)
-        .title(getString(R.string.select_cats))
+        .title(getString(title))
         .statusBarColor(Color.BLACK)
         .toolBarColor(Color.BLACK)
         .navigationBarColor(Color.BLACK)

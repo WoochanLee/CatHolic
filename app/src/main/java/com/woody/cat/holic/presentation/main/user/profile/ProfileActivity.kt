@@ -24,6 +24,8 @@ import com.woody.cat.holic.framework.base.BaseActivity
 import com.woody.cat.holic.framework.base.hideKeyboard
 import com.woody.cat.holic.framework.base.makeCustomAlbumWidget
 import com.woody.cat.holic.framework.base.observeEvent
+import com.woody.cat.holic.presentation.main.user.profile.follower.FollowerListDialog
+import com.woody.cat.holic.presentation.main.user.profile.following.FollowingListDialog
 import com.woody.cat.holic.presentation.upload.UploadActivity
 import com.yanzhenjie.album.Album
 import kotlin.math.min
@@ -84,8 +86,22 @@ class ProfileActivity : BaseActivity() {
                 }
             })
 
-            eventShowToast.observeEvent(this@ProfileActivity, {
-                Toast.makeText(this@ProfileActivity, it, Toast.LENGTH_SHORT).show()
+            eventShowFollowerDialog.observeEvent(this@ProfileActivity, { followerList ->
+                FollowerListDialog.Builder()
+                    .setFollowerUserList(followerList)
+                    .create()
+                    .show(supportFragmentManager, FollowerListDialog::class.java.name)
+            })
+
+            eventShowFollowingDialog.observeEvent(this@ProfileActivity, { followingList ->
+                FollowingListDialog.Builder()
+                    .setFollowingUserList(followingList)
+                    .create()
+                    .show(supportFragmentManager, FollowingListDialog::class.java.name)
+            })
+
+            eventShowToast.observeEvent(this@ProfileActivity, { stringRes ->
+                Toast.makeText(applicationContext, stringRes, Toast.LENGTH_SHORT).show()
             })
 
             eventFinishActivity.observeEvent(this@ProfileActivity, {
@@ -107,7 +123,7 @@ class ProfileActivity : BaseActivity() {
     private fun getUserBackgroundPhotoFromAlbum(onPhotoSelected: (String) -> Unit) {
         Album.image(this)
             .singleChoice()
-            .widget(makeCustomAlbumWidget())
+            .widget(makeCustomAlbumWidget(title = R.string.select_photo))
             .camera(true)
             .columnCount(UploadActivity.ALBUM_COLUMN_COUNT)
             .onResult breaker@{ checkedList ->

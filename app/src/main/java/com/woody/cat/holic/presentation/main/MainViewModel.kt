@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.woody.cat.holic.R
-import com.woody.cat.holic.data.PostingOrder
+import com.woody.cat.holic.data.common.PostingOrder
 import com.woody.cat.holic.framework.base.*
 import com.woody.cat.holic.framework.paging.item.PostingItem
 import com.woody.cat.holic.usecase.posting.GetPostingOrder

@@ -182,7 +182,10 @@
                     android:layout_height="100dp"
                     android:layout_marginHorizontal="20dp"
                     android:layout_marginBottom="20dp"
-                    app:model="@{viewModel.userProfile}" />
+                    app:model="@{viewModel.userProfile}"
+                    app:onClickFollowers="@{viewModel::onClickFollowers}"
+                    app:onClickFollowing="@{viewModel::onClickFollowing}"
+                    app:onClickPhotos="@{viewModel::onClickPhotos}" />
             </LinearLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout

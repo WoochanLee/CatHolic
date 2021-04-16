@@ -1,4 +1,4 @@
-package com.woody.cat.holic.presentation.main.posting.likelist
+package com.woody.cat.holic.presentation.main.user.profile.follower
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -9,11 +9,11 @@ import androidx.paging.cachedIn
 import com.woody.cat.holic.framework.base.BaseViewModel
 import com.woody.cat.holic.framework.base.Event
 import com.woody.cat.holic.framework.base.emit
-import com.woody.cat.holic.framework.paging.LikeListDataSource
+import com.woody.cat.holic.framework.paging.FollowerListDataSource
 import com.woody.cat.holic.usecase.user.GetUserProfile
 
-class LikeListViewModel(
-    private val likeUserList: List<String>,
+class FollowerListViewModel(
+    private val followerUserList: List<String>,
     private val getUserProfile: GetUserProfile
 ) : BaseViewModel() {
 
@@ -27,8 +27,8 @@ class LikeListViewModel(
     fun getCommentFlow() = Pager(
         config = PagingConfig(pageSize = PAGE_SIZE),
         pagingSourceFactory = {
-            LikeListDataSource(
-                likeUserList,
+            FollowerListDataSource(
+                followerUserList,
                 getUserProfile
             )
         }

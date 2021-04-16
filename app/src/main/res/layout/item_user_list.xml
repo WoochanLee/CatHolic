@@ -5,6 +5,10 @@
     <data>
 
         <variable
+            name="onClickProfile"
+            type="Function1&lt;String, Unit>" />
+
+        <variable
             name="position"
             type="Integer" />
 
@@ -13,6 +17,10 @@
             type="com.woody.cat.holic.framework.paging.item.UserItem" />
 
         <import type="android.view.View" />
+
+        <import type="kotlin.jvm.functions.Function1" />
+
+        <import type="kotlin.Unit" />
     </data>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -27,7 +35,7 @@
         <androidx.cardview.widget.CardView
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:layout_marginEnd="5dp"
+            android:onClick="@{() -> onClickProfile.invoke(model.userId)}"
             app:cardBackgroundColor="@color/gray"
             app:cardCornerRadius="15dp"
             app:cardElevation="0dp">
@@ -43,6 +51,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:onClick="@{() -> onClickProfile.invoke(model.userId)}"
+            android:padding="5dp"
             android:text="@{model.displayName}"
             android:textColor="@color/text_color"
             android:textSize="15dp"

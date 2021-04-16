@@ -4,9 +4,9 @@ import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-import com.woody.cat.holic.data.PostingOrder
 import com.woody.cat.holic.data.PostingRepository
-import com.woody.cat.holic.data.PostingType
+import com.woody.cat.holic.data.common.PostingOrder
+import com.woody.cat.holic.data.common.PostingType
 import com.woody.cat.holic.data.common.Resource
 import com.woody.cat.holic.domain.Posting
 import com.woody.cat.holic.framework.COLLECTION_POSTING_PATH

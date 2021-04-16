@@ -1,6 +1,5 @@
 package com.woody.cat.holic.framework.net
 
-import android.net.Uri
 import com.google.firebase.storage.StorageReference
 import com.woody.cat.holic.data.PhotoRepository
 import com.woody.cat.holic.data.common.Resource
@@ -10,6 +9,7 @@ import com.woody.cat.holic.framework.STORAGE_USER_BACKGROUND_PHOTO_PATH
 import com.woody.cat.holic.framework.STORAGE_USER_PROFILE_PHOTO_PATH
 import com.woody.cat.holic.framework.base.CatHolicLogger
 import com.woody.cat.holic.framework.base.getFileExtension
+import com.woody.cat.holic.framework.base.getJpegByteArray
 import kotlinx.coroutines.CompletableDeferred
 import java.io.File
 
@@ -26,8 +26,10 @@ class FirebaseStoragePhotoRepository(private val storageRef: StorageReference) :
     ): Resource<Photo> {
         val dataDeferred = CompletableDeferred<Resource<Photo>>()
 
+        val imageByteArray = getJpegByteArray(file.path, PhotoRepository.MAX_CAT_PHOTO_IMAGE_SIZE)
+
         val catsRef = storageRef.child(makeFirebaseStorageUploadFilePath(file, STORAGE_CAT_PHOTO_PATH, userId))
-        val task = catsRef.putFile(Uri.fromFile(file))
+        val task = catsRef.putBytes(imageByteArray)
             .addOnProgressListener { snapshot ->
                 val progress = (100f * snapshot.bytesTransferred / snapshot.totalByteCount).toInt()
                 onProgress(progress)
@@ -59,8 +61,10 @@ class FirebaseStoragePhotoRepository(private val storageRef: StorageReference) :
     override suspend fun uploadUserProfilePhoto(userId: String, file: File): Resource<Photo> {
         val dataDeferred = CompletableDeferred<Resource<Photo>>()
 
+        val imageByteArray = getJpegByteArray(file.path, PhotoRepository.MAX_USER_PROFILE_PHOTO_IMAGE_SIZE)
+
         val catsRef = storageRef.child(makeFirebaseStorageUploadFilePath(file, STORAGE_USER_PROFILE_PHOTO_PATH, userId))
-        val task = catsRef.putFile(Uri.fromFile(file))
+        val task = catsRef.putBytes(imageByteArray)
             .addOnSuccessListener {
                 CatHolicLogger.log("success to upload")
                 catsRef.downloadUrl.addOnSuccessListener {
@@ -87,8 +91,10 @@ class FirebaseStoragePhotoRepository(private val storageRef: StorageReference) :
     override suspend fun uploadUserBackgroundPhoto(userId: String, file: File): Resource<Photo> {
         val dataDeferred = CompletableDeferred<Resource<Photo>>()
 
+        val imageByteArray = getJpegByteArray(file.path, PhotoRepository.MAX_USER_BACKGROUND_PHOTO_IMAGE_SIZE)
+
         val catsRef = storageRef.child(makeFirebaseStorageUploadFilePath(file, STORAGE_USER_BACKGROUND_PHOTO_PATH, userId))
-        val task = catsRef.putFile(Uri.fromFile(file))
+        val task = catsRef.putBytes(imageByteArray)
             .addOnSuccessListener {
                 CatHolicLogger.log("success to upload")
                 catsRef.downloadUrl.addOnSuccessListener {

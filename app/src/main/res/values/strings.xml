@@ -50,4 +50,6 @@
     <string name="edit_greetings">Edit Greetings</string>
     <string name="enter_your_nickname">enter your nickname !</string>
     <string name="something_went_wrong">Something went wrong !\nPlease try again.</string>
+    <string name="photos">Photos</string>
+    <string name="select_photo">SELECT PHOTO</string>
 </resources>

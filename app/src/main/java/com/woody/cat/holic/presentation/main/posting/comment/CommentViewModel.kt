@@ -33,6 +33,9 @@ class CommentViewModel(
     private val _eventRefreshData = MutableLiveData<Event<Unit>>()
     val eventRefreshData: LiveData<Event<Unit>> get() = _eventRefreshData
 
+    private val _eventStartProfileActivity = MutableLiveData<Event<String>>()
+    val eventStartProfileActivity: LiveData<Event<String>> get() = _eventStartProfileActivity
+
     private val _writingEmojiStr = MutableLiveData("")
     val writeEmojiStr: LiveData<String> get() = _writingEmojiStr
 
@@ -67,6 +70,10 @@ class CommentViewModel(
 
     fun setIsListEmpty(isListEmpty: Boolean) {
         _isListEmpty.postValue(isListEmpty)
+    }
+
+    fun onClickProfile(userId: String) {
+        _eventStartProfileActivity.emit(userId)
     }
 
     fun onClickAddComment() {

@@ -5,6 +5,10 @@
     <data>
 
         <variable
+            name="viewModel"
+            type="com.woody.cat.holic.presentation.main.posting.comment.CommentViewModel" />
+
+        <variable
             name="position"
             type="Integer" />
 
@@ -28,6 +32,7 @@
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="5dp"
+            android:onClick="@{() -> viewModel.onClickProfile(model.user.userId)}"
             app:cardBackgroundColor="@color/gray"
             app:cardCornerRadius="25dp"
             app:cardElevation="5dp">
@@ -51,6 +56,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
+                android:onClick="@{() -> viewModel.onClickProfile(model.user.userId)}"
                 android:text="@{model.user.displayName}"
                 android:textColor="@color/text_color"
                 android:textSize="15dp"

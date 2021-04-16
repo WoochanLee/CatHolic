@@ -6,14 +6,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.woody.cat.holic.BR
 
 class BaseViewHolder<M : Any, VM : Any>(
-    private val binding: ViewDataBinding,
+    val binding: ViewDataBinding,
     private val lifecycleOwner: LifecycleOwner
 ) : RecyclerView.ViewHolder(binding.root) {
 
-    fun bind(position: Int, model: M, viewModel: VM) {
+    fun bind(position: Int, model: M, viewModel: VM? = null) {
         binding.setVariable(BR.position, position)
         binding.setVariable(BR.model, model)
-        binding.setVariable(BR.viewModel, viewModel)
+        if (viewModel != null) binding.setVariable(BR.viewModel, viewModel)
         binding.lifecycleOwner = lifecycleOwner
         binding.executePendingBindings()
     }

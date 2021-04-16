@@ -1,5 +1,7 @@
 package com.woody.cat.holic.data
 
+import com.woody.cat.holic.data.common.PostingOrder
+import com.woody.cat.holic.data.common.PostingType
 import com.woody.cat.holic.data.common.Resource
 import com.woody.cat.holic.domain.Posting
 
@@ -21,24 +23,4 @@ interface PostingRepository {
     suspend fun getUserLikePostings(key: String?, userId: String, size: Int): Resource<List<Posting>>
 
     suspend fun getUserUploadedPostings(key: String?, userId: String, size: Int): Resource<List<Posting>>
-}
-
-enum class PostingType {
-    GALLERY,
-    LIKED,
-    USER
-}
-
-enum class PostingOrder {
-    CREATED,
-    LIKED,
-    RANDOM; //TODO: need more logic. (randomly combine order, value, etc..)
-
-    fun getNextPostingOrder(): PostingOrder {
-        return when (this) {
-            LIKED -> CREATED
-            CREATED -> RANDOM
-            RANDOM -> LIKED
-        }
-    }
 }

@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
-import com.woody.cat.holic.data.PostingType
+import com.woody.cat.holic.data.common.PostingType
 import com.woody.cat.holic.framework.base.*
 import com.woody.cat.holic.framework.paging.LikePostingDataSource
 import com.woody.cat.holic.usecase.posting.ChangeToNextPostingOrder

@@ -20,6 +20,8 @@ import com.woody.cat.holic.framework.base.observeEvent
 import com.woody.cat.holic.presentation.main.SignViewModel
 import com.woody.cat.holic.presentation.main.SignViewModelFactory
 import com.woody.cat.holic.presentation.main.user.profile.ProfileActivity
+import com.woody.cat.holic.presentation.main.user.profile.follower.FollowerListDialog
+import com.woody.cat.holic.presentation.main.user.profile.following.FollowingListDialog
 
 class UserFragment : Fragment() {
 
@@ -81,6 +83,20 @@ class UserFragment : Fragment() {
 
             eventStartProfileActivity.observeEvent(viewLifecycleOwner, { userId ->
                 startActivity(ProfileActivity.getIntent(activity, userId))
+            })
+
+            eventShowFollowerDialog.observeEvent(viewLifecycleOwner, { followerList ->
+                FollowerListDialog.Builder()
+                    .setFollowerUserList(followerList)
+                    .create()
+                    .show(parentFragmentManager, FollowerListDialog::class.java.name)
+            })
+
+            eventShowFollowingDialog.observeEvent(viewLifecycleOwner, { followingList ->
+                FollowingListDialog.Builder()
+                    .setFollowingUserList(followingList)
+                    .create()
+                    .show(parentFragmentManager, FollowingListDialog::class.java.name)
             })
         }
 

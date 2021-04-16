@@ -25,6 +25,15 @@ class UserViewModel(
     private val _eventStartProfileActivity = MutableLiveData<Event<String>>()
     val eventStartProfileActivity: LiveData<Event<String>> get() = _eventStartProfileActivity
 
+    private val _eventStartUserPhotoListActivity = MutableLiveData<Event<String>>()
+    val eventStartUserPhotoListActivity: LiveData<Event<String>> get() = _eventStartUserPhotoListActivity
+
+    private val _eventShowFollowerDialog = MutableLiveData<Event<List<String>>>()
+    val eventShowFollowerDialog: LiveData<Event<List<String>>> get() = _eventShowFollowerDialog
+
+    private val _eventShowFollowingDialog = MutableLiveData<Event<List<String>>>()
+    val eventShowFollowingDialog: LiveData<Event<List<String>>> get() = _eventShowFollowingDialog
+
     fun changeDarkMode() {
         val changedDarkMode = isDarkMode.value != true
         updateAppSetting.setDarkMode(changedDarkMode)
@@ -35,5 +44,17 @@ class UserViewModel(
 
     fun onClickProfile(userId: String) {
         _eventStartProfileActivity.emit(userId)
+    }
+
+    fun onClickPhotos(userId: String) {
+        _eventStartUserPhotoListActivity.emit(userId)
+    }
+
+    fun onClickFollowers(followerUserIds: List<String>) {
+        _eventShowFollowerDialog.emit(followerUserIds)
+    }
+
+    fun onClickFollowing(followingUserIds: List<String>) {
+        _eventShowFollowingDialog.emit(followingUserIds)
     }
 }

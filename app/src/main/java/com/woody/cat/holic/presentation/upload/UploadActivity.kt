@@ -50,16 +50,16 @@ class UploadActivity : BaseActivity() {
                 moveToPrevPreviewPage()
             })
 
-            eventMoveToTargetPreviewPage.observeEvent(this@UploadActivity, {
-                moveToTargetPreviewPage(it)
+            eventMoveToTargetPreviewPage.observeEvent(this@UploadActivity, { position ->
+                moveToTargetPreviewPage(position)
             })
 
-            eventRemoveTargetPreviewPage.observeEvent(this@UploadActivity, {
-                removeTargetPreviewPage(it)
+            eventRemoveTargetPreviewPage.observeEvent(this@UploadActivity, { position ->
+                removeTargetPreviewPage(position)
             })
 
-            eventShowToast.observeEvent(this@UploadActivity, {
-                Toast.makeText(this@UploadActivity, it, Toast.LENGTH_LONG).show()
+            eventShowToast.observeEvent(this@UploadActivity, { stringRes ->
+                Toast.makeText(applicationContext, stringRes, Toast.LENGTH_LONG).show()
             })
 
             eventFinish.observeEvent(this@UploadActivity, {
@@ -115,7 +115,7 @@ class UploadActivity : BaseActivity() {
     private fun getAlbumPhotos() {
         Album.image(this)
             .multipleChoice()
-            .widget(makeCustomAlbumWidget())
+            .widget(makeCustomAlbumWidget(title = R.string.select_cats))
             .camera(true)
             .columnCount(ALBUM_COLUMN_COUNT)
             .selectCount(ALBUM_MAX_SELECT_COUNT)
