@@ -11,7 +11,7 @@
 
         <variable
             name="postingDetailViewModel"
-            type="com.woody.cat.holic.presentation.main.posting.PostingDetailViewModel" />
+            type="com.woody.cat.holic.presentation.main.posting.detail.PostingDetailViewModel" />
 
         <import type="android.view.View" />
 

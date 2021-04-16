@@ -14,8 +14,8 @@ import com.woody.cat.holic.framework.base.BaseActivity
 import com.woody.cat.holic.framework.base.observeEvent
 import com.woody.cat.holic.presentation.main.gallery.GalleryFragment
 import com.woody.cat.holic.presentation.main.like.LikeFragment
-import com.woody.cat.holic.presentation.main.posting.PostingDetailDialog
-import com.woody.cat.holic.presentation.main.posting.comment.CommentDialog
+import com.woody.cat.holic.presentation.main.posting.PostingViewModel
+import com.woody.cat.holic.presentation.main.posting.PostingViewModelFactory
 import com.woody.cat.holic.presentation.main.posting.likelist.LikeListDialog
 import com.woody.cat.holic.presentation.main.user.UserFragment
 import com.woody.cat.holic.presentation.main.user.myphoto.MyPhotoActivity
@@ -27,6 +27,7 @@ class MainActivity : BaseActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var mainViewModel: MainViewModel
     private lateinit var signViewModel: SignViewModel
+    private lateinit var postingViewModel: PostingViewModel
 
     private lateinit var galleryFragment: GalleryFragment
     private lateinit var likeFragment: LikeFragment
@@ -42,6 +43,7 @@ class MainActivity : BaseActivity() {
 
         mainViewModel = ViewModelProvider(this, MainViewModelFactory()).get(MainViewModel::class.java).apply {
             binding.mainViewModel = this
+            setToolbarTitle(getString(R.string.gallery))
 
             eventStartUploadActivity.observeEvent(this@MainActivity, {
                 startActivity(Intent(this@MainActivity, UploadActivity::class.java))
@@ -52,18 +54,8 @@ class MainActivity : BaseActivity() {
                 Toast.makeText(applicationContext, R.string.need_to_sign_in, Toast.LENGTH_LONG).show()
             })
 
-            eventShowPostingDetail.observeEvent(this@MainActivity, { postingItem ->
-                PostingDetailDialog.Builder()
-                    .setPostingItem(postingItem)
-                    .create()
-                    .show(supportFragmentManager, PostingDetailDialog::class.java.name)
-            })
-
-            eventShowCommentDialog.observeEvent(this@MainActivity, { postingItem ->
-                CommentDialog.Builder()
-                    .setPostingItem(postingItem)
-                    .create()
-                    .show(supportFragmentManager, CommentDialog::class.java.name)
+            eventStartProfileActivity.observeEvent(this@MainActivity, { userId ->
+                startActivity(ProfileActivity.getIntent(this@MainActivity, userId))
             })
 
             eventShowLikeListDialog.observeEvent(this@MainActivity, { postingItem ->
@@ -71,10 +63,6 @@ class MainActivity : BaseActivity() {
                     .setLikeUserList(postingItem.likedUserIds)
                     .create()
                     .show(supportFragmentManager, LikeListDialog::class.java.name)
-            })
-
-            eventStartProfileActivity.observeEvent(this@MainActivity, { userId ->
-                startActivity(ProfileActivity.getIntent(this@MainActivity, userId))
             })
         }
 
@@ -85,7 +73,13 @@ class MainActivity : BaseActivity() {
             })
         }
 
-        mainViewModel.setToolbarTitle(getString(R.string.gallery))
+        postingViewModel = ViewModelProvider(this, PostingViewModelFactory()).get(PostingViewModel::class.java).apply {
+            eventMoveToSignInTabWithToast.observeEvent(this@MainActivity, {
+                binding.tlMain.getTabAt(MainTab.TAB_USER.position)?.select()
+                Toast.makeText(applicationContext, R.string.need_to_sign_in, Toast.LENGTH_LONG).show()
+            })
+        }
+
         if (savedInstanceState == null) {
             initFragments()
         } else {

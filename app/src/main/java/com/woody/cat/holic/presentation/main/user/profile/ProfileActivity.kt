@@ -26,6 +26,7 @@ import com.woody.cat.holic.framework.base.makeCustomAlbumWidget
 import com.woody.cat.holic.framework.base.observeEvent
 import com.woody.cat.holic.presentation.main.user.profile.follower.FollowerListDialog
 import com.woody.cat.holic.presentation.main.user.profile.following.FollowingListDialog
+import com.woody.cat.holic.presentation.main.user.profile.photo.UserPhotoActivity
 import com.woody.cat.holic.presentation.upload.UploadActivity
 import com.yanzhenjie.album.Album
 import kotlin.math.min
@@ -84,6 +85,10 @@ class ProfileActivity : BaseActivity() {
                 showEditTextAlertDialog(EditTextDialogType.GREETINGS, binding.tvProfileGreetings.text.toString()) { greetings ->
                     viewModel.updateUserGreetings(greetings)
                 }
+            })
+
+            eventStartUserPhotoActivity.observeEvent(this@ProfileActivity, { userId ->
+                startActivity(UserPhotoActivity.getIntent(this@ProfileActivity, userId))
             })
 
             eventShowFollowerDialog.observeEvent(this@ProfileActivity, { followerList ->

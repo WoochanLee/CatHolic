@@ -2,15 +2,6 @@
 <layout>
 
     <data>
-
-        <variable
-            name="mainViewModel"
-            type="com.woody.cat.holic.presentation.main.MainViewModel" />
-
-        <variable
-            name="userViewModel"
-            type="com.woody.cat.holic.presentation.main.SignViewModel" />
-
         <variable
             name="galleryViewModel"
             type="com.woody.cat.holic.presentation.main.gallery.GalleryViewModel" />

@@ -233,7 +233,7 @@
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
                                             android:layout_gravity="center"
-                                            android:text="@string/my_cat_photos"
+                                            android:text="@string/my_cat_photo"
                                             android:textColor="@color/text_color"
                                             android:textSize="17dp"
                                             android:textStyle="bold" />

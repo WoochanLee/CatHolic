@@ -8,8 +8,7 @@
     <string name="privacy_policy">Privacy Policy</string>
     <string name="sign_out">Sign Out</string>
     <string name="notification">Notification</string>
-    <string name="my_cat_photos">My Cat Photos</string>
-    <string name="my_cat_photo">MY CAT PHOTO</string>
+    <string name="my_cat_photo">My Cat Photo</string>
     <string name="welcome_to_cat_holic">Welcome to Cat Holic !</string>
     <string name="please_sign_in_to_manage_your_cat_photos">Please sign in to manage your cat photos.</string>
     <string name="post_these_photos">Post These Photos !</string>
@@ -52,4 +51,5 @@
     <string name="something_went_wrong">Something went wrong !\nPlease try again.</string>
     <string name="photos">Photos</string>
     <string name="select_photo">SELECT PHOTO</string>
+    <string name="cat_photo">"%s Cat Photo"</string>
 </resources>

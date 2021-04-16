@@ -41,8 +41,8 @@ class ProfileViewModel(
     private val _eventShowEditGreetingsDialog = MutableLiveData<Event<Unit>>()
     val eventShowEditGreetingsDialog: LiveData<Event<Unit>> get() = _eventShowEditGreetingsDialog
 
-    private val _eventStartPostingActivity = MutableLiveData<Event<String>>()
-    val eventStartPostingActivity: LiveData<Event<String>> get() = _eventStartPostingActivity
+    private val _eventStartUserPhotoActivity = MutableLiveData<Event<String>>()
+    val eventStartUserPhotoActivity: LiveData<Event<String>> get() = _eventStartUserPhotoActivity
 
     private val _eventShowFollowerDialog = MutableLiveData<Event<List<String>>>()
     val eventShowFollowerDialog: LiveData<Event<List<String>>> get() = _eventShowFollowerDialog
@@ -131,7 +131,7 @@ class ProfileViewModel(
     }
 
     fun onClickPhotos(userId: String) {
-        _eventStartPostingActivity.emit(userId)
+        _eventStartUserPhotoActivity.emit(userId)
     }
 
     fun onClickFollowers(followerUserIds: List<String>) {

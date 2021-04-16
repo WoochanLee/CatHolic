@@ -1,4 +1,4 @@
-package com.woody.cat.holic.presentation.main.posting
+package com.woody.cat.holic.presentation.main.posting.detail
 
 import android.os.Bundle
 import android.view.LayoutInflater

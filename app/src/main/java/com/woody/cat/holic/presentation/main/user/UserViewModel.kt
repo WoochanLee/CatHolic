@@ -25,8 +25,8 @@ class UserViewModel(
     private val _eventStartProfileActivity = MutableLiveData<Event<String>>()
     val eventStartProfileActivity: LiveData<Event<String>> get() = _eventStartProfileActivity
 
-    private val _eventStartUserPhotoListActivity = MutableLiveData<Event<String>>()
-    val eventStartUserPhotoListActivity: LiveData<Event<String>> get() = _eventStartUserPhotoListActivity
+    private val _eventStartUserPhotoActivity = MutableLiveData<Event<String>>()
+    val eventStartUserPhotoActivity: LiveData<Event<String>> get() = _eventStartUserPhotoActivity
 
     private val _eventShowFollowerDialog = MutableLiveData<Event<List<String>>>()
     val eventShowFollowerDialog: LiveData<Event<List<String>>> get() = _eventShowFollowerDialog
@@ -47,7 +47,7 @@ class UserViewModel(
     }
 
     fun onClickPhotos(userId: String) {
-        _eventStartUserPhotoListActivity.emit(userId)
+        _eventStartUserPhotoActivity.emit(userId)
     }
 
     fun onClickFollowers(followerUserIds: List<String>) {

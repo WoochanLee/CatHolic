@@ -37,17 +37,11 @@ class MainViewModel(
     private val _eventChangeLikePostingOrder = MutableLiveData<Event<Unit>>()
     val eventChangeLikePostingOrder: LiveData<Event<Unit>> get() = _eventChangeLikePostingOrder
 
-    private val _eventShowPostingDetail = MutableLiveData<Event<PostingItem>>()
-    val eventShowPostingDetail: LiveData<Event<PostingItem>> get() = _eventShowPostingDetail
-
-    private val _eventShowCommentDialog = MutableLiveData<Event<PostingItem>>()
-    val eventShowCommentDialog: LiveData<Event<PostingItem>> get() = _eventShowCommentDialog
+    private val _eventStartProfileActivity = MutableLiveData<Event<String>>()
+    val eventStartProfileActivity: LiveData<Event<String>> get() = _eventStartProfileActivity
 
     private val _eventShowLikeListDialog = MutableLiveData<Event<PostingItem>>()
     val eventShowLikeListDialog: LiveData<Event<PostingItem>> get() = _eventShowLikeListDialog
-
-    private val _eventStartProfileActivity = MutableLiveData<Event<String>>()
-    val eventStartProfileActivity: LiveData<Event<String>> get() = _eventStartProfileActivity
 
     private val _toolbarTitle = MutableLiveData<String>()
     val toolbarTitle: LiveData<String> get() = _toolbarTitle
@@ -105,8 +99,8 @@ class MainViewModel(
         }
     }
 
-    fun onClickComment(postingItem: PostingItem) {
-        _eventShowCommentDialog.emit(postingItem)
+    fun onClickLikeList(postingItem: PostingItem) {
+        _eventShowLikeListDialog.emit(postingItem)
     }
 
     fun onClickUploadFab() {
@@ -125,14 +119,6 @@ class MainViewModel(
         }
     }
 
-    fun onClickPostingImage(postingItem: PostingItem) {
-        _eventShowPostingDetail.emit(postingItem)
-    }
-
-    fun onClickLikeList(postingItem: PostingItem) {
-        _eventShowLikeListDialog.emit(postingItem)
-    }
-
     fun onClickProfile(userId: String) {
         _eventStartProfileActivity.emit(userId)
     }
@@ -143,5 +129,9 @@ class MainViewModel(
 
     fun setVisibleOrderSwitch(isVisible: Boolean) {
         _isVisibleOrderSwitch.postValue(isVisible)
+    }
+
+    fun callEventMoveToSignInTabWithToast() {
+        _eventMoveToSignInTabWithToast.emit()
     }
 }

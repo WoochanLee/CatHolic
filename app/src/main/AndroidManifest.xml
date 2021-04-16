@@ -16,6 +16,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.CatHolic">
+        <activity android:name=".presentation.main.user.profile.photo.UserPhotoActivity"></activity>
         <activity
             android:name=".presentation.main.user.profile.ProfileActivity"
             android:screenOrientation="portrait" />

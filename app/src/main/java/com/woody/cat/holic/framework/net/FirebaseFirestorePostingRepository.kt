@@ -44,7 +44,7 @@ class FirebaseFirestorePostingRepository(private val db: FirebaseFirestore) : Po
         val dataDeferred = CompletableDeferred<Resource<Unit>>()
 
         db.runTransaction {
-            it.update(db.collection(COLLECTION_PROFILE_PATH).document(userId), UserDto::postingCount.name, FieldValue.increment(1))
+            it.update(db.collection(COLLECTION_PROFILE_PATH).document(userId), UserDto::postingCount.name, FieldValue.increment(postings.size.toLong()))
             postings.forEach { posting ->
                 it.set(db.collection(COLLECTION_POSTING_PATH).document(), posting.mapToPostingDto())
             }
@@ -152,6 +152,39 @@ class FirebaseFirestorePostingRepository(private val db: FirebaseFirestore) : Po
     }
 
     override suspend fun getUserUploadedPostings(key: String?, userId: String, size: Int): Resource<List<Posting>> {
+        val lastDoc = getPagingKey(key)
+
+        if (lastDoc !is Resource.Success) {
+            return Resource.Error(IllegalStateException())
+        }
+
+        val dataDeferred = CompletableDeferred<Resource<List<Posting>>>()
+
+        db.collection(COLLECTION_POSTING_PATH)
+            .whereEqualTo(PostingDto::deleted.name, false)
+            .whereEqualTo(PostingDto::userId.name, userId)
+            .orderBy(PostingDto::created.name, Query.Direction.DESCENDING)
+            .run {
+                if (key != null && lastDoc.data != null) {
+                    startAfter(lastDoc.data as DocumentSnapshot)
+                } else this
+            }.limit(size.toLong())
+            .get()
+            .addOnSuccessListener { querySnapshot ->
+                val postingList = querySnapshot.documents.mapNotNull {
+                    val postingDto = it.toObject(PostingDto::class.java)
+                    postingDto?.mapToPosting(postingId = it.id)
+                }
+
+                dataDeferred.complete(Resource.Success(postingList))
+            }.addOnFailureListener {
+                dataDeferred.complete(Resource.Error(it))
+            }
+
+        return dataDeferred.await()
+    }
+
+    override suspend fun getUserPostings(key: String?, userId: String, size: Int): Resource<List<Posting>> {
         val lastDoc = getPagingKey(key)
 
         if (lastDoc !is Resource.Success) {

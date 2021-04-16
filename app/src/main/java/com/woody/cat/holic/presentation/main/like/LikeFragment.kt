@@ -15,6 +15,13 @@ import com.woody.cat.holic.databinding.FragmentLikeBinding
 import com.woody.cat.holic.framework.base.observeEvent
 import com.woody.cat.holic.framework.net.common.NotSignedInException
 import com.woody.cat.holic.presentation.main.*
+import com.woody.cat.holic.presentation.main.posting.PostingAdapter
+import com.woody.cat.holic.presentation.main.posting.PostingViewModel
+import com.woody.cat.holic.presentation.main.posting.PostingViewModelFactory
+import com.woody.cat.holic.presentation.main.posting.comment.CommentDialog
+import com.woody.cat.holic.presentation.main.posting.detail.PostingDetailDialog
+import com.woody.cat.holic.presentation.main.posting.likelist.LikeListDialog
+import com.woody.cat.holic.presentation.main.user.profile.ProfileActivity
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChangedBy
@@ -26,8 +33,9 @@ class LikeFragment : Fragment() {
     private lateinit var mainViewModel: MainViewModel
     private lateinit var signViewModel: SignViewModel
     private lateinit var likeViewModel: LikeViewModel
+    private lateinit var postingViewModel: PostingViewModel
 
-    private lateinit var postingAdapter: MainPostingAdapter
+    private lateinit var postingAdapter: PostingAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return DataBindingUtil.inflate<FragmentLikeBinding>(inflater, R.layout.fragment_like, container, false).apply {
@@ -43,7 +51,6 @@ class LikeFragment : Fragment() {
 
         mainViewModel = ViewModelProvider(activity, MainViewModelFactory()).get(MainViewModel::class.java).apply {
             binding.mainViewModel = this
-            postingAdapter = MainPostingAdapter(viewLifecycleOwner, this)
 
             eventChangeLikePostingOrder.observeEvent(viewLifecycleOwner, {
                 likeViewModel.changeToNextPostingOrder()
@@ -61,6 +68,39 @@ class LikeFragment : Fragment() {
 
             eventSignOutSuccess.observeEvent(viewLifecycleOwner, {
                 likeViewModel.initPagingFlow()
+            })
+        }
+
+        postingViewModel = ViewModelProvider(this, PostingViewModelFactory()).get(PostingViewModel::class.java).apply {
+            postingAdapter = PostingAdapter(viewLifecycleOwner, this)
+
+            eventShowPostingDetail.observeEvent(viewLifecycleOwner, { postingItem ->
+                PostingDetailDialog.Builder()
+                    .setPostingItem(postingItem)
+                    .create()
+                    .show(parentFragmentManager, PostingDetailDialog::class.java.name)
+            })
+
+            eventShowCommentDialog.observeEvent(viewLifecycleOwner, { postingItem ->
+                CommentDialog.Builder()
+                    .setPostingItem(postingItem)
+                    .create()
+                    .show(parentFragmentManager, CommentDialog::class.java.name)
+            })
+
+            eventShowLikeListDialog.observeEvent(viewLifecycleOwner, { postingItem ->
+                LikeListDialog.Builder()
+                    .setLikeUserList(postingItem.likedUserIds)
+                    .create()
+                    .show(parentFragmentManager, LikeListDialog::class.java.name)
+            })
+
+            eventStartProfileActivity.observeEvent(viewLifecycleOwner, { userId ->
+                startActivity(ProfileActivity.getIntent(requireContext(), userId))
+            })
+
+            eventMoveToSignInTabWithToast.observeEvent(viewLifecycleOwner, {
+                mainViewModel.callEventMoveToSignInTabWithToast()
             })
         }
 

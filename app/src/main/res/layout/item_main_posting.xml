@@ -6,7 +6,7 @@
 
         <variable
             name="viewModel"
-            type="com.woody.cat.holic.presentation.main.MainViewModel" />
+            type="com.woody.cat.holic.presentation.main.posting.PostingViewModel" />
 
         <variable
             name="position"
