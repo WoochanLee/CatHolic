@@ -10,87 +10,74 @@ import com.woody.cat.holic.domain.Comment
 import com.woody.cat.holic.domain.Posting
 import com.woody.cat.holic.framework.COLLECTION_COMMENT_PATH
 import com.woody.cat.holic.framework.COLLECTION_POSTING_PATH
-import com.woody.cat.holic.framework.base.CatHolicLogger
 import com.woody.cat.holic.framework.net.dto.CommentDto
 import com.woody.cat.holic.framework.net.dto.PostingDto
 import com.woody.cat.holic.framework.net.dto.mapToComment
 import com.woody.cat.holic.framework.net.dto.mapToCommentDto
-import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.tasks.await
 
 class FirebaseFirestoreCommentRepository(private val db: FirebaseFirestore) : CommentRepository {
 
     override suspend fun addComment(comment: Comment): Resource<Unit> {
-        val dataDeferred = CompletableDeferred<Resource<Unit>>()
-
         val commentDto = comment.mapToCommentDto()
 
-        db.runTransaction {
-            val commentDocumentReference = db.collection(COLLECTION_COMMENT_PATH).document()
-            val postingDocumentReference = db.collection(COLLECTION_POSTING_PATH).document(comment.postingId)
-            val postingDto = it.get(postingDocumentReference).toObject(PostingDto::class.java)
+        return try {
+            db.runTransaction {
+                val commentDocumentReference = db.collection(COLLECTION_COMMENT_PATH).document()
+                val postingDocumentReference = db.collection(COLLECTION_POSTING_PATH).document(comment.postingId)
+                val postingDto = it.get(postingDocumentReference).toObject(PostingDto::class.java)
 
-            it.set(commentDocumentReference, commentDto)
-            it.update(postingDocumentReference, Posting::commentIds.name, FieldValue.arrayUnion(commentDocumentReference.id))
-            it.update(postingDocumentReference, Posting::commentCount.name, (postingDto?.commentIds?.size ?: 0) + 1)
-        }.addOnSuccessListener {
-            dataDeferred.complete(Resource.Success(Unit))
-            CatHolicLogger.log("success to add comment to posting")
-        }.addOnFailureListener {
-            dataDeferred.complete(Resource.Error(it))
-            CatHolicLogger.log("fail to add comment to posting")
+                it.set(commentDocumentReference, commentDto)
+                it.update(postingDocumentReference, Posting::commentIds.name, FieldValue.arrayUnion(commentDocumentReference.id))
+                it.update(postingDocumentReference, Posting::commentCount.name, (postingDto?.commentIds?.size ?: 0) + 1)
+            }.await()
+            Resource.Success(Unit)
+        } catch (e: Exception) {
+            Resource.Error(e)
         }
-
-        return dataDeferred.await()
     }
 
     override suspend fun getComments(key: String?, postingId: String, size: Int): Resource<List<Comment>> {
-        val lastDoc = getPagingKey(key)
+        val lastDoc = getPagingKeyDoc(key)
 
         if (lastDoc !is Resource.Success) {
             return Resource.Error(IllegalStateException())
         }
 
-        val dataDeferred = CompletableDeferred<Resource<List<Comment>>>()
+        return try {
+            val querySnapshot = db.collection(COLLECTION_COMMENT_PATH)
+                .whereEqualTo(Comment::postingId.name, postingId)
+                .orderBy(Comment::created.name, Query.Direction.DESCENDING)
+                .run {
+                    if (key != null && lastDoc.data != null) {
+                        startAfter(lastDoc.data as DocumentSnapshot)
+                    } else this
+                }.limit(size.toLong())
+                .get()
+                .await()
 
-        db.collection(COLLECTION_COMMENT_PATH)
-            .whereEqualTo(Comment::postingId.name, postingId)
-            .orderBy(Comment::created.name, Query.Direction.DESCENDING)
-            .run {
-                if (key != null && lastDoc.data != null) {
-                    startAfter(lastDoc.data as DocumentSnapshot)
-                } else this
-            }.limit(size.toLong())
-            .get()
-            .addOnSuccessListener { querySnapshot ->
-                val commentList = querySnapshot.documents.mapNotNull {
-                    val commentDto = it.toObject(CommentDto::class.java)
-                    commentDto?.mapToComment(commentId = it.id)
-                }
-
-                dataDeferred.complete(Resource.Success(commentList))
-            }.addOnFailureListener {
-                dataDeferred.complete(Resource.Error(it))
+            val commentList = querySnapshot.documents.mapNotNull {
+                val commentDto = it.toObject(CommentDto::class.java)
+                commentDto?.mapToComment(commentId = it.id)
             }
-
-        return dataDeferred.await()
+            Resource.Success(commentList)
+        } catch (e: Exception) {
+            Resource.Error(e)
+        }
     }
 
-    private suspend fun getPagingKey(key: String?): Resource<DocumentSnapshot?> {
-        val lastDocDeferred = CompletableDeferred<Resource<DocumentSnapshot?>>()
+    private suspend fun getPagingKeyDoc(key: String?): Resource<DocumentSnapshot?> {
+        if (key == null) return Resource.Success(null)
 
-        if (key != null) {
-            db.collection(COLLECTION_COMMENT_PATH)
+        return try {
+            val result = db.collection(COLLECTION_COMMENT_PATH)
                 .document(key)
                 .get()
-                .addOnSuccessListener {
-                    lastDocDeferred.complete(Resource.Success(it))
-                }.addOnFailureListener {
-                    lastDocDeferred.complete(Resource.Error(it))
-                }
-        } else {
-            lastDocDeferred.complete(Resource.Success(null))
-        }
+                .await()
 
-        return lastDocDeferred.await()
+            Resource.Success(result)
+        } catch (e: Exception) {
+            Resource.Error(e)
+        }
     }
 }

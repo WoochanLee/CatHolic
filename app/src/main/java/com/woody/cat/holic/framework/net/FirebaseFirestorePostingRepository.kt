@@ -11,12 +11,11 @@ import com.woody.cat.holic.data.common.Resource
 import com.woody.cat.holic.domain.Posting
 import com.woody.cat.holic.framework.COLLECTION_POSTING_PATH
 import com.woody.cat.holic.framework.COLLECTION_PROFILE_PATH
-import com.woody.cat.holic.framework.base.CatHolicLogger
 import com.woody.cat.holic.framework.net.dto.PostingDto
 import com.woody.cat.holic.framework.net.dto.UserDto
 import com.woody.cat.holic.framework.net.dto.mapToPosting
 import com.woody.cat.holic.framework.net.dto.mapToPostingDto
-import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.tasks.await
 
 
 class FirebaseFirestorePostingRepository(private val db: FirebaseFirestore) : PostingRepository {
@@ -41,198 +40,182 @@ class FirebaseFirestorePostingRepository(private val db: FirebaseFirestore) : Po
     }
 
     override suspend fun addPosting(userId: String, postings: List<Posting>): Resource<Unit> {
-        val dataDeferred = CompletableDeferred<Resource<Unit>>()
-
-        db.runTransaction {
-            it.update(db.collection(COLLECTION_PROFILE_PATH).document(userId), UserDto::postingCount.name, FieldValue.increment(postings.size.toLong()))
-            postings.forEach { posting ->
-                it.set(db.collection(COLLECTION_POSTING_PATH).document(), posting.mapToPostingDto())
-            }
-        }.addOnSuccessListener {
-            dataDeferred.complete(Resource.Success(Unit))
-            CatHolicLogger.log("success to add posting")
-        }.addOnFailureListener {
-            dataDeferred.complete(Resource.Error(it))
-            CatHolicLogger.log("fail to add posting")
+        return try {
+            db.runTransaction { transaction ->
+                transaction.update(
+                    db.collection(COLLECTION_PROFILE_PATH).document(userId),
+                    UserDto::postingCount.name,
+                    FieldValue.increment(postings.size.toLong())
+                )
+                postings.forEach { posting ->
+                    transaction.set(db.collection(COLLECTION_POSTING_PATH).document(), posting.mapToPostingDto())
+                }
+            }.await()
+            Resource.Success(Unit)
+        } catch (e: Exception) {
+            Resource.Error(e)
         }
-
-        return dataDeferred.await()
     }
 
     override suspend fun removePosting(userId: String, postingId: String): Resource<Unit> {
-        val dataDeferred = CompletableDeferred<Resource<Unit>>()
-
-        db.runTransaction {
-            it.update(db.collection(COLLECTION_PROFILE_PATH).document(userId), UserDto::postingCount.name, FieldValue.increment(-1))
-            it.update(db.collection(COLLECTION_POSTING_PATH).document(postingId), PostingDto::deleted.name, true)
-        }.addOnSuccessListener {
-            dataDeferred.complete(Resource.Success(Unit))
-        }.addOnFailureListener {
-            dataDeferred.complete(Resource.Error(it))
+        return try {
+            db.runTransaction {
+                it.update(db.collection(COLLECTION_PROFILE_PATH).document(userId), UserDto::postingCount.name, FieldValue.increment(-1))
+                it.update(db.collection(COLLECTION_POSTING_PATH).document(postingId), PostingDto::deleted.name, true)
+            }.await()
+            Resource.Success(Unit)
+        } catch (e: Exception) {
+            Resource.Error(e)
         }
-
-        return dataDeferred.await()
     }
 
     override suspend fun getGalleryPostings(key: String?, size: Int): Resource<List<Posting>> {
 
-        val lastDoc = getPagingKey(key)
+        val lastDoc = getPagingKeyDoc(key)
 
         if (lastDoc !is Resource.Success) {
             return Resource.Error(IllegalStateException())
         }
 
-        val dataDeferred = CompletableDeferred<Resource<List<Posting>>>()
+        return try {
+            val querySnapshot = db.collection(COLLECTION_POSTING_PATH)
+                .whereEqualTo(PostingDto::deleted.name, false)
+                .run {
+                    when (currentGalleryPostingOrder) {
+                        PostingOrder.CREATED -> orderBy(PostingDto::created.name, Query.Direction.DESCENDING)
+                        PostingOrder.LIKED -> orderBy(PostingDto::likeCount.name, Query.Direction.DESCENDING)
+                        PostingOrder.RANDOM -> this
+                    }
+                }.run {
+                    if (key != null && lastDoc.data != null) {
+                        startAfter(lastDoc.data as DocumentSnapshot)
+                    } else this
+                }.limit(size.toLong())
+                .get()
+                .await()
 
-        db.collection(COLLECTION_POSTING_PATH)
-            .whereEqualTo(PostingDto::deleted.name, false)
-            .run {
-                when (currentGalleryPostingOrder) {
-                    PostingOrder.CREATED -> orderBy(PostingDto::created.name, Query.Direction.DESCENDING)
-                    PostingOrder.LIKED -> orderBy(PostingDto::likeCount.name, Query.Direction.DESCENDING)
-                    PostingOrder.RANDOM -> this
-                }
-            }.run {
-                if (key != null && lastDoc.data != null) {
-                    startAfter(lastDoc.data as DocumentSnapshot)
-                } else this
-            }.limit(size.toLong())
-            .get()
-            .addOnSuccessListener { querySnapshot ->
-                val postingList = querySnapshot.documents.mapNotNull {
-                    val postingDto = it.toObject(PostingDto::class.java)
-                    postingDto?.mapToPosting(postingId = it.id)
-                }
-
-                dataDeferred.complete(Resource.Success(postingList))
-            }.addOnFailureListener {
-                dataDeferred.complete(Resource.Error(it))
+            val postingList = querySnapshot.documents.mapNotNull {
+                val postingDto = it.toObject(PostingDto::class.java)
+                postingDto?.mapToPosting(postingId = it.id)
             }
 
-        return dataDeferred.await()
+            Resource.Success(postingList)
+        } catch (e: Exception) {
+            Resource.Error(e)
+        }
     }
 
     override suspend fun getUserLikePostings(key: String?, userId: String, size: Int): Resource<List<Posting>> {
 
-        val lastDoc = getPagingKey(key)
+        val lastDoc = getPagingKeyDoc(key)
 
         if (lastDoc !is Resource.Success) {
             return Resource.Error(IllegalStateException())
         }
 
-        val dataDeferred = CompletableDeferred<Resource<List<Posting>>>()
+        return try {
+            val querySnapshot = db.collection(COLLECTION_POSTING_PATH)
+                .whereEqualTo(PostingDto::deleted.name, false)
+                .whereArrayContains(PostingDto::likedUserIds.name, userId)
+                .run {
+                    when (currentLikePostingOrder) {
+                        PostingOrder.CREATED -> orderBy(PostingDto::created.name, Query.Direction.DESCENDING)
+                        PostingOrder.LIKED -> orderBy(PostingDto::likeCount.name, Query.Direction.DESCENDING)
+                        PostingOrder.RANDOM -> this
+                    }
+                }.run {
+                    if (key != null && lastDoc.data != null) {
+                        startAfter(lastDoc.data as DocumentSnapshot)
+                    } else this
+                }.limit(size.toLong())
+                .get()
+                .await()
 
-        db.collection(COLLECTION_POSTING_PATH)
-            .whereEqualTo(PostingDto::deleted.name, false)
-            .whereArrayContains(PostingDto::likedUserIds.name, userId)
-            .run {
-                when (currentLikePostingOrder) {
-                    PostingOrder.CREATED -> orderBy(PostingDto::created.name, Query.Direction.DESCENDING)
-                    PostingOrder.LIKED -> orderBy(PostingDto::likeCount.name, Query.Direction.DESCENDING)
-                    PostingOrder.RANDOM -> this
-                }
-            }.run {
-                if (key != null && lastDoc.data != null) {
-                    startAfter(lastDoc.data as DocumentSnapshot)
-                } else this
-            }.limit(size.toLong())
-            .get()
-            .addOnSuccessListener { querySnapshot ->
-                val postingList = querySnapshot.documents.mapNotNull {
-                    val postingDto = it.toObject(PostingDto::class.java)
-                    postingDto?.mapToPosting(postingId = it.id)
-                }
-
-                dataDeferred.complete(Resource.Success(postingList))
-            }.addOnFailureListener {
-                dataDeferred.complete(Resource.Error(it))
+            val postingList = querySnapshot.documents.mapNotNull {
+                val postingDto = it.toObject(PostingDto::class.java)
+                postingDto?.mapToPosting(postingId = it.id)
             }
 
-        return dataDeferred.await()
+            Resource.Success(postingList)
+        }catch (e: Exception) {
+            Resource.Error(e)
+        }
     }
 
     override suspend fun getUserUploadedPostings(key: String?, userId: String, size: Int): Resource<List<Posting>> {
-        val lastDoc = getPagingKey(key)
+        val lastDoc = getPagingKeyDoc(key)
 
         if (lastDoc !is Resource.Success) {
             return Resource.Error(IllegalStateException())
         }
 
-        val dataDeferred = CompletableDeferred<Resource<List<Posting>>>()
+        return try {
+            val querySnapshot = db.collection(COLLECTION_POSTING_PATH)
+                .whereEqualTo(PostingDto::deleted.name, false)
+                .whereEqualTo(PostingDto::userId.name, userId)
+                .orderBy(PostingDto::created.name, Query.Direction.DESCENDING)
+                .run {
+                    if (key != null && lastDoc.data != null) {
+                        startAfter(lastDoc.data as DocumentSnapshot)
+                    } else this
+                }.limit(size.toLong())
+                .get()
+                .await()
 
-        db.collection(COLLECTION_POSTING_PATH)
-            .whereEqualTo(PostingDto::deleted.name, false)
-            .whereEqualTo(PostingDto::userId.name, userId)
-            .orderBy(PostingDto::created.name, Query.Direction.DESCENDING)
-            .run {
-                if (key != null && lastDoc.data != null) {
-                    startAfter(lastDoc.data as DocumentSnapshot)
-                } else this
-            }.limit(size.toLong())
-            .get()
-            .addOnSuccessListener { querySnapshot ->
-                val postingList = querySnapshot.documents.mapNotNull {
-                    val postingDto = it.toObject(PostingDto::class.java)
-                    postingDto?.mapToPosting(postingId = it.id)
-                }
-
-                dataDeferred.complete(Resource.Success(postingList))
-            }.addOnFailureListener {
-                dataDeferred.complete(Resource.Error(it))
+            val postingList = querySnapshot.documents.mapNotNull {
+                val postingDto = it.toObject(PostingDto::class.java)
+                postingDto?.mapToPosting(postingId = it.id)
             }
 
-        return dataDeferred.await()
+            Resource.Success(postingList)
+        } catch (e: Exception) {
+            Resource.Error(e)
+        }
     }
 
     override suspend fun getUserPostings(key: String?, userId: String, size: Int): Resource<List<Posting>> {
-        val lastDoc = getPagingKey(key)
+        val lastDoc = getPagingKeyDoc(key)
 
         if (lastDoc !is Resource.Success) {
             return Resource.Error(IllegalStateException())
         }
 
-        val dataDeferred = CompletableDeferred<Resource<List<Posting>>>()
+        return try {
+            val querySnapshot = db.collection(COLLECTION_POSTING_PATH)
+                .whereEqualTo(PostingDto::deleted.name, false)
+                .whereEqualTo(PostingDto::userId.name, userId)
+                .orderBy(PostingDto::created.name, Query.Direction.DESCENDING)
+                .run {
+                    if (key != null && lastDoc.data != null) {
+                        startAfter(lastDoc.data as DocumentSnapshot)
+                    } else this
+                }.limit(size.toLong())
+                .get()
+                .await()
 
-        db.collection(COLLECTION_POSTING_PATH)
-            .whereEqualTo(PostingDto::deleted.name, false)
-            .whereEqualTo(PostingDto::userId.name, userId)
-            .orderBy(PostingDto::created.name, Query.Direction.DESCENDING)
-            .run {
-                if (key != null && lastDoc.data != null) {
-                    startAfter(lastDoc.data as DocumentSnapshot)
-                } else this
-            }.limit(size.toLong())
-            .get()
-            .addOnSuccessListener { querySnapshot ->
-                val postingList = querySnapshot.documents.mapNotNull {
-                    val postingDto = it.toObject(PostingDto::class.java)
-                    postingDto?.mapToPosting(postingId = it.id)
-                }
-
-                dataDeferred.complete(Resource.Success(postingList))
-            }.addOnFailureListener {
-                dataDeferred.complete(Resource.Error(it))
+            val postingList = querySnapshot.documents.mapNotNull {
+                val postingDto = it.toObject(PostingDto::class.java)
+                postingDto?.mapToPosting(postingId = it.id)
             }
 
-        return dataDeferred.await()
+            Resource.Success(postingList)
+        } catch (e: Exception) {
+            Resource.Error(e)
+        }
     }
 
-    private suspend fun getPagingKey(key: String?): Resource<DocumentSnapshot?> {
-        val lastDocDeferred = CompletableDeferred<Resource<DocumentSnapshot?>>()
+    private suspend fun getPagingKeyDoc(key: String?): Resource<DocumentSnapshot?> {
+        if (key == null) return Resource.Success(null)
 
-        if (key != null) {
-            db.collection(COLLECTION_POSTING_PATH)
+        return try {
+            val result = db.collection(COLLECTION_POSTING_PATH)
                 .document(key)
                 .get()
-                .addOnSuccessListener {
-                    lastDocDeferred.complete(Resource.Success(it))
-                }.addOnFailureListener {
-                    lastDocDeferred.complete(Resource.Error(it))
-                }
-        } else {
-            lastDocDeferred.complete(Resource.Success(null))
-        }
+                .await()
 
-        return lastDocDeferred.await()
+            Resource.Success(result)
+        } catch (e: Exception) {
+            Resource.Error(e)
+        }
     }
 }

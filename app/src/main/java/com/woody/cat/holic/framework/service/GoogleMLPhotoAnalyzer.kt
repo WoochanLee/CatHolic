@@ -8,8 +8,7 @@ import com.google.mlkit.vision.label.defaults.ImageLabelerOptions
 import com.woody.cat.holic.data.PhotoAnalyzer
 import com.woody.cat.holic.data.common.Resource
 import com.woody.cat.holic.framework.base.CatHolicLogger
-import com.woody.cat.holic.framework.base.printStackTraceIfDebug
-import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.tasks.await
 import java.io.File
 
 class GoogleMLPhotoAnalyzer(private val context: Context) : PhotoAnalyzer {
@@ -23,29 +22,20 @@ class GoogleMLPhotoAnalyzer(private val context: Context) : PhotoAnalyzer {
 
     @Suppress("BlockingMethodInNonBlockingContext")
     override suspend fun detectCatFromLocalPhoto(uri: String): Resource<Boolean> {
-        val dataDeferred = CompletableDeferred<Resource<Boolean>>()
-
         val image = InputImage.fromFilePath(context, File(uri).toUri())
 
-        imageLabeler.process(image)
-            .addOnSuccessListener breaker@{ labels ->
-                for (label in labels) {
-                    val text = label.text
-                    val confidence = label.confidence
+        return try {
+            val labels = imageLabeler.process(image).await()
 
-                    if (label.text == DETECT_CAT_TEXT && label.confidence > DETECT_CAT_CONFIDENCE) {
-                        dataDeferred.complete(Resource.Success(true))
-                        return@breaker
-                    }
-                    CatHolicLogger.log("detect : $text , confidence : ${(confidence * 100).toInt()}%")
+            for (label in labels) {
+                CatHolicLogger.log("detect : ${label.text} , confidence : ${(label.confidence * 100).toInt()}%")
+                if (label.text == DETECT_CAT_TEXT && label.confidence > DETECT_CAT_CONFIDENCE) {
+                    return Resource.Success(true)
                 }
-                dataDeferred.complete(Resource.Success(false))
             }
-            .addOnFailureListener { e ->
-                e.printStackTraceIfDebug()
-                dataDeferred.complete(Resource.Error(e))
-            }
-
-        return dataDeferred.await()
+            Resource.Success(false)
+        }catch (e: Exception) {
+            Resource.Error(e)
+        }
     }
 }
