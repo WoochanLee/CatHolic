@@ -6,6 +6,7 @@ import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatDelegate
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.vanniktech.emoji.EmojiManager
@@ -33,8 +34,11 @@ class CatHolicApplication : Application() {
     private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var firebaseFirestore: FirebaseFirestore
     private lateinit var firebaseStorageReference: StorageReference
+    private lateinit var firebaseMessaging: FirebaseMessaging
 
     val settingRepository by lazy { SharedPreferenceSettingRepository(settingSharedPreferences) }
+    val pushTokenRepository by lazy { FirebaseFirestorePushTokenRepository(firebaseFirestore) }
+    val pushTokenGenerateRepository by lazy { FirebaseMessagingPushTokenGenerateRepository(firebaseMessaging) }
     val photoRepository by lazy { FirebaseStoragePhotoRepository(firebaseStorageReference) }
     val postingRepository by lazy { FirebaseFirestorePostingRepository(firebaseFirestore) }
     val likePostingRepository by lazy { FirebaseFirestoreLikePostingRepository(firebaseFirestore) }
@@ -67,6 +71,7 @@ class CatHolicApplication : Application() {
             maxDownloadRetryTimeMillis = FirebaseStoragePhotoRepository.MAX_RETRY_TIME_MILLIS
             maxUploadRetryTimeMillis = FirebaseStoragePhotoRepository.MAX_RETRY_TIME_MILLIS
         }.reference
+        firebaseMessaging = FirebaseMessaging.getInstance()
     }
 
     private fun initLibraryAlbum() {

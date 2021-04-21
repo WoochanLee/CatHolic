@@ -10,5 +10,5 @@ data class User(
     val followerCount: Int = 0,
     val followerUserIds: List<String> = listOf(),
     val followingCount: Int = 0,
-    val followingUserIds: List<String> = listOf()
+    val followingUserIds: List<String> = listOf(),
 )

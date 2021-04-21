@@ -63,7 +63,7 @@ class UploadActivity : BaseActivity() {
             })
 
             eventFinish.observeEvent(this@UploadActivity, {
-                onBackPressed()
+                finish()
             })
         }
 

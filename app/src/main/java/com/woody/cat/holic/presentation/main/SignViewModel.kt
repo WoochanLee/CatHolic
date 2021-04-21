@@ -13,10 +13,8 @@ import com.google.firebase.auth.GoogleAuthProvider
 import com.woody.cat.holic.domain.User
 import com.woody.cat.holic.framework.base.*
 import com.woody.cat.holic.framework.net.common.DataNotExistException
-import com.woody.cat.holic.usecase.user.AddUserProfile
-import com.woody.cat.holic.usecase.user.GetCurrentUserId
-import com.woody.cat.holic.usecase.user.GetIsSignedIn
-import com.woody.cat.holic.usecase.user.GetUserProfile
+import com.woody.cat.holic.usecase.setting.GetPushToken
+import com.woody.cat.holic.usecase.user.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -28,6 +26,9 @@ class SignViewModel(
     private val getCurrentUserId: GetCurrentUserId,
     private val getUserProfile: GetUserProfile,
     private val addUserProfile: AddUserProfile,
+    private val getPushToken: GetPushToken,
+    private val addPushToken: AddPushToken,
+    private val removePushToken: RemovePushToken
 ) : BaseViewModel() {
 
     lateinit var gso: GoogleSignInOptions
@@ -108,6 +109,7 @@ class SignViewModel(
                 _isSignedIn.postValue(getIsSignedIn())
                 _userData.postValue(it)
                 _eventSignInSuccess.emit()
+                addUserPushToken(user.userId)
             } else {
                 makeProfile(user)
             }
@@ -122,8 +124,8 @@ class SignViewModel(
                 _isLoading.postValue(true)
                 val result = getUserProfile(userId)
                 _isLoading.postValue(false)
-                handleResourceResult(result, onSuccess = {
-                    onResult(it)
+                handleResourceResult(result, onSuccess = { user ->
+                    onResult(user)
                 }, onError = {
                     if (it is DataNotExistException) {
                         onResult(null)
@@ -146,6 +148,23 @@ class SignViewModel(
                 }, onError = {
                     _eventSignInFail.emit()
                 })
+            }
+        }
+    }
+
+    private fun addUserPushToken(userId: String) {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                val pushToken = getPushToken() ?: return@withContext
+                addPushToken(userId, pushToken)
+            }
+        }
+    }
+
+    private fun removeUserPushToken(userId: String) {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                removePushToken(userId)
             }
         }
     }
@@ -188,6 +207,7 @@ class SignViewModel(
     }
 
     fun signOutFirebase() {
+        removeUserPushToken(userData.value?.userId ?: return)
         firebaseAuth.signOut()
     }
 

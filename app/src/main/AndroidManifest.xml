@@ -16,7 +16,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.CatHolic">
-        <activity android:name=".presentation.main.user.profile.photo.UserPhotoActivity"></activity>
+
+        <!--<service
+            android:name=".framework.CatHolicFirebaseInstanceIdService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+            </intent-filter>
+        </service>-->
+
+        <activity android:name=".presentation.main.user.profile.photo.UserPhotoActivity"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".presentation.main.user.profile.ProfileActivity"
             android:screenOrientation="portrait" />

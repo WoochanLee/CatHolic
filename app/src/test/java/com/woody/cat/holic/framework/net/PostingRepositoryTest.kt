@@ -76,7 +76,7 @@ class PostingRepositoryTest {
     }
 
     @Test
-    fun testAddPostingSuccess() = runBlockingTest {
+    fun testAddPosting_Success() = runBlockingTest {
 
         given(db.runTransaction(any<Transaction.Function<Any>>())).willReturn(FakeSuccessTask(Any()))
 
@@ -86,7 +86,7 @@ class PostingRepositoryTest {
     }
 
     @Test
-    fun testAddPostingFail() = runBlockingTest {
+    fun testAddPosting_Fail() = runBlockingTest {
 
         given(db.runTransaction(any<Transaction.Function<Any>>())).willReturn(FakeFailTask(Any()))
 
@@ -96,7 +96,7 @@ class PostingRepositoryTest {
     }
 
     @Test
-    fun testRemovePostingSuccess() = runBlockingTest {
+    fun testRemovePosting_Success() = runBlockingTest {
         given(db.runTransaction(any<Transaction.Function<Any>>())).willReturn(FakeSuccessTask(Any()))
 
         val result = postingRepository.removePosting(FAKE_USER_ID, FAKE_POSTING_ID)
@@ -105,7 +105,7 @@ class PostingRepositoryTest {
     }
 
     @Test
-    fun testRemovePostingFail() = runBlockingTest {
+    fun testRemovePosting_Fail() = runBlockingTest {
         given(db.runTransaction(any<Transaction.Function<Any>>())).willReturn(FakeFailTask(Any()))
 
         val result = postingRepository.removePosting(FAKE_USER_ID, FAKE_POSTING_ID)
@@ -114,7 +114,7 @@ class PostingRepositoryTest {
     }
 
     @Test
-    fun testGetGalleryPostingsWithKeyDocNotFound() = runBlockingTest {
+    fun testGetGalleryPostings_KeyDocNotFound() = runBlockingTest {
         given(db.collection(COLLECTION_POSTING_PATH)).willThrow(RuntimeException())
         val key = FAKE_PAGE_KEY
         val pageSize = FAKE_PAGE_SIZE
@@ -125,7 +125,7 @@ class PostingRepositoryTest {
     }
 
     @Test
-    fun testGetGalleryPostingsWithQueryError() = runBlockingTest {
+    fun testGetGalleryPostings_QueryError() = runBlockingTest {
         given(db.collection(COLLECTION_POSTING_PATH)).willThrow(RuntimeException())
         val key = null
         val pageSize = FAKE_PAGE_SIZE
@@ -136,7 +136,7 @@ class PostingRepositoryTest {
     }
 
     @Test
-    fun testGetGalleryPostingsWithAllCase() = runBlockingTest {
+    fun testGetGalleryPostings_AllCase() = runBlockingTest {
         val postingOrders = PostingOrder.values()
         val keys = listOf(null, FAKE_PAGE_KEY)
         postingOrders.forEach { postingOrder ->
@@ -179,7 +179,7 @@ class PostingRepositoryTest {
     }
 
     @Test
-    fun testGetUserLikePostingsWithKeyDocNotFound() = runBlockingTest {
+    fun testGetUserLikePostings_KeyDocNotFound() = runBlockingTest {
         given(db.collection(COLLECTION_POSTING_PATH)).willThrow(RuntimeException())
         val key = FAKE_PAGE_KEY
         val userId = FAKE_USER_ID
@@ -191,7 +191,7 @@ class PostingRepositoryTest {
     }
 
     @Test
-    fun testGetUserLikePostingsWithQueryError() = runBlockingTest {
+    fun testGetUserLikePostings_QueryError() = runBlockingTest {
         given(db.collection(COLLECTION_POSTING_PATH)).willThrow(RuntimeException())
         val key = null
         val userId = FAKE_USER_ID
@@ -203,7 +203,7 @@ class PostingRepositoryTest {
     }
 
     @Test
-    fun testGetUserLikePostingsWithAllCase() = runBlockingTest {
+    fun testGetUserLikePostings_AllCase() = runBlockingTest {
         val postingOrders = PostingOrder.values()
         val keys = listOf(null, FAKE_PAGE_KEY)
         val userId = FAKE_USER_ID
@@ -248,7 +248,7 @@ class PostingRepositoryTest {
     }
 
     @Test
-    fun testGetUserUploadedPostingsWithKeyDocNotFound() = runBlockingTest {
+    fun testGetUserUploadedPostings_KeyDocNotFound() = runBlockingTest {
         given(db.collection(COLLECTION_POSTING_PATH)).willThrow(RuntimeException())
         val key = FAKE_PAGE_KEY
         val userId = FAKE_USER_ID
@@ -260,7 +260,7 @@ class PostingRepositoryTest {
     }
 
     @Test
-    fun testGetUserUploadedPostingsWithQueryError() = runBlockingTest {
+    fun testGetUserUploadedPostings_QueryError() = runBlockingTest {
         given(db.collection(COLLECTION_POSTING_PATH)).willThrow(RuntimeException())
         val key = null
         val userId = FAKE_USER_ID
@@ -272,7 +272,7 @@ class PostingRepositoryTest {
     }
 
     @Test
-    fun testGetUserUploadedPostingsWithAllCase() = runBlockingTest {
+    fun testGetUserUploadedPostings_AllCase() = runBlockingTest {
         val keys = listOf(null, FAKE_PAGE_KEY)
         val userId = FAKE_USER_ID
         keys.forEach { key ->
@@ -309,7 +309,7 @@ class PostingRepositoryTest {
     }
 
     @Test
-    fun testGetUserPostingsWithKeyDocNotFound() = runBlockingTest {
+    fun testGetUserPostings_KeyDocNotFound() = runBlockingTest {
         given(db.collection(COLLECTION_POSTING_PATH)).willThrow(RuntimeException())
         val key = FAKE_PAGE_KEY
         val userId = FAKE_USER_ID
@@ -321,7 +321,7 @@ class PostingRepositoryTest {
     }
 
     @Test
-    fun testGetUserPostingsWithQueryError() = runBlockingTest {
+    fun testGetUserPostings_QueryError() = runBlockingTest {
         given(db.collection(COLLECTION_POSTING_PATH)).willThrow(RuntimeException())
         val key = null
         val userId = FAKE_USER_ID
@@ -333,7 +333,7 @@ class PostingRepositoryTest {
     }
 
     @Test
-    fun testGetUserPostingsWithAllCase() = runBlockingTest {
+    fun testGetUserPostings_AllCase() = runBlockingTest {
         val keys = listOf(null, FAKE_PAGE_KEY)
         val userId = FAKE_USER_ID
         keys.forEach { key ->
