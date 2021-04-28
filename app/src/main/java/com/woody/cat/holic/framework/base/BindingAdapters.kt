@@ -19,20 +19,25 @@ fun ImageView.bindImage(imageUrl: String?) {
     }
 }
 
-@BindingAdapter("app:tint")
+@BindingAdapter("tint")
 fun ImageView.setImageTint(@ColorInt color: Int) {
     setColorFilter(color)
 }
 
-@BindingAdapter("onClickDelete")
-fun ImageButton.setOnClickDeleteMenu(onClickDelete: () -> Unit) {
+@BindingAdapter("onClickDownload")
+fun ImageButton.setOnClickDeleteMenu(onClickDownload: () -> Unit) {
     setOnClickListener {
         val popup = PopupMenu(context, this)
         popup.inflate(R.menu.posting_menu)
         popup.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.menu_delete -> {
-                    onClickDelete()
+                    //onClickDelete()
+                    return@setOnMenuItemClickListener true
+                }
+
+                R.id.menu_download -> {
+                    onClickDownload()
                     return@setOnMenuItemClickListener true
                 }
             }

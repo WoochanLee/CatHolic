@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">CatHolic</string>
+    <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
 
     <string name="success_to_posting">Upload Success!</string>
     <string name="fail_to_posting">Upload Fail! Please try again</string>
@@ -21,6 +22,7 @@
     <string name="profile">PROFILE</string>
     <string name="select_cats">SELECT CATS</string>
     <string name="delete">DELETE</string>
+    <string name="download">DOWNLOAD</string>
     <string name="dark_mode">Dark Mode</string>
     <string name="we_didn_t_find_any_cats_in_this_photo">"We didn't find any cats in this photo."</string>
     <string name="comment_your_emoji">Comment Your Emoji 😋</string>
@@ -36,6 +38,7 @@
     <string name="following">Following</string>
     <string name="follow">follow</string>
     <string name="unfollow">unfollow</string>
+    <string name="followed">✔️ followed</string>
     <string name="open_source_license">Open Source License</string>
     <string name="my_profile">MY PROFILE</string>
     <string name="cat_holic">CAT HOLIC</string>
@@ -52,4 +55,12 @@
     <string name="photos">Photos</string>
     <string name="select_photo">SELECT PHOTO</string>
     <string name="cat_photo">"%s Cat Photo"</string>
+    <string name="new_follower">new follower</string>
+    <string name="new_posting_from_you_follow">new posting from you follow</string>
+    <string name="notification_description">notification description test</string>
+    <string name="photo_download">Photo Download</string>
+    <string name="fail_to_download_photo">Fail to download photo</string>
+    <string name="success_to_download_photo">Success to download photo</string>
+    <string name="start_to_download_photo">Start to download photo</string>
+    <string name="downloading_cat_photo">Downloading cat photo ..</string>
 </resources>

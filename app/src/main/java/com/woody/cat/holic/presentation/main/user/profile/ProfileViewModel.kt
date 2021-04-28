@@ -56,6 +56,9 @@ class ProfileViewModel(
     private val _eventShowToast = MutableLiveData<Event<Int>>()
     val eventShowToast: LiveData<Event<Int>> get() = _eventShowToast
 
+    private val _eventShowUnfollowAlertDialog = MutableLiveData<Event<Pair<String, String>>>()
+    val eventShowUnfollowAlertDialog: LiveData<Event<Pair<String, String>>> get() = _eventShowUnfollowAlertDialog
+
     private val _userProfile = MutableLiveData<User>()
     val userProfile: LiveData<User> get() = _userProfile
 
@@ -157,15 +160,37 @@ class ProfileViewModel(
 
         val currentUserFollowed = isUserFollowed.value == true
 
+        if (currentUserFollowed) {
+            _eventShowUnfollowAlertDialog.emit(Pair(myUserId, targetUserId))
+            return
+        } else {
+            followUser(myUserId, targetUserId)
+        }
+    }
+
+    private fun followUser(myUserId: String, targetUserId: String) {
         _isUserFollowed.postValue(isUserFollowed.value != true)
 
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                val result = if (currentUserFollowed) {
-                    updateFollowUser.unfollowUser(myUserId, targetUserId)
-                } else {
-                    updateFollowUser.followUser(myUserId, targetUserId)
-                }
+                val result = updateFollowUser.followUser(myUserId, targetUserId)
+
+                handleResourceResult(result, onSuccess = {
+                    refreshEventBus.emitEvent(GlobalRefreshEvent.FollowUserEvent)
+                    getProfile(targetUserId)
+                }, onError = {
+                    _eventShowToast.emit(R.string.something_went_wrong)
+                })
+            }
+        }
+    }
+
+    fun unfollowUser(myUserId: String, targetUserId: String) {
+        _isUserFollowed.postValue(isUserFollowed.value != true)
+
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                val result = updateFollowUser.unfollowUser(myUserId, targetUserId)
 
                 handleResourceResult(result, onSuccess = {
                     refreshEventBus.emitEvent(GlobalRefreshEvent.FollowUserEvent)

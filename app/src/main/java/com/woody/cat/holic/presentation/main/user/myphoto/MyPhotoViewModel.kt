@@ -7,7 +7,6 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import com.woody.cat.holic.framework.base.*
-
 import com.woody.cat.holic.framework.paging.UploadedPostingDataSource
 import com.woody.cat.holic.framework.paging.item.PostingItem
 import com.woody.cat.holic.usecase.posting.GetUserUploadedPostings
@@ -41,6 +40,9 @@ class MyPhotoViewModel(
 
     private val _eventStartUploadActivity = MutableLiveData<Event<Unit>>()
     val eventStartUploadActivity: LiveData<Event<Unit>> get() = _eventStartUploadActivity
+
+    private val _eventStartPhotoDownload = MutableLiveData<Event<String>>()
+    val eventStartPhotoDownload: LiveData<Event<String>> get() = _eventStartPhotoDownload
 
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> get() = _isLoading
@@ -86,6 +88,10 @@ class MyPhotoViewModel(
                 })
             }
         }
+    }
+
+    fun onClickDownload(imageUrl: String) {
+        _eventStartPhotoDownload.emit(imageUrl)
     }
 
     fun setIsListEmpty(isListEmpty: Boolean) {

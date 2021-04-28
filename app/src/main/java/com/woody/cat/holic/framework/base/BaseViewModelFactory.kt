@@ -17,4 +17,5 @@ abstract class BaseViewModelFactory: ViewModelProvider.Factory {
     protected val commentRepository = application.commentRepository
     protected val followRepository = application.followRepository
     protected val photoAnalyzer = application.photoAnalyzer
+    protected val fileManager = application.fileManager
 }

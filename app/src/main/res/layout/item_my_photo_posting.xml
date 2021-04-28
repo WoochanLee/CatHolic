@@ -85,7 +85,7 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:onClickDelete="@{() -> viewModel.onClickDelete(model)}" />
+                        app:onClickDownload="@{() -> viewModel.onClickDownload(model.downloadUrl)}" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 

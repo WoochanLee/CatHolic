@@ -147,23 +147,26 @@
                         android:layout_width="wrap_content"
                         android:layout_height="40dp"
                         android:layout_marginBottom="80dp"
+                        android:clickable="@{!viewModel.isUserFollowed()}"
                         android:onClick="@{() -> viewModel.onClickFollowButton()}"
                         android:visibility="@{viewModel.userProfile != null &amp;&amp; viewModel.isMyProfile() ? View.INVISIBLE : View.VISIBLE}"
-                        app:cardBackgroundColor="@{viewModel.isUserFollowed() ? @color/gray : @color/red}"
+                        app:cardBackgroundColor="@color/red"
                         app:cardCornerRadius="10dp"
-                        app:cardElevation="10dp">
+                        app:cardElevation="10dp"
+                        tools:cardBackgroundColor="@color/red">
 
                         <TextView
-                            android:layout_width="match_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:layout_marginHorizontal="20dp"
                             android:gravity="center"
-                            android:text="@{viewModel.isUserFollowed() ? @string/unfollow :@string/follow}"
+                            android:text="@{viewModel.isUserFollowed() ? @string/followed :@string/follow}"
                             android:textAllCaps="true"
-                            android:textColor="@color/text_color"
+                            android:textColor="@{viewModel.isUserFollowed() ? @color/text_color_reverse : @color/text_color}"
                             android:textSize="16dp"
                             android:textStyle="bold"
-                            tools:text="@string/follow" />
+                            tools:text="@string/followed"
+                            tools:textColor="@color/text_color_reverse" />
 
                     </androidx.cardview.widget.CardView>
                 </LinearLayout>
@@ -199,6 +202,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="35dp"
+                    android:gravity="center"
+                    android:orientation="vertical"
                     app:layout_constraintTop_toTopOf="parent">
 
                     <androidx.cardview.widget.CardView
@@ -224,6 +229,29 @@
                             android:textColor="@color/text_color"
                             android:textSize="15dp"
                             tools:text="Hello!\nI'm Woody, and my cats are Chan and Young.\nPlease follow me!\nPlease follow me!\nPlease follow me!\nPlease follow me!\nPlease follow me!\nPlease follow me!\nPlease follow me!\nPlease follow me!\nPlease follow me!\nPlease follow me!\nPlease follow me!\nPlease follow me!\nPlease follow me!\nPlease follow me!" />
+                    </androidx.cardview.widget.CardView>
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:layout_marginBottom="40dp"
+                        android:onClick="@{() -> viewModel.onClickFollowButton()}"
+                        android:visibility="@{(viewModel.userProfile != null &amp;&amp; viewModel.isMyProfile()) || !viewModel.isUserFollowed() ? View.GONE : View.VISIBLE}"
+                        app:cardBackgroundColor="@color/gray"
+                        app:cardCornerRadius="10dp"
+                        app:cardElevation="10dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginHorizontal="20dp"
+                            android:gravity="center"
+                            android:text="@string/unfollow"
+                            android:textAllCaps="true"
+                            android:textColor="@color/text_color"
+                            android:textSize="16dp"
+                            android:textStyle="bold" />
+
                     </androidx.cardview.widget.CardView>
                 </LinearLayout>
 

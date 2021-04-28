@@ -12,6 +12,7 @@ import com.woody.cat.holic.framework.base.BaseActivity
 import com.woody.cat.holic.framework.base.observeEvent
 import com.woody.cat.holic.presentation.main.posting.comment.CommentDialog
 import com.woody.cat.holic.presentation.main.posting.likelist.LikeListDialog
+import com.woody.cat.holic.presentation.service.download.PhotoDownloadService
 import com.woody.cat.holic.presentation.upload.UploadActivity
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
@@ -72,6 +73,10 @@ class MyPhotoActivity : BaseActivity() {
 
             eventStartUploadActivity.observeEvent(this@MyPhotoActivity, {
                 startActivity(Intent(this@MyPhotoActivity, UploadActivity::class.java))
+            })
+
+            eventStartPhotoDownload.observeEvent(this@MyPhotoActivity, { imageUrl ->
+                startService(PhotoDownloadService.getIntent(this@MyPhotoActivity, imageDownloadUrl = imageUrl))
             })
         }
 

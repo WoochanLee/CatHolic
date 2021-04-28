@@ -14,8 +14,9 @@ import com.vanniktech.emoji.twitter.TwitterEmojiProvider
 import com.woody.cat.holic.framework.base.AlbumMediaLoader
 import com.woody.cat.holic.framework.base.RefreshEventBus
 import com.woody.cat.holic.framework.db.SharedPreferenceSettingRepository
+import com.woody.cat.holic.framework.manager.AndroidFileManager
+import com.woody.cat.holic.framework.manager.GoogleMLPhotoAnalyzer
 import com.woody.cat.holic.framework.net.*
-import com.woody.cat.holic.framework.service.GoogleMLPhotoAnalyzer
 import com.yanzhenjie.album.Album
 import com.yanzhenjie.album.AlbumConfig
 import java.util.*
@@ -46,6 +47,7 @@ class CatHolicApplication : Application() {
     val commentRepository by lazy { FirebaseFirestoreCommentRepository(firebaseFirestore) }
     val followRepository by lazy { FirebaseFirestoreFollowRepository(firebaseFirestore) }
     val photoAnalyzer by lazy { GoogleMLPhotoAnalyzer(this) }
+    val fileManager by lazy { AndroidFileManager(this) }
 
     val refreshEventBus by lazy { RefreshEventBus() }
 

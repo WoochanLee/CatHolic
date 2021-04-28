@@ -161,10 +161,16 @@ class SignViewModel(
         }
     }
 
-    private fun removeUserPushToken(userId: String) {
+    private fun removeUserPushToken(userId: String, onComplete: () -> Unit) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                removePushToken(userId)
+                val result = removePushToken(userId)
+
+                handleResourceResult(result, onSuccess = {
+                    onComplete()
+                }, onError = {
+                    onComplete()
+                })
             }
         }
     }
@@ -202,13 +208,16 @@ class SignViewModel(
         _eventSignOut.emit()
     }
 
-    fun onSignOutSuccess() {
+    private fun onSignOutSuccess() {
         _eventSignOutSuccess.emit()
     }
 
     fun signOutFirebase() {
-        removeUserPushToken(userData.value?.userId ?: return)
-        firebaseAuth.signOut()
+        removeUserPushToken(userData.value?.userId ?: return, onComplete = {
+            firebaseAuth.signOut()
+            refreshSignInStatus()
+            onSignOutSuccess()
+        })
     }
 
     private fun initEventBusSubscribe() {

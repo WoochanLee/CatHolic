@@ -62,8 +62,6 @@ class UserFragment : Fragment() {
 
             eventSignOut.observeEvent(viewLifecycleOwner, {
                 signOut()
-                refreshSignInStatus()
-                onSignOutSuccess()
             })
 
             eventSignInFail.observeEvent(viewLifecycleOwner, {

@@ -109,6 +109,10 @@ class ProfileActivity : BaseActivity() {
                 Toast.makeText(applicationContext, stringRes, Toast.LENGTH_SHORT).show()
             })
 
+            eventShowUnfollowAlertDialog.observeEvent(this@ProfileActivity, { (myUserId, targetUserId) ->
+                showUnfollowAlertDialog(myUserId, targetUserId)
+            })
+
             eventFinishActivity.observeEvent(this@ProfileActivity, {
                 finish()
             })
@@ -189,6 +193,16 @@ class ProfileActivity : BaseActivity() {
                 } else {
                     onConfirm(editText.text.toString())
                 }
+            }.setNegativeButton(R.string.cancel, null)
+            .show()
+    }
+
+    private fun showUnfollowAlertDialog(myUserId: String, targetUserId: String) {
+        AlertDialog.Builder(this)
+            .setTitle("Unfollow")
+            .setMessage("Do you really want to unfollow?")
+            .setPositiveButton("Unfollow") {_, _ ->
+                viewModel.unfollowUser(myUserId, targetUserId)
             }.setNegativeButton(R.string.cancel, null)
             .show()
     }

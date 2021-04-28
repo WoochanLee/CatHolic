@@ -1,4 +1,4 @@
-package com.woody.cat.holic.framework.service
+package com.woody.cat.holic.framework.manager
 
 import android.content.Context
 import androidx.core.net.toUri

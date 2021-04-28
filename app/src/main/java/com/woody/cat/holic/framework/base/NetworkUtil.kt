@@ -5,10 +5,17 @@ import com.woody.cat.holic.data.common.Resource
 inline fun <T> handleResourceResult(
     resource: Resource<T>,
     onSuccess: (T) -> Unit,
-    noinline onError: ((Exception) -> Unit)? = null
+    onError: (Exception) -> Unit = {},
+    onComplete: () -> Unit = {}
 ) {
     when (resource) {
-        is Resource.Success -> onSuccess(resource.data)
-        is Resource.Error -> onError?.invoke(resource.exception)
+        is Resource.Success -> {
+            onSuccess(resource.data)
+            onComplete()
+        }
+        is Resource.Error -> {
+            onError(resource.exception)
+            onComplete()
+        }
     }
 }
