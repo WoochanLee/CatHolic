@@ -71,9 +71,7 @@ class ProfileViewModel(
     fun getProfile(targetUserId: String) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                val result = getUserProfile(targetUserId)
-
-                handleResourceResult(result, onSuccess = { targetUser ->
+                handleResourceResult(getUserProfile(targetUserId), onSuccess = { targetUser ->
                     _userProfile.postValue(targetUser)
                     checkIsMyProfile(targetUser.userId)
                     refreshIsUserFollowed(targetUser)
@@ -90,9 +88,7 @@ class ProfileViewModel(
 
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                val result = uploadPhoto.uploadUserBackgroundPhoto(userId, File(imageUri))
-
-                handleResourceResult(result, onSuccess = {
+                handleResourceResult(uploadPhoto.uploadUserBackgroundPhoto(userId, File(imageUri)), onSuccess = {
                     updateUserBackgroundPhotoUrl(userId, it.imageUrl)
                 }, onError = {
                     _eventShowToast.emit(R.string.network_fail)
@@ -106,9 +102,7 @@ class ProfileViewModel(
 
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                val result = uploadPhoto.uploadUserProfilePhoto(userId, File(imageUri))
-
-                handleResourceResult(result, onSuccess = {
+                handleResourceResult(uploadPhoto.uploadUserProfilePhoto(userId, File(imageUri)), onSuccess = {
                     updateUserProfilePhotoUrl(userId, it.imageUrl)
                 }, onError = {
                     _eventShowToast.emit(R.string.network_fail)
@@ -173,9 +167,7 @@ class ProfileViewModel(
 
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                val result = updateFollowUser.followUser(myUserId, targetUserId)
-
-                handleResourceResult(result, onSuccess = {
+                handleResourceResult(updateFollowUser.followUser(myUserId, targetUserId), onSuccess = {
                     refreshEventBus.emitEvent(GlobalRefreshEvent.FollowUserEvent)
                     getProfile(targetUserId)
                 }, onError = {
@@ -190,9 +182,7 @@ class ProfileViewModel(
 
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                val result = updateFollowUser.unfollowUser(myUserId, targetUserId)
-
-                handleResourceResult(result, onSuccess = {
+                handleResourceResult(updateFollowUser.unfollowUser(myUserId, targetUserId), onSuccess = {
                     refreshEventBus.emitEvent(GlobalRefreshEvent.FollowUserEvent)
                     getProfile(targetUserId)
                 }, onError = {
@@ -211,9 +201,7 @@ class ProfileViewModel(
     private fun updateUserBackgroundPhotoUrl(userId: String, imageUrl: String) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                val result = updateUserProfile.updateUserBackgroundPhotoUrl(userId, imageUrl)
-
-                handleResourceResult(result, onSuccess = {
+                handleResourceResult(updateUserProfile.updateUserBackgroundPhotoUrl(userId, imageUrl), onSuccess = {
                     getProfile(userId)
                 }, onError = {
                     _eventShowToast.emit(R.string.network_fail)
@@ -225,9 +213,7 @@ class ProfileViewModel(
     private fun updateUserProfilePhotoUrl(userId: String, imageUrl: String) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                val result = updateUserProfile.updateUserProfilePhotoUrl(userId, imageUrl)
-
-                handleResourceResult(result, onSuccess = {
+                handleResourceResult(updateUserProfile.updateUserProfilePhotoUrl(userId, imageUrl), onSuccess = {
                     refreshEventBus.emitEvent(GlobalRefreshEvent.UpdateUserProfileEvent)
                     getProfile(userId)
                 }, onError = {
@@ -242,9 +228,7 @@ class ProfileViewModel(
 
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                val result = updateUserProfile.updateDisplayName(userId, displayName)
-
-                handleResourceResult(result, onSuccess = {
+                handleResourceResult(updateUserProfile.updateDisplayName(userId, displayName), onSuccess = {
                     refreshEventBus.emitEvent(GlobalRefreshEvent.UpdateUserProfileEvent)
                     getProfile(userId)
                 }, onError = {
@@ -259,9 +243,7 @@ class ProfileViewModel(
 
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                val result = updateUserProfile.updateGreetings(userId, greetings)
-
-                handleResourceResult(result, onSuccess = {
+                handleResourceResult(updateUserProfile.updateGreetings(userId, greetings), onSuccess = {
                     getProfile(userId)
                 }, onError = {
                     _eventShowToast.emit(R.string.network_fail)

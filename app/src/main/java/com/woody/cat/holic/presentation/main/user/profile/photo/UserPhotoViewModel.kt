@@ -46,9 +46,7 @@ class UserPhotoViewModel(
     private fun getProfile() {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                val result = getUserProfile(userId)
-
-                handleResourceResult(result, onSuccess = { user ->
+                handleResourceResult(getUserProfile(userId), onSuccess = { user ->
                     _userDisplayName.postValue(user.displayName ?: "")
                 })
             }

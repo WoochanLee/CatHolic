@@ -50,6 +50,27 @@ class MyPhotoViewModel(
     private val _isListEmpty = MutableLiveData<Boolean>()
     val isListEmpty: LiveData<Boolean> get() = _isListEmpty
 
+    val myPhotoItemMenuListener = object: MyPhotoItemMenuListener {
+        override fun onClickDelete(postingId: String) {
+            val userId = getCurrentUserId() ?: return
+
+            viewModelScope.launch {
+                withContext(Dispatchers.IO) {
+                    handleResourceResult(removeUserPosting(userId, postingId), onSuccess = {
+                        refreshEventBus.emitEvent(GlobalRefreshEvent.DeletePostingEvent)
+                    }, onError = {
+                        it.printStackTraceIfDebug()
+                        //TODO : handle network error
+                    })
+                }
+            }
+        }
+
+        override fun onClickDownload(imageUrl: String) {
+            _eventStartPhotoDownload.emit(imageUrl)
+        }
+    }
+
     init {
         initEventBusSubscribe()
     }
@@ -71,27 +92,6 @@ class MyPhotoViewModel(
 
     fun initData() {
         _eventRefreshData.emit()
-    }
-
-    fun onClickDelete(postingItem: PostingItem) {
-        val userId = getCurrentUserId() ?: return
-
-        viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                val result = removeUserPosting(userId, postingItem.postingId)
-
-                handleResourceResult(result, onSuccess = {
-                    refreshEventBus.emitEvent(GlobalRefreshEvent.DeletePostingEvent)
-                }, onError = {
-                    it.printStackTraceIfDebug()
-                    //TODO : handle network error
-                })
-            }
-        }
-    }
-
-    fun onClickDownload(imageUrl: String) {
-        _eventStartPhotoDownload.emit(imageUrl)
     }
 
     fun setIsListEmpty(isListEmpty: Boolean) {
@@ -119,5 +119,10 @@ class MyPhotoViewModel(
                 initData()
             }
         }
+    }
+
+    interface MyPhotoItemMenuListener {
+        fun onClickDelete(postingId: String)
+        fun onClickDownload(imageUrl: String)
     }
 }

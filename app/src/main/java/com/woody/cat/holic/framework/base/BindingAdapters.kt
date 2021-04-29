@@ -8,6 +8,8 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
 import com.woody.cat.holic.R
+import com.woody.cat.holic.framework.paging.item.PostingItem
+import com.woody.cat.holic.presentation.main.user.myphoto.MyPhotoViewModel
 
 @BindingAdapter("imageUrl")
 fun ImageView.bindImage(imageUrl: String?) {
@@ -24,20 +26,20 @@ fun ImageView.setImageTint(@ColorInt color: Int) {
     setColorFilter(color)
 }
 
-@BindingAdapter("onClickDownload")
-fun ImageButton.setOnClickDeleteMenu(onClickDownload: () -> Unit) {
+@BindingAdapter("postingItem", "myPhotoItemMenuListener")
+fun ImageButton.setMyPhotoItemMenuListener(postingItem: PostingItem, myPhotoItemMenuListener: MyPhotoViewModel.MyPhotoItemMenuListener) {
     setOnClickListener {
         val popup = PopupMenu(context, this)
         popup.inflate(R.menu.posting_menu)
         popup.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.menu_delete -> {
-                    //onClickDelete()
+                    myPhotoItemMenuListener.onClickDelete(postingItem.postingId)
                     return@setOnMenuItemClickListener true
                 }
 
                 R.id.menu_download -> {
-                    onClickDownload()
+                    myPhotoItemMenuListener.onClickDownload(postingItem.downloadUrl)
                     return@setOnMenuItemClickListener true
                 }
             }

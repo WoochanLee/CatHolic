@@ -164,9 +164,7 @@ class SignViewModel(
     private fun removeUserPushToken(userId: String, onComplete: () -> Unit) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                val result = removePushToken(userId)
-
-                handleResourceResult(result, onSuccess = {
+                handleResourceResult(removePushToken(userId), onSuccess = {
                     onComplete()
                 }, onError = {
                     onComplete()

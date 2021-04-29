@@ -128,9 +128,7 @@ class UploadViewModel(
                     ?.map { Posting(userId = userId, downloadUrl = it.imageDownloadUrl) }
                     ?: listOf()
 
-                val result = addPosting(userId, uploadPostingItemList)
-
-                handleResourceResult(result, onSuccess = {
+                handleResourceResult(addPosting(userId, uploadPostingItemList), onSuccess = {
                     _eventShowPostingToast.emit(R.string.success_to_posting)
                     _eventFinish.emit()
                     refreshEventBus.emitEvent(GlobalRefreshEvent.UploadPostingEvent)
@@ -157,9 +155,7 @@ class UploadViewModel(
             ?.forEach { uploadItem ->
                 viewModelScope.launch {
                     withContext(Dispatchers.IO) {
-                        val result = detectCatFromPhoto(uploadItem.imageUri)
-
-                        handleResourceResult(result, onSuccess = { isCatDetected ->
+                        handleResourceResult(detectCatFromPhoto(uploadItem.imageUri), onSuccess = { isCatDetected ->
                             if (isCatDetected) {
                                 uploadItem.uploadingJob = uploadSinglePhoto(userId, uploadItem)
                             } else {

@@ -85,7 +85,8 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:onClickDownload="@{() -> viewModel.onClickDownload(model.downloadUrl)}" />
+                        app:postingItem="@{model}"
+                        app:myPhotoItemMenuListener="@{viewModel.myPhotoItemMenuListener}" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
