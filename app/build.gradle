@@ -75,6 +75,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth-ktx'
     implementation 'com.google.firebase:firebase-firestore-ktx'
     implementation 'com.google.firebase:firebase-messaging-ktx'
+    implementation 'com.google.firebase:firebase-ads'
 
     //debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.7'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.12.0'

@@ -3,6 +3,8 @@ package com.woody.cat.holic.framework.paging.item
 import androidx.lifecycle.MutableLiveData
 import com.woody.cat.holic.domain.Posting
 
+abstract class RecyclerViewItem(open val postingId: String)
+
 data class PostingItem(
     val user: UserItem,
     val downloadUrl: String,
@@ -11,10 +13,12 @@ data class PostingItem(
     val currentUserLiked: MutableLiveData<Boolean>,
     val commentCount: MutableLiveData<Int>,
     val reportCount: Int,
-    val postingId: String,
+    override val postingId: String,
     val created: String,
     val updated: String
-)
+): RecyclerViewItem(postingId)
+
+class AdItem(postingId: String): RecyclerViewItem(postingId)
 
 fun Posting.mapToPostingItem(currentUserId: String?): PostingItem {
     return PostingItem(

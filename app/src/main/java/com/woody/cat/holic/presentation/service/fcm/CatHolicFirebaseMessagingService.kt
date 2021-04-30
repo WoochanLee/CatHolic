@@ -1,4 +1,4 @@
-package com.woody.cat.holic.presentation.service
+package com.woody.cat.holic.presentation.service.fcm
 
 import android.annotation.SuppressLint
 import android.app.NotificationChannel
@@ -23,6 +23,8 @@ class CatHolicFirebaseMessagingService : FirebaseMessagingService() {
     companion object {
         const val NOTIFICATION_CHANNEL_ID_FOLLOW = "NOTIFICATION_CHANNEL_ID_FOLLOW"
         const val NOTIFICATION_CHANNEL_ID_POSTING = "NOTIFICATION_CHANNEL_ID_POSTING"
+        const val NOTIFICATION_CHANNEL_ID_COMMENT = "NOTIFICATION_CHANNEL_ID_COMMENT"
+        const val NOTIFICATION_CHANNEL_ID_LIKE = "NOTIFICATION_CHANNEL_ID_LIKE"
 
         @Volatile
         private var notificationId = 0
@@ -80,5 +82,7 @@ enum class NotificationType(
     val notificationName: Int
 ) {
     NOTIFICATION_CHANNEL_ID_FOLLOW(CatHolicFirebaseMessagingService.NOTIFICATION_CHANNEL_ID_FOLLOW, R.string.new_follower),
-    NOTIFICATION_CHANNEL_ID_POSTING(CatHolicFirebaseMessagingService.NOTIFICATION_CHANNEL_ID_POSTING, R.string.new_posting_from_you_follow)
+    NOTIFICATION_CHANNEL_ID_POSTING(CatHolicFirebaseMessagingService.NOTIFICATION_CHANNEL_ID_POSTING, R.string.new_posting_from_you_follow),
+    NOTIFICATION_CHANNEL_ID_COMMENT(CatHolicFirebaseMessagingService.NOTIFICATION_CHANNEL_ID_COMMENT, R.string.new_comment),
+    NOTIFICATION_CHANNEL_ID_LIKE(CatHolicFirebaseMessagingService.NOTIFICATION_CHANNEL_ID_LIKE, R.string.new_like),
 }

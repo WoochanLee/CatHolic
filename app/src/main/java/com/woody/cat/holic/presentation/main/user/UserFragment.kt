@@ -19,6 +19,7 @@ import com.woody.cat.holic.databinding.FragmentUserBinding
 import com.woody.cat.holic.framework.base.observeEvent
 import com.woody.cat.holic.presentation.main.SignViewModel
 import com.woody.cat.holic.presentation.main.SignViewModelFactory
+import com.woody.cat.holic.presentation.main.user.myphoto.MyPhotoActivity
 import com.woody.cat.holic.presentation.main.user.profile.ProfileActivity
 import com.woody.cat.holic.presentation.main.user.profile.follower.FollowerListDialog
 import com.woody.cat.holic.presentation.main.user.profile.following.FollowingListDialog
@@ -101,6 +102,14 @@ class UserFragment : Fragment() {
                     .create()
                     .show(parentFragmentManager, FollowingListDialog::class.java.name)
             })
+
+            eventStartMyCatPhotos.observeEvent(viewLifecycleOwner, {
+                startActivity(Intent(requireContext(), MyPhotoActivity::class.java))
+            })
+
+            eventStartNotificationSetting.observeEvent(viewLifecycleOwner, {
+                startNotificationSetting()
+            })
         }
 
         signViewModel.refreshSignInStatus()
@@ -117,6 +126,18 @@ class UserFragment : Fragment() {
         signViewModel.let { signViewModel ->
             GoogleSignIn.getClient(requireActivity(), signViewModel.gso).signOut()
             signViewModel.signOutFirebase()
+        }
+    }
+
+    private fun startNotificationSetting() {
+        requireContext().run {
+            Intent().apply {
+                action = "android.settings.APP_NOTIFICATION_SETTINGS"
+                putExtra("app_package", packageName)
+                putExtra("app_uid", applicationInfo.uid)
+                putExtra("android.provider.extra.APP_PACKAGE", packageName)
+                startActivity(this)
+            }
         }
     }
 }

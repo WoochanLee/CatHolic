@@ -14,146 +14,157 @@
             type="com.woody.cat.holic.presentation.main.SignViewModel" />
 
         <import type="android.view.View" />
+
+        <import type="kotlin.Unit" />
     </data>
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
         tools:context=".presentation.main.MainActivity">
 
-        <androidx.appcompat.widget.Toolbar
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/background_color_main">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <androidx.appcompat.widget.Toolbar
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/background_color_main">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@{mainViewModel.toolbarTitle}"
+                        android:textColor="@color/text_color"
+                        android:textSize="20dp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:text="GALLERY" />
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="100dp"
+                        android:layout_height="34dp"
+                        android:layout_marginEnd="10dp"
+                        android:foreground="?android:selectableItemBackground"
+                        android:onClick="@{() -> mainViewModel.onClickChangePostingOrder()}"
+                        android:padding="0dp"
+                        android:visibility="@{mainViewModel.isVisibleOrderSwitch() ? View.VISIBLE : View.GONE}"
+                        app:cardBackgroundColor="@color/background_color_sub"
+                        app:cardCornerRadius="15dp"
+                        app:cardElevation="0dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginEnd="5dp"
+                                android:text="@string/order_by"
+                                android:textColor="@color/background_color_main"
+                                android:textSize="12dp"
+                                android:textStyle="bold" />
+
+                            <ImageView
+                                android:layout_width="18dp"
+                                android:layout_height="18dp"
+                                app:imageResource="@{mainViewModel.getResourceIdByPostingOrder(mainViewModel.currentVisiblePostingOrder)}"
+                                app:tint="@color/background_color_main"
+                                tools:src="@drawable/ic_heart_fill" />
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+
+                    <ImageButton
+                        android:id="@+id/ib_profile_menu"
+                        android:layout_width="45dp"
+                        android:layout_height="45dp"
+                        android:background="@null"
+                        android:onClick="@{() -> mainViewModel.onClickProfile(signViewModel.userData.userId)}"
+                        android:padding="10dp"
+                        android:scaleType="centerInside"
+                        android:src="@drawable/ic_edit"
+                        android:tint="@color/background_color_sub"
+                        android:visibility="@{mainViewModel.isVisibleOrderSwitch() ? View.GONE : View.VISIBLE}"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:visibility="gone" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.appcompat.widget.Toolbar>
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="0dp"
+                android:layout_weight="1">
 
-                <TextView
+                <FrameLayout
+                    android:id="@+id/main_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/background_color_sub" />
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/fab_main_upload"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@{mainViewModel.toolbarTitle}"
-                    android:textColor="@color/text_color"
-                    android:textSize="20dp"
-                    android:textStyle="bold"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:text="GALLERY" />
-
-                <androidx.cardview.widget.CardView
-                    android:layout_width="100dp"
-                    android:layout_height="34dp"
-                    android:layout_marginEnd="10dp"
-                    android:foreground="?android:selectableItemBackground"
-                    android:onClick="@{() -> mainViewModel.onClickChangePostingOrder()}"
-                    android:padding="0dp"
-                    android:visibility="@{mainViewModel.isVisibleOrderSwitch() ? View.VISIBLE : View.GONE}"
-                    app:cardBackgroundColor="@color/background_color_sub"
-                    app:cardCornerRadius="15dp"
-                    app:cardElevation="0dp"
+                    android:layout_marginEnd="25dp"
+                    android:layout_marginBottom="25dp"
+                    android:onClick="@{() -> mainViewModel.onClickUploadFab()}"
+                    android:src="@drawable/ic_upload"
+                    android:visibility="@{mainViewModel.isVisibleUploadFab() ? View.VISIBLE : View.GONE}"
+                    app:backgroundTint="@color/background_color_main"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="5dp"
-                            android:text="@string/order_by"
-                            android:textColor="@color/background_color_main"
-                            android:textSize="12dp"
-                            android:textStyle="bold" />
-
-                        <ImageView
-                            android:layout_width="18dp"
-                            android:layout_height="18dp"
-                            app:imageResource="@{mainViewModel.getResourceIdByPostingOrder(mainViewModel.currentVisiblePostingOrder)}"
-                            app:tint="@color/background_color_main"
-                            tools:src="@drawable/ic_heart_fill" />
-                    </LinearLayout>
-                </androidx.cardview.widget.CardView>
-
-                <ImageButton
-                    android:id="@+id/ib_profile_menu"
-                    android:layout_width="45dp"
-                    android:layout_height="45dp"
-                    android:background="@null"
-                    android:onClick="@{() -> mainViewModel.onClickProfile(signViewModel.userData.userId)}"
-                    android:padding="10dp"
-                    android:scaleType="centerInside"
-                    android:src="@drawable/ic_edit"
-                    android:tint="@color/background_color_sub"
-                    android:visibility="@{mainViewModel.isVisibleOrderSwitch() ? View.GONE : View.VISIBLE}"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:visibility="gone" />
+                    app:rippleColor="@color/background_color_sub"
+                    app:tint="@color/background_color_sub" />
             </androidx.constraintlayout.widget.ConstraintLayout>
-        </androidx.appcompat.widget.Toolbar>
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1">
-
-            <FrameLayout
-                android:id="@+id/main_container"
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tl_main"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/background_color_sub" />
-
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/fab_main_upload"
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="25dp"
-                android:layout_marginBottom="25dp"
-                android:onClick="@{() -> mainViewModel.onClickUploadFab()}"
-                android:src="@drawable/ic_upload"
-                android:visibility="@{mainViewModel.isVisibleUploadFab() ? View.VISIBLE : View.GONE}"
-                app:backgroundTint="@color/background_color_main"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:rippleColor="@color/background_color_sub"
-                app:tint="@color/background_color_sub" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                android:background="@color/background_color_main"
+                app:tabIconTint="@color/background_color_sub"
+                app:tabIndicator="@null"
+                app:tabRippleColor="@null">
 
-        <com.google.android.material.tabs.TabLayout
-            android:id="@+id/tl_main"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/background_color_main"
-            app:tabIconTint="@color/background_color_sub"
-            app:tabIndicator="@null"
-            app:tabRippleColor="@null">
+                <com.google.android.material.tabs.TabItem
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:icon="@drawable/ic_cloud_data_fill"
+                    android:textSize="14dp" />
 
-            <com.google.android.material.tabs.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:icon="@drawable/ic_cloud_data_fill"
-                android:textSize="14dp" />
+                <com.google.android.material.tabs.TabItem
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:icon="@drawable/ic_heart_empty"
+                    android:textSize="14dp" />
 
-            <com.google.android.material.tabs.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:icon="@drawable/ic_heart_empty"
-                android:textSize="14dp" />
+                <com.google.android.material.tabs.TabItem
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:icon="@drawable/ic_user_empty"
+                    android:textSize="14dp" />
+            </com.google.android.material.tabs.TabLayout>
+        </LinearLayout>
 
-            <com.google.android.material.tabs.TabItem
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:icon="@drawable/ic_user_empty"
-                android:textSize="14dp" />
-        </com.google.android.material.tabs.TabLayout>
-
-    </LinearLayout>
+        <include
+            layout="@layout/layout_main_guide"
+            app:isVisibleGuide="@{mainViewModel.isVisibleGuide()}"
+            app:onClickCloseGuide="@{mainViewModel::onClickCloseGuide}" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

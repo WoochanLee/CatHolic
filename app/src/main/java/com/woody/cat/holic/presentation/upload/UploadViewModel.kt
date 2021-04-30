@@ -55,6 +55,9 @@ class UploadViewModel(
     private val _isUploadButtonEnabled = MutableLiveData(false)
     val isUploadButtonEnabled: LiveData<Boolean> get() = _isUploadButtonEnabled
 
+    private val _isVisibleGuide = MutableLiveData(true)
+    val isVisibleGuide: LiveData<Boolean> get() = _isVisibleGuide
+
     private val _previewData = MutableLiveData<MutableList<UploadItem>>(mutableListOf())
     val previewData: LiveData<MutableList<UploadItem>> get() = _previewData
 
@@ -142,6 +145,10 @@ class UploadViewModel(
         }
     }
 
+    fun onClickCloseGuide() {
+        _isVisibleGuide.postValue(false)
+    }
+
     fun changeArrowButtonStatus(currentPosition: Int, dataSize: Int) {
         _isLeftArrowButtonVisible.postValue(currentPosition != 0)
         _isRightArrowButtonVisible.postValue(dataSize != 0 && currentPosition < dataSize - 1)
@@ -214,5 +221,4 @@ class UploadViewModel(
             it.uploadingJob?.cancel(CancellationException())
         }
     }
-
 }

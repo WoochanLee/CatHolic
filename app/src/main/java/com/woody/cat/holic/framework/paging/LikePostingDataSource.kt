@@ -5,7 +5,7 @@ import androidx.paging.PagingState
 import com.woody.cat.holic.data.common.Resource
 import com.woody.cat.holic.framework.base.handleResourceResult
 import com.woody.cat.holic.framework.net.common.NotSignedInException
-import com.woody.cat.holic.framework.paging.item.PostingItem
+import com.woody.cat.holic.framework.paging.item.RecyclerViewItem
 import com.woody.cat.holic.framework.paging.item.UserItem
 import com.woody.cat.holic.framework.paging.item.mapToPostingItem
 import com.woody.cat.holic.usecase.posting.GetUserLikePostings
@@ -20,9 +20,9 @@ class LikePostingDataSource(
     private val getCurrentUserId: GetCurrentUserId,
     private val getUserLikePostings: GetUserLikePostings,
     private val getUserProfile: GetUserProfile
-) : PagingSource<String, PostingItem>() {
+) : PagingSource<String, RecyclerViewItem>() {
 
-    override suspend fun load(params: LoadParams<String>): LoadResult<String, PostingItem> {
+    override suspend fun load(params: LoadParams<String>): LoadResult<String, RecyclerViewItem> {
         getCurrentUserId()?.let { userId ->
             getUserLikePostings(params.key, userId).let { result ->
                 return if (result is Resource.Success) {
@@ -58,7 +58,7 @@ class LikePostingDataSource(
         }
     }
 
-    override fun getRefreshKey(state: PagingState<String, PostingItem>): String? {
+    override fun getRefreshKey(state: PagingState<String, RecyclerViewItem>): String? {
         return null
     }
 }

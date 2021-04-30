@@ -55,12 +55,22 @@
     <string name="photos">Photos</string>
     <string name="select_photo">SELECT PHOTO</string>
     <string name="cat_photo">"%s Cat Photo"</string>
-    <string name="new_follower">new follower</string>
-    <string name="new_posting_from_you_follow">new posting from you follow</string>
+    <string name="new_follower">New Follower</string>
+    <string name="new_posting_from_you_follow">New Posting</string>
+    <string name="new_comment">New Comment</string>
+    <string name="new_like">New Like</string>
     <string name="notification_description">notification description test</string>
     <string name="photo_download">Photo Download</string>
     <string name="fail_to_download_photo">Fail to download photo</string>
     <string name="success_to_download_photo">Success to download photo</string>
     <string name="start_to_download_photo">Start to download photo</string>
     <string name="downloading_cat_photo">Downloading cat photo ..</string>
+    <string name="click_the_button_above_to_change_the_arrangement_of_cat_photos">Click the button above to change the arrangement of cat photos.</string>
+    <string name="click_the_button_below_to_upload_your_cat_photos">Click the button below to upload your cat photos.</string>
+    <string name="create_your_profile_simply_by_clicking_on_the_user_tab">Create your profile simply by clicking on the user tab!</string>
+    <string name="i_got_it">I GOT IT !</string>
+    <string name="click_here_to_select_your_cat_photos_that_you_would_like_to_upload">Click here to select your cat photos that you would like to upload.</string>
+    <string name="click_here_to_delete_the_photo_you_were_trying_to_upload">Click here to delete the photo you were trying to upload.</string>
+    <string name="click_here_to_retry_uploading_a_photo_that_failed_to_upload">Click here to retry uploading a photo that failed to upload.</string>
+    <string name="if_you_try_to_upload_a_photo_that_is_not_a_cat_it_fails_as_shown_on_the_left_click_to_delete_the_photo">If you try to upload a photo that is not a cat, it fails as shown on the left. Click to delete the photo.</string>
 </resources>

@@ -33,9 +33,6 @@ class SignViewModel(
 
     lateinit var gso: GoogleSignInOptions
 
-    private val _eventStartMyCatPhotos = MutableLiveData<Event<Unit>>()
-    val eventStartMyCatPhotos: LiveData<Event<Unit>> get() = _eventStartMyCatPhotos
-
     private val _eventSignIn = MutableLiveData<Event<Unit>>()
     val eventSignIn: LiveData<Event<Unit>> get() = _eventSignIn
 
@@ -192,10 +189,6 @@ class SignViewModel(
         } else {
             _eventSignOut.emit()
         }
-    }
-
-    fun onClickMyCatPhotos() {
-        _eventStartMyCatPhotos.emit()
     }
 
     fun onClickSignIn() {

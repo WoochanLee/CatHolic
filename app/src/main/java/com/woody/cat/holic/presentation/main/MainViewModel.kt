@@ -43,6 +43,9 @@ class MainViewModel(
     private val _eventShowLikeListDialog = MutableLiveData<Event<PostingItem>>()
     val eventShowLikeListDialog: LiveData<Event<PostingItem>> get() = _eventShowLikeListDialog
 
+    private val _isVisibleGuide = MutableLiveData(true)
+    val isVisibleGuide: LiveData<Boolean> get() = _isVisibleGuide
+
     private val _toolbarTitle = MutableLiveData<String>()
     val toolbarTitle: LiveData<String> get() = _toolbarTitle
 
@@ -121,6 +124,10 @@ class MainViewModel(
 
     fun onClickProfile(userId: String) {
         _eventStartProfileActivity.emit(userId)
+    }
+
+    fun onClickCloseGuide() {
+        _isVisibleGuide.postValue(false)
     }
 
     fun setVisibleUploadFab(isVisible: Boolean) {

@@ -4,7 +4,8 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.woody.cat.holic.data.common.Resource
 import com.woody.cat.holic.framework.base.handleResourceResult
-import com.woody.cat.holic.framework.paging.item.PostingItem
+import com.woody.cat.holic.framework.paging.item.AdItem
+import com.woody.cat.holic.framework.paging.item.RecyclerViewItem
 import com.woody.cat.holic.framework.paging.item.UserItem
 import com.woody.cat.holic.framework.paging.item.mapToPostingItem
 import com.woody.cat.holic.usecase.posting.GetGalleryPostings
@@ -19,9 +20,9 @@ class GalleryPostingDataSource(
     private val getCurrentUserId: GetCurrentUserId,
     private val getGalleryPostings: GetGalleryPostings,
     private val getUserProfile: GetUserProfile
-) : PagingSource<String, PostingItem>() {
+) : PagingSource<String, RecyclerViewItem>() {
 
-    override suspend fun load(params: LoadParams<String>): LoadResult<String, PostingItem> {
+    override suspend fun load(params: LoadParams<String>): LoadResult<String, RecyclerViewItem> {
         getGalleryPostings(params.key).let { result ->
             return if (result is Resource.Success) {
                 result.data
@@ -32,8 +33,10 @@ class GalleryPostingDataSource(
                             getPostingUserProfile(it.user)
                         }
 
+                        val list = mutableListOf<RecyclerViewItem>(*postingList.toTypedArray()).apply { add(AdItem((0..Long.MAX_VALUE).random().toString())) }
+
                         LoadResult.Page(
-                            data = postingList,
+                            data = list,
                             prevKey = null,
                             nextKey = postingList.lastOrNull()?.postingId
                         )
@@ -55,7 +58,7 @@ class GalleryPostingDataSource(
         }
     }
 
-    override fun getRefreshKey(state: PagingState<String, PostingItem>): String? {
+    override fun getRefreshKey(state: PagingState<String, RecyclerViewItem>): String? {
         return null
     }
 }

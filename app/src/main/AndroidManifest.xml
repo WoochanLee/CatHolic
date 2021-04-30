@@ -17,8 +17,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CatHolic">
 
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-2149251688296092~7808746566"/>
+
         <service
-            android:name=".presentation.service.CatHolicFirebaseMessagingService"
+            android:name=".presentation.service.fcm.CatHolicFirebaseMessagingService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />

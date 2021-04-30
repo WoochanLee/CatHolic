@@ -205,7 +205,7 @@
                                 android:layout_height="70dp"
                                 android:backgroundTint="@android:color/transparent"
                                 android:foreground="?android:selectableItemBackground"
-                                android:onClick="@{() -> signViewModel.onClickMyCatPhotos()}"
+                                android:onClick="@{() -> userViewModel.onClickMyCatPhotos()}"
                                 app:cardCornerRadius="10dp"
                                 app:cardElevation="0dp">
 
@@ -254,6 +254,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="70dp"
                                 android:backgroundTint="@android:color/transparent"
+                                android:onClick="@{() -> userViewModel.onClickNotificationSetting()}"
                                 android:foreground="?android:selectableItemBackground"
                                 app:cardCornerRadius="10dp"
                                 app:cardElevation="0dp">
@@ -353,6 +354,7 @@
                                 android:layout_height="70dp"
                                 android:backgroundTint="@android:color/transparent"
                                 android:foreground="?android:selectableItemBackground"
+                                android:visibility="gone"
                                 app:cardCornerRadius="10dp"
                                 app:cardElevation="0dp">
 

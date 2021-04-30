@@ -18,7 +18,6 @@ import com.woody.cat.holic.presentation.main.posting.PostingViewModel
 import com.woody.cat.holic.presentation.main.posting.PostingViewModelFactory
 import com.woody.cat.holic.presentation.main.posting.likelist.LikeListDialog
 import com.woody.cat.holic.presentation.main.user.UserFragment
-import com.woody.cat.holic.presentation.main.user.myphoto.MyPhotoActivity
 import com.woody.cat.holic.presentation.main.user.profile.ProfileActivity
 import com.woody.cat.holic.presentation.upload.UploadActivity
 
@@ -68,9 +67,6 @@ class MainActivity : BaseActivity() {
 
         signViewModel = ViewModelProvider(this, SignViewModelFactory()).get(SignViewModel::class.java).apply {
             binding.signViewModel = this
-            eventStartMyCatPhotos.observeEvent(this@MainActivity, {
-                startActivity(Intent(this@MainActivity, MyPhotoActivity::class.java))
-            })
         }
 
         postingViewModel = ViewModelProvider(this, PostingViewModelFactory()).get(PostingViewModel::class.java).apply {
