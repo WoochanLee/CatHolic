@@ -10,8 +10,9 @@ import com.woody.cat.holic.usecase.user.GetCurrentUserId
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class PostingViewModel(
+class PostingViewModel @Inject constructor(
     private val refreshEventBus: RefreshEventBus,
     private val getCurrentUserId: GetCurrentUserId,
     private val updateLikedPosting: UpdateLikedPosting

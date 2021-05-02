@@ -18,8 +18,9 @@ import com.woody.cat.holic.usecase.user.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class SignViewModel(
+class SignViewModel @Inject constructor(
     private val refreshEventBus: RefreshEventBus,
     private val firebaseAuth: FirebaseAuth,
     private val getIsSignedIn: GetIsSignedIn,

@@ -15,9 +15,10 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 import java.io.File
+import javax.inject.Inject
 
 
-class UploadViewModel(
+class UploadViewModel @Inject constructor(
     private val refreshEventBus: RefreshEventBus,
     private val getCurrentUserId: GetCurrentUserId,
     private val detectCatFromPhoto: DetectCatFromPhoto,

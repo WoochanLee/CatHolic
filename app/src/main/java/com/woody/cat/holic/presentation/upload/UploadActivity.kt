@@ -8,9 +8,11 @@ import androidx.viewpager2.widget.ViewPager2
 import com.woody.cat.holic.R
 import com.woody.cat.holic.databinding.ActivityUploadBinding
 import com.woody.cat.holic.framework.base.BaseActivity
+import com.woody.cat.holic.framework.base.ViewModelFactory
 import com.woody.cat.holic.framework.base.makeCustomAlbumWidget
 import com.woody.cat.holic.framework.base.observeEvent
 import com.yanzhenjie.album.Album
+import javax.inject.Inject
 
 
 class UploadActivity : BaseActivity() {
@@ -22,6 +24,10 @@ class UploadActivity : BaseActivity() {
 
     lateinit var viewModel: UploadViewModel
     lateinit var binding: ActivityUploadBinding
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
+
     private val uploadSmallPreviewAdapter: UploadSmallPreviewAdapter by lazy {
         UploadSmallPreviewAdapter(this, viewModel)
     }
@@ -35,7 +41,7 @@ class UploadActivity : BaseActivity() {
             lifecycleOwner = this@UploadActivity
         }
 
-        viewModel = ViewModelProvider(this, UploadViewModelFactory()).get(UploadViewModel::class.java).apply {
+        viewModel = ViewModelProvider(this, viewModelFactory).get(UploadViewModel::class.java).apply {
             binding.viewModel = this
 
             eventSelectImage.observeEvent(this@UploadActivity, {

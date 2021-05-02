@@ -16,12 +16,14 @@ import com.woody.cat.holic.usecase.user.GetUserProfile
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class UserPhotoViewModel(
-    private val userId: String,
+class UserPhotoViewModel @Inject constructor(
     private val getUserPostings: GetUserPostings,
     private val getUserProfile: GetUserProfile
 ) : BaseViewModel() {
+
+    lateinit var userId: String
 
     companion object {
         const val PAGE_SIZE = 10

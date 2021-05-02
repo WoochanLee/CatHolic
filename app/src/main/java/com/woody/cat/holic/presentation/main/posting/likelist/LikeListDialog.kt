@@ -5,19 +5,25 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.woody.cat.holic.R
 import com.woody.cat.holic.databinding.DialogLikeListBinding
+import com.woody.cat.holic.framework.base.ViewModelFactory
 import com.woody.cat.holic.framework.base.observeEvent
 import com.woody.cat.holic.presentation.main.user.profile.ProfileActivity
+import dagger.android.support.DaggerDialogFragment
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class LikeListDialog : DialogFragment() {
+class LikeListDialog : DaggerDialogFragment() {
 
     private lateinit var binding: DialogLikeListBinding
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
+
     private lateinit var likeListViewModel: LikeListViewModel
 
     private var likeUserList = mutableListOf<String>()
@@ -47,8 +53,11 @@ class LikeListDialog : DialogFragment() {
 
         dialog?.window?.attributes?.windowAnimations = R.style.BottomSlideAnimation
 
-        likeListViewModel = ViewModelProvider(viewModelStore, LikeListViewModelFactory(likeUserList)).get(LikeListViewModel::class.java).apply {
+        likeListViewModel = ViewModelProvider(viewModelStore, viewModelFactory).get(LikeListViewModel::class.java).apply {
             binding.likeListViewModel = this
+
+            this.likeUserList = this@LikeListDialog.likeUserList
+
             likeListAdapter = LikeListAdapter(viewLifecycleOwner, this)
 
             viewLifecycleOwner.lifecycleScope.launch {

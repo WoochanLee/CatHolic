@@ -9,6 +9,7 @@ import androidx.paging.LoadState
 import com.woody.cat.holic.R
 import com.woody.cat.holic.databinding.ActivityMyPhotoBinding
 import com.woody.cat.holic.framework.base.BaseActivity
+import com.woody.cat.holic.framework.base.ViewModelFactory
 import com.woody.cat.holic.framework.base.observeEvent
 import com.woody.cat.holic.presentation.main.posting.comment.CommentDialog
 import com.woody.cat.holic.presentation.main.posting.likelist.LikeListDialog
@@ -17,10 +18,15 @@ import com.woody.cat.holic.presentation.upload.UploadActivity
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 class MyPhotoActivity : BaseActivity() {
 
     private lateinit var binding: ActivityMyPhotoBinding
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
+
     private lateinit var viewModel: MyPhotoViewModel
 
     private lateinit var postingAdapter: MyPhotoPostingAdapter
@@ -32,7 +38,7 @@ class MyPhotoActivity : BaseActivity() {
             lifecycleOwner = this@MyPhotoActivity
         }
 
-        viewModel = ViewModelProvider(this, MyPhotoViewModelFactory()).get(MyPhotoViewModel::class.java).apply {
+        viewModel = ViewModelProvider(this, viewModelFactory).get(MyPhotoViewModel::class.java).apply {
             binding.viewModel = this
             postingAdapter = MyPhotoPostingAdapter(this@MyPhotoActivity, this)
 

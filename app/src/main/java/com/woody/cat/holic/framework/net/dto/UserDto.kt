@@ -12,7 +12,7 @@ data class UserDto(
     val followerCount: Int = 0,
     val followerUserIds: List<String> = listOf(),
     val followingCount: Int = 0,
-    val followingUserIds: List<String> = listOf(),
+    val followingUserIds: List<String> = listOf()
 )
 
 fun UserDto.mapToUser(): User {
@@ -26,6 +26,6 @@ fun UserDto.mapToUser(): User {
         followerCount = followerCount,
         followerUserIds = followerUserIds,
         followingCount = followingCount,
-        followingUserIds = followingUserIds,
+        followingUserIds = followingUserIds
     )
 }

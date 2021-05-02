@@ -11,19 +11,24 @@ import com.google.android.material.tabs.TabLayout
 import com.woody.cat.holic.R
 import com.woody.cat.holic.databinding.ActivityMainBinding
 import com.woody.cat.holic.framework.base.BaseActivity
+import com.woody.cat.holic.framework.base.ViewModelFactory
 import com.woody.cat.holic.framework.base.observeEvent
 import com.woody.cat.holic.presentation.main.gallery.GalleryFragment
 import com.woody.cat.holic.presentation.main.like.LikeFragment
 import com.woody.cat.holic.presentation.main.posting.PostingViewModel
-import com.woody.cat.holic.presentation.main.posting.PostingViewModelFactory
 import com.woody.cat.holic.presentation.main.posting.likelist.LikeListDialog
 import com.woody.cat.holic.presentation.main.user.UserFragment
 import com.woody.cat.holic.presentation.main.user.profile.ProfileActivity
 import com.woody.cat.holic.presentation.upload.UploadActivity
+import javax.inject.Inject
 
 class MainActivity : BaseActivity() {
 
     private lateinit var binding: ActivityMainBinding
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
+
     private lateinit var mainViewModel: MainViewModel
     private lateinit var signViewModel: SignViewModel
     private lateinit var postingViewModel: PostingViewModel
@@ -40,7 +45,7 @@ class MainActivity : BaseActivity() {
             lifecycleOwner = this@MainActivity
         }
 
-        mainViewModel = ViewModelProvider(this, MainViewModelFactory()).get(MainViewModel::class.java).apply {
+        mainViewModel = ViewModelProvider(this, viewModelFactory).get(MainViewModel::class.java).apply {
             binding.mainViewModel = this
             setToolbarTitle(getString(R.string.gallery))
 
@@ -65,11 +70,11 @@ class MainActivity : BaseActivity() {
             })
         }
 
-        signViewModel = ViewModelProvider(this, SignViewModelFactory()).get(SignViewModel::class.java).apply {
+        signViewModel = ViewModelProvider(this, viewModelFactory).get(SignViewModel::class.java).apply {
             binding.signViewModel = this
         }
 
-        postingViewModel = ViewModelProvider(this, PostingViewModelFactory()).get(PostingViewModel::class.java).apply {
+        postingViewModel = ViewModelProvider(this, viewModelFactory).get(PostingViewModel::class.java).apply {
             eventMoveToSignInTabWithToast.observeEvent(this@MainActivity, {
                 binding.tlMain.getTabAt(MainTab.TAB_USER.position)?.select()
                 Toast.makeText(applicationContext, R.string.need_to_sign_in, Toast.LENGTH_LONG).show()

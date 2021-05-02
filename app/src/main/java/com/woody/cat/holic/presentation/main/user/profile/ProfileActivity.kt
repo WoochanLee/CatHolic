@@ -20,15 +20,13 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.woody.cat.holic.R
 import com.woody.cat.holic.databinding.ActivityProfileBinding
-import com.woody.cat.holic.framework.base.BaseActivity
-import com.woody.cat.holic.framework.base.hideKeyboard
-import com.woody.cat.holic.framework.base.makeCustomAlbumWidget
-import com.woody.cat.holic.framework.base.observeEvent
+import com.woody.cat.holic.framework.base.*
 import com.woody.cat.holic.presentation.main.user.profile.follower.FollowerListDialog
 import com.woody.cat.holic.presentation.main.user.profile.following.FollowingListDialog
 import com.woody.cat.holic.presentation.main.user.profile.photo.UserPhotoActivity
 import com.woody.cat.holic.presentation.upload.UploadActivity
 import com.yanzhenjie.album.Album
+import javax.inject.Inject
 import kotlin.math.min
 
 
@@ -46,6 +44,10 @@ class ProfileActivity : BaseActivity() {
     }
 
     private lateinit var binding: ActivityProfileBinding
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
+
     private lateinit var viewModel: ProfileViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,7 +61,7 @@ class ProfileActivity : BaseActivity() {
             return
         }
 
-        viewModel = ViewModelProvider(this, ProfileViewModelFactory()).get(ProfileViewModel::class.java).apply {
+        viewModel = ViewModelProvider(this, viewModelFactory).get(ProfileViewModel::class.java).apply {
             binding.viewModel = this
             getProfile(userId)
 

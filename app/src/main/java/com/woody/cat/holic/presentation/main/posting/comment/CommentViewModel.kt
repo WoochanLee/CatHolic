@@ -17,9 +17,9 @@ import com.woody.cat.holic.usecase.user.GetUserProfile
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class CommentViewModel(
-    private val postingItem: PostingItem,
+class CommentViewModel @Inject constructor(
     private val getCurrentUserId: GetCurrentUserId,
     private val addComment: AddComment,
     private val getComments: GetComments,
@@ -29,6 +29,8 @@ class CommentViewModel(
     companion object {
         const val PAGE_SIZE = 10
     }
+
+    lateinit var postingItem: PostingItem
 
     private val _eventRefreshData = MutableLiveData<Event<Unit>>()
     val eventRefreshData: LiveData<Event<Unit>> get() = _eventRefreshData

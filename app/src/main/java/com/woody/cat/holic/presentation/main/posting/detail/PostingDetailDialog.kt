@@ -5,19 +5,24 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import com.woody.cat.holic.R
 import com.woody.cat.holic.databinding.DialogPostingDetailBinding
+import com.woody.cat.holic.framework.base.ViewModelFactory
 import com.woody.cat.holic.framework.base.observeEvent
 import com.woody.cat.holic.framework.paging.item.PostingItem
 import com.woody.cat.holic.presentation.main.MainViewModel
-import com.woody.cat.holic.presentation.main.MainViewModelFactory
 import com.woody.cat.holic.presentation.main.posting.comment.CommentDialog
+import dagger.android.support.DaggerDialogFragment
+import javax.inject.Inject
 
-class PostingDetailDialog : DialogFragment() {
+class PostingDetailDialog : DaggerDialogFragment() {
 
     private lateinit var binding: DialogPostingDetailBinding
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
+
     private lateinit var mainViewModel: MainViewModel
     private lateinit var postingDetailViewModel: PostingDetailViewModel
 
@@ -49,12 +54,13 @@ class PostingDetailDialog : DialogFragment() {
         val activity = activity ?: return
         val postingItem = this.postingItem ?: return
 
-        mainViewModel = ViewModelProvider(activity, MainViewModelFactory()).get(MainViewModel::class.java).apply {
+        mainViewModel = ViewModelProvider(activity, viewModelFactory).get(MainViewModel::class.java).apply {
             binding.mainViewModel = this
         }
 
-        postingDetailViewModel = ViewModelProvider(viewModelStore, PostingDetailViewModelFactory(postingItem)).get(PostingDetailViewModel::class.java).apply {
+        postingDetailViewModel = ViewModelProvider(viewModelStore, viewModelFactory).get(PostingDetailViewModel::class.java).apply {
             binding.postingDetailViewModel = this
+            this.postingItem = postingItem
 
             eventShowCommentDialog.observeEvent(viewLifecycleOwner, {
                 CommentDialog.Builder()

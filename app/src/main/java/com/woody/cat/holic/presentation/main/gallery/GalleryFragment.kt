@@ -5,19 +5,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import androidx.paging.PagingData
 import com.woody.cat.holic.R
 import com.woody.cat.holic.databinding.FragmentGalleryBinding
+import com.woody.cat.holic.framework.base.BaseFragment
+import com.woody.cat.holic.framework.base.ViewModelFactory
 import com.woody.cat.holic.framework.base.observeEvent
 import com.woody.cat.holic.framework.net.common.NotSignedInException
-import com.woody.cat.holic.presentation.main.*
+import com.woody.cat.holic.presentation.main.MainTab
+import com.woody.cat.holic.presentation.main.MainViewModel
+import com.woody.cat.holic.presentation.main.SignViewModel
 import com.woody.cat.holic.presentation.main.posting.PostingAdapter
 import com.woody.cat.holic.presentation.main.posting.PostingViewModel
-import com.woody.cat.holic.presentation.main.posting.PostingViewModelFactory
 import com.woody.cat.holic.presentation.main.posting.comment.CommentDialog
 import com.woody.cat.holic.presentation.main.posting.detail.PostingDetailDialog
 import com.woody.cat.holic.presentation.main.posting.likelist.LikeListDialog
@@ -26,10 +28,15 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class GalleryFragment : Fragment() {
+class GalleryFragment : BaseFragment() {
 
     private lateinit var binding: FragmentGalleryBinding
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
+
     private lateinit var mainViewModel: MainViewModel
     private lateinit var signViewModel: SignViewModel
     private lateinit var galleryViewModel: GalleryViewModel
@@ -47,9 +54,7 @@ class GalleryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val activity = activity ?: return
-
-        mainViewModel = ViewModelProvider(activity, MainViewModelFactory()).get(MainViewModel::class.java).apply {
+        mainViewModel = ViewModelProvider(requireActivity(), viewModelFactory).get(MainViewModel::class.java).apply {
             eventChangeGalleryPostingOrder.observeEvent(viewLifecycleOwner, {
                 galleryViewModel.changeToNextPostingOrder()
                 mainViewModel.refreshVisiblePostingOrder(MainTab.TAB_GALLERY)
@@ -57,7 +62,7 @@ class GalleryFragment : Fragment() {
             })
         }
 
-        signViewModel = ViewModelProvider(activity, SignViewModelFactory()).get(SignViewModel::class.java).apply {
+        signViewModel = ViewModelProvider(requireActivity(), viewModelFactory).get(SignViewModel::class.java).apply {
             eventSignInSuccess.observeEvent(viewLifecycleOwner, { //TODO: change to global refresh
                 galleryViewModel.initPagingFlow()
             })
@@ -67,7 +72,7 @@ class GalleryFragment : Fragment() {
             })
         }
 
-        postingViewModel = ViewModelProvider(this, PostingViewModelFactory()).get(PostingViewModel::class.java).apply {
+        postingViewModel = ViewModelProvider(this, viewModelFactory).get(PostingViewModel::class.java).apply {
             postingAdapter = PostingAdapter(viewLifecycleOwner, this)
 
             eventShowPostingDetail.observeEvent(viewLifecycleOwner, { postingItem ->
@@ -101,7 +106,7 @@ class GalleryFragment : Fragment() {
         }
 
 
-        galleryViewModel = ViewModelProvider(activity, GalleryViewModelFactory()).get(GalleryViewModel::class.java).apply {
+        galleryViewModel = ViewModelProvider(requireActivity(), viewModelFactory).get(GalleryViewModel::class.java).apply {
             binding.galleryViewModel = this
 
             initPagingFlow()

@@ -5,19 +5,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import androidx.paging.PagingData
 import com.woody.cat.holic.R
 import com.woody.cat.holic.databinding.FragmentLikeBinding
+import com.woody.cat.holic.framework.base.BaseFragment
+import com.woody.cat.holic.framework.base.ViewModelFactory
 import com.woody.cat.holic.framework.base.observeEvent
 import com.woody.cat.holic.framework.net.common.NotSignedInException
-import com.woody.cat.holic.presentation.main.*
+import com.woody.cat.holic.presentation.main.MainTab
+import com.woody.cat.holic.presentation.main.MainViewModel
+import com.woody.cat.holic.presentation.main.SignViewModel
 import com.woody.cat.holic.presentation.main.posting.PostingAdapter
 import com.woody.cat.holic.presentation.main.posting.PostingViewModel
-import com.woody.cat.holic.presentation.main.posting.PostingViewModelFactory
 import com.woody.cat.holic.presentation.main.posting.comment.CommentDialog
 import com.woody.cat.holic.presentation.main.posting.detail.PostingDetailDialog
 import com.woody.cat.holic.presentation.main.posting.likelist.LikeListDialog
@@ -26,10 +28,15 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class LikeFragment : Fragment() {
+class LikeFragment : BaseFragment() {
 
     private lateinit var binding: FragmentLikeBinding
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
+
     private lateinit var mainViewModel: MainViewModel
     private lateinit var signViewModel: SignViewModel
     private lateinit var likeViewModel: LikeViewModel
@@ -49,7 +56,7 @@ class LikeFragment : Fragment() {
 
         val activity = activity ?: return
 
-        mainViewModel = ViewModelProvider(activity, MainViewModelFactory()).get(MainViewModel::class.java).apply {
+        mainViewModel = ViewModelProvider(activity, viewModelFactory).get(MainViewModel::class.java).apply {
             binding.mainViewModel = this
 
             eventChangeLikePostingOrder.observeEvent(viewLifecycleOwner, {
@@ -59,7 +66,7 @@ class LikeFragment : Fragment() {
             })
         }
 
-        signViewModel = ViewModelProvider(activity, SignViewModelFactory()).get(SignViewModel::class.java).apply {
+        signViewModel = ViewModelProvider(activity, viewModelFactory).get(SignViewModel::class.java).apply {
             binding.userViewModel = this
 
             eventSignInSuccess.observeEvent(viewLifecycleOwner, {
@@ -71,7 +78,7 @@ class LikeFragment : Fragment() {
             })
         }
 
-        postingViewModel = ViewModelProvider(this, PostingViewModelFactory()).get(PostingViewModel::class.java).apply {
+        postingViewModel = ViewModelProvider(this, viewModelFactory).get(PostingViewModel::class.java).apply {
             postingAdapter = PostingAdapter(viewLifecycleOwner, this)
 
             eventShowPostingDetail.observeEvent(viewLifecycleOwner, { postingItem ->
@@ -104,7 +111,7 @@ class LikeFragment : Fragment() {
             })
         }
 
-        likeViewModel = ViewModelProvider(activity, LikeViewModelFactory()).get(LikeViewModel::class.java).apply {
+        likeViewModel = ViewModelProvider(activity, viewModelFactory).get(LikeViewModel::class.java).apply {
             binding.likeViewModel = this
 
             initPagingFlow()

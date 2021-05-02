@@ -11,11 +11,11 @@ import com.woody.cat.holic.framework.base.Event
 import com.woody.cat.holic.framework.base.emit
 import com.woody.cat.holic.framework.paging.LikeListDataSource
 import com.woody.cat.holic.usecase.user.GetUserProfile
+import javax.inject.Inject
 
-class LikeListViewModel(
-    private val likeUserList: List<String>,
-    private val getUserProfile: GetUserProfile
-) : BaseViewModel() {
+class LikeListViewModel @Inject constructor(private val getUserProfile: GetUserProfile) : BaseViewModel() {
+
+    lateinit var likeUserList: List<String>
 
     companion object {
         const val PAGE_SIZE = 10

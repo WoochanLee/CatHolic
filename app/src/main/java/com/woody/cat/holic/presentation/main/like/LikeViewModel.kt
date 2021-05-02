@@ -14,13 +14,14 @@ import com.woody.cat.holic.usecase.posting.GetUserLikePostings
 import com.woody.cat.holic.usecase.user.GetCurrentUserId
 import com.woody.cat.holic.usecase.user.GetUserProfile
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class LikeViewModel(
+class LikeViewModel @Inject constructor(
     private val refreshEventBus: RefreshEventBus,
     private val changeToNextPostingOrder: ChangeToNextPostingOrder,
     private val getCurrentUserId: GetCurrentUserId,
     private val getUserLikePostings: GetUserLikePostings,
-    private val getUserProfile: GetUserProfile,
+    private val getUserProfile: GetUserProfile
 ) : BaseViewModel() {
 
     companion object {

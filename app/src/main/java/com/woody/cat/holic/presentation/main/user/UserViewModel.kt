@@ -8,8 +8,9 @@ import com.woody.cat.holic.framework.base.Event
 import com.woody.cat.holic.framework.base.emit
 import com.woody.cat.holic.usecase.setting.GetAppSetting
 import com.woody.cat.holic.usecase.setting.UpdateAppSetting
+import javax.inject.Inject
 
-class UserViewModel(
+class UserViewModel @Inject constructor(
     private val getAppSetting: GetAppSetting,
     private val updateAppSetting: UpdateAppSetting
 ) : BaseViewModel() {

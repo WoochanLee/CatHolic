@@ -12,8 +12,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class PhotoDownloadViewModel(val downloadPhoto: DownloadPhoto) : BaseViewModel() {
+class PhotoDownloadViewModel @Inject constructor(val downloadPhoto: DownloadPhoto) : BaseViewModel() {
 
     private val _eventShowToast = MutableLiveData<Event<Int>>()
     val eventShowToast: LiveData<Event<Int>> get() = _eventShowToast

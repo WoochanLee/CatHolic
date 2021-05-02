@@ -16,15 +16,16 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
+import javax.inject.Inject
 
-class ProfileViewModel(
+class ProfileViewModel @Inject constructor(
     private val refreshEventBus: RefreshEventBus,
     private val getCurrentUserId: GetCurrentUserId,
     private val getUserProfile: GetUserProfile,
     private val getAppSetting: GetAppSetting,
     private val uploadPhoto: UploadPhoto,
     private val updateUserProfile: UpdateUserProfile,
-    private val updateFollowUser: UpdateFollowUser,
+    private val updateFollowUser: UpdateFollowUser
 ) : BaseViewModel() {
 
     val isDarkMode = getAppSetting.getDarkMode()

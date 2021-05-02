@@ -1,79 +1,42 @@
 package com.woody.cat.holic.framework
 
-import android.app.Application
-import android.content.Context
-import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatDelegate
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.messaging.FirebaseMessaging
-import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.StorageReference
 import com.vanniktech.emoji.EmojiManager
 import com.vanniktech.emoji.twitter.TwitterEmojiProvider
+import com.woody.cat.holic.data.SettingRepository
 import com.woody.cat.holic.framework.base.AlbumMediaLoader
-import com.woody.cat.holic.framework.base.RefreshEventBus
-import com.woody.cat.holic.framework.db.SharedPreferenceSettingRepository
-import com.woody.cat.holic.framework.manager.AndroidFileManager
-import com.woody.cat.holic.framework.manager.GoogleMLPhotoAnalyzer
-import com.woody.cat.holic.framework.net.*
+import com.woody.cat.holic.framework.di.ApplicationModule
+import com.woody.cat.holic.framework.di.DaggerApplicationComponent
 import com.yanzhenjie.album.Album
 import com.yanzhenjie.album.AlbumConfig
+import dagger.android.AndroidInjector
+import dagger.android.DaggerApplication
 import java.util.*
+import javax.inject.Inject
 
 
-class CatHolicApplication : Application() {
+class CatHolicApplication : DaggerApplication() {
 
     companion object {
         lateinit var application: CatHolicApplication
-
-        private const val NAME_SETTING_REPOSITORY = "SETTING_REPOSITORY"
     }
 
-    private lateinit var settingSharedPreferences: SharedPreferences
-
-    private lateinit var firebaseAuth: FirebaseAuth
-    private lateinit var firebaseFirestore: FirebaseFirestore
-    private lateinit var firebaseStorageReference: StorageReference
-    private lateinit var firebaseMessaging: FirebaseMessaging
-
-    val settingRepository by lazy { SharedPreferenceSettingRepository(settingSharedPreferences) }
-    val pushTokenRepository by lazy { FirebaseFirestorePushTokenRepository(firebaseFirestore) }
-    val pushTokenGenerateRepository by lazy { FirebaseMessagingPushTokenGenerateRepository(firebaseMessaging) }
-    val photoRepository by lazy { FirebaseStoragePhotoRepository(firebaseStorageReference) }
-    val postingRepository by lazy { FirebaseFirestorePostingRepository(firebaseFirestore) }
-    val likePostingRepository by lazy { FirebaseFirestoreLikePostingRepository(firebaseFirestore) }
-    val userRepository by lazy { FirebaseFirestoreUserRepository(firebaseFirestore, firebaseAuth) }
-    val commentRepository by lazy { FirebaseFirestoreCommentRepository(firebaseFirestore) }
-    val followRepository by lazy { FirebaseFirestoreFollowRepository(firebaseFirestore) }
-    val photoAnalyzer by lazy { GoogleMLPhotoAnalyzer(this) }
-    val fileManager by lazy { AndroidFileManager(this) }
-
-    val refreshEventBus by lazy { RefreshEventBus() }
+    @Inject
+    lateinit var settingRepository: SettingRepository
 
     override fun onCreate() {
         super.onCreate()
         application = this
 
-        initSharedPreference()
-        initFirebase()
         initLibraryAlbum()
         initSetting()
         initEmoji()
     }
 
-    private fun initSharedPreference() {
-        settingSharedPreferences = getSharedPreferences(NAME_SETTING_REPOSITORY, Context.MODE_PRIVATE);
-    }
-
-    private fun initFirebase() {
-        firebaseAuth = FirebaseAuth.getInstance()
-        firebaseFirestore = FirebaseFirestore.getInstance()
-        firebaseStorageReference = FirebaseStorage.getInstance().apply {
-            maxDownloadRetryTimeMillis = FirebaseStoragePhotoRepository.MAX_RETRY_TIME_MILLIS
-            maxUploadRetryTimeMillis = FirebaseStoragePhotoRepository.MAX_RETRY_TIME_MILLIS
-        }.reference
-        firebaseMessaging = FirebaseMessaging.getInstance()
+    override fun applicationInjector(): AndroidInjector<out DaggerApplication> {
+        return DaggerApplicationComponent.builder()
+            .applicationModule(ApplicationModule(this))
+            .build()
     }
 
     private fun initLibraryAlbum() {

@@ -11,23 +11,28 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.woody.cat.holic.R
 import com.woody.cat.holic.databinding.FragmentUserBinding
+import com.woody.cat.holic.framework.base.BaseFragment
+import com.woody.cat.holic.framework.base.ViewModelFactory
 import com.woody.cat.holic.framework.base.observeEvent
 import com.woody.cat.holic.presentation.main.SignViewModel
-import com.woody.cat.holic.presentation.main.SignViewModelFactory
 import com.woody.cat.holic.presentation.main.user.myphoto.MyPhotoActivity
 import com.woody.cat.holic.presentation.main.user.profile.ProfileActivity
 import com.woody.cat.holic.presentation.main.user.profile.follower.FollowerListDialog
 import com.woody.cat.holic.presentation.main.user.profile.following.FollowingListDialog
 import com.woody.cat.holic.presentation.main.user.profile.photo.UserPhotoActivity
+import javax.inject.Inject
 
-class UserFragment : Fragment() {
+class UserFragment : BaseFragment() {
 
     private lateinit var binding: FragmentUserBinding
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
+
     private lateinit var signViewModel: SignViewModel
     private lateinit var userViewModel: UserViewModel
 
@@ -52,7 +57,7 @@ class UserFragment : Fragment() {
 
         val activity = activity ?: return
 
-        signViewModel = ViewModelProvider(activity, SignViewModelFactory()).get(SignViewModel::class.java).apply {
+        signViewModel = ViewModelProvider(activity, viewModelFactory).get(SignViewModel::class.java).apply {
             binding.signViewModel = this
 
             initFirebaseAuth(getString(R.string.default_web_client_id))
@@ -70,7 +75,7 @@ class UserFragment : Fragment() {
             })
         }
 
-        userViewModel = ViewModelProvider(activity, UserViewModelFactory()).get(UserViewModel::class.java).apply {
+        userViewModel = ViewModelProvider(activity, viewModelFactory).get(UserViewModel::class.java).apply {
             binding.userViewModel = this
 
             eventChangeDarkMode.observeEvent(viewLifecycleOwner, { isDarkMode ->

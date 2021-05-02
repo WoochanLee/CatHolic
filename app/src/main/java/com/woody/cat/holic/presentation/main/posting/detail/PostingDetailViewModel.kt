@@ -6,8 +6,11 @@ import com.woody.cat.holic.framework.base.BaseViewModel
 import com.woody.cat.holic.framework.base.Event
 import com.woody.cat.holic.framework.base.emit
 import com.woody.cat.holic.framework.paging.item.PostingItem
+import javax.inject.Inject
 
-class PostingDetailViewModel(val postingItem: PostingItem) : BaseViewModel() {
+class PostingDetailViewModel @Inject constructor() : BaseViewModel() {
+
+    lateinit var postingItem: PostingItem
 
     private val _eventShowCommentDialog = MutableLiveData<Event<Unit>>()
     val eventShowCommentDialog: LiveData<Event<Unit>> get() = _eventShowCommentDialog

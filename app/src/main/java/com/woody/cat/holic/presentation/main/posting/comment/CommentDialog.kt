@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.core.widget.doOnTextChanged
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
@@ -16,18 +15,25 @@ import com.vanniktech.emoji.EmojiPopup
 import com.vdurmont.emoji.EmojiParser
 import com.woody.cat.holic.R
 import com.woody.cat.holic.databinding.DialogPostingCommentBinding
+import com.woody.cat.holic.framework.base.ViewModelFactory
 import com.woody.cat.holic.framework.base.observeEvent
 import com.woody.cat.holic.framework.net.common.NotSignedInException
 import com.woody.cat.holic.framework.paging.item.PostingItem
 import com.woody.cat.holic.presentation.main.user.profile.ProfileActivity
+import dagger.android.support.DaggerDialogFragment
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class CommentDialog : DialogFragment() {
+class CommentDialog : DaggerDialogFragment() {
 
     private lateinit var binding: DialogPostingCommentBinding
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
+
     private lateinit var commentViewModel: CommentViewModel
 
     private var postingItem: PostingItem? = null
@@ -36,6 +42,7 @@ class CommentDialog : DialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setStyle(STYLE_NO_TITLE, R.style.dialog_fullscreen)
     }
 
@@ -61,7 +68,8 @@ class CommentDialog : DialogFragment() {
 
         val postingItem = this.postingItem ?: return
 
-        commentViewModel = ViewModelProvider(viewModelStore, CommentViewModelFactory(postingItem)).get(CommentViewModel::class.java).apply {
+        commentViewModel = ViewModelProvider(viewModelStore, viewModelFactory).get(CommentViewModel::class.java).apply {
+            this.postingItem = postingItem
             binding.commentViewModel = this
             commentAdapter = CommentAdapter(viewLifecycleOwner, this)
 

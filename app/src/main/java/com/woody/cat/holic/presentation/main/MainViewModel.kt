@@ -14,8 +14,9 @@ import com.woody.cat.holic.usecase.user.GetIsSignedIn
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class MainViewModel(
+class MainViewModel @Inject constructor(
     private val refreshEventBus: RefreshEventBus,
     private val getPostingOrder: GetPostingOrder,
     private val getIsSignedIn: GetIsSignedIn,

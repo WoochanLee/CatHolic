@@ -11,11 +11,11 @@ import com.woody.cat.holic.framework.base.Event
 import com.woody.cat.holic.framework.base.emit
 import com.woody.cat.holic.framework.paging.FollowingListDataSource
 import com.woody.cat.holic.usecase.user.GetUserProfile
+import javax.inject.Inject
 
-class FollowingListViewModel(
-    private val followingUserList: List<String>,
-    private val getUserProfile: GetUserProfile
-) : BaseViewModel() {
+class FollowingListViewModel @Inject constructor(private val getUserProfile: GetUserProfile) : BaseViewModel() {
+
+    lateinit var followingUserList: List<String>
 
     companion object {
         const val PAGE_SIZE = 10

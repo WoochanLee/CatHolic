@@ -5,14 +5,10 @@ import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.lifecycle.LifecycleService
 import com.woody.cat.holic.R
-import com.woody.cat.holic.framework.CatHolicApplication
-import com.woody.cat.holic.framework.base.observeEvent
-import com.woody.cat.holic.usecase.photo.DownloadPhoto
 
 class PhotoDownloadService : LifecycleService() {
 
@@ -33,7 +29,7 @@ class PhotoDownloadService : LifecycleService() {
     override fun onCreate() {
         super.onCreate()
 
-        viewModel = PhotoDownloadViewModel(DownloadPhoto(CatHolicApplication.application.fileManager)).apply {
+        /*viewModel = PhotoDownloadViewModel(DownloadPhoto(CatHolicApplication.application.fileManager)).apply {
             eventShowToast.observeEvent(this@PhotoDownloadService, { stringId ->
                 Toast.makeText(this@PhotoDownloadService, stringId, Toast.LENGTH_SHORT).show()
             })
@@ -41,7 +37,7 @@ class PhotoDownloadService : LifecycleService() {
             eventStopService.observeEvent(this@PhotoDownloadService, {
                 stopSelf()
             })
-        }
+        }*/
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             createNotificationChannel()

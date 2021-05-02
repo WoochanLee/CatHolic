@@ -5,19 +5,25 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.woody.cat.holic.R
 import com.woody.cat.holic.databinding.DialogFollowerListBinding
+import com.woody.cat.holic.framework.base.ViewModelFactory
 import com.woody.cat.holic.framework.base.observeEvent
 import com.woody.cat.holic.presentation.main.user.profile.ProfileActivity
+import dagger.android.support.DaggerDialogFragment
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class FollowerListDialog : DialogFragment() {
+class FollowerListDialog : DaggerDialogFragment() {
 
     private lateinit var binding: DialogFollowerListBinding
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
+
     private lateinit var followerListViewModel: FollowerListViewModel
 
     private var followerUserList = mutableListOf<String>()
@@ -47,8 +53,11 @@ class FollowerListDialog : DialogFragment() {
 
         dialog?.window?.attributes?.windowAnimations = R.style.BottomSlideAnimation
 
-        followerListViewModel = ViewModelProvider(viewModelStore, FollowerListViewModelFactory(followerUserList)).get(FollowerListViewModel::class.java).apply {
+        followerListViewModel = ViewModelProvider(viewModelStore, viewModelFactory).get(FollowerListViewModel::class.java).apply {
             binding.followerListViewModel = this
+
+            this.followerUserList = this@FollowerListDialog.followerUserList
+
             followerListAdapter = FollowerListAdapter(viewLifecycleOwner, this)
 
             viewLifecycleOwner.lifecycleScope.launch {

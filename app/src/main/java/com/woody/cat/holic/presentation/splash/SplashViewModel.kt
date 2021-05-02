@@ -8,8 +8,9 @@ import com.woody.cat.holic.framework.base.Event
 import com.woody.cat.holic.framework.base.emit
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class SplashViewModel : BaseViewModel() {
+class SplashViewModel @Inject constructor() : BaseViewModel() {
 
     private val _eventStartMainActivity = MutableLiveData<Event<Unit>>()
     val eventStartMainActivity: LiveData<Event<Unit>> get() = _eventStartMainActivity

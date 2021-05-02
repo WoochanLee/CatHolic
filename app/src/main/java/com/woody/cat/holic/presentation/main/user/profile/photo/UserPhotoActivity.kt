@@ -11,10 +11,10 @@ import androidx.paging.LoadState
 import com.woody.cat.holic.R
 import com.woody.cat.holic.databinding.ActivityUserPhotoBinding
 import com.woody.cat.holic.framework.base.BaseActivity
+import com.woody.cat.holic.framework.base.ViewModelFactory
 import com.woody.cat.holic.framework.base.observeEvent
 import com.woody.cat.holic.presentation.main.posting.PostingAdapter
 import com.woody.cat.holic.presentation.main.posting.PostingViewModel
-import com.woody.cat.holic.presentation.main.posting.PostingViewModelFactory
 import com.woody.cat.holic.presentation.main.posting.comment.CommentDialog
 import com.woody.cat.holic.presentation.main.posting.detail.PostingDetailDialog
 import com.woody.cat.holic.presentation.main.posting.likelist.LikeListDialog
@@ -22,6 +22,7 @@ import com.woody.cat.holic.presentation.main.user.profile.ProfileActivity
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 class UserPhotoActivity : BaseActivity() {
 
@@ -37,6 +38,10 @@ class UserPhotoActivity : BaseActivity() {
     }
 
     private lateinit var binding: ActivityUserPhotoBinding
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
+
     private lateinit var userPhotoViewModel: UserPhotoViewModel
     private lateinit var postingViewModel: PostingViewModel
 
@@ -54,7 +59,7 @@ class UserPhotoActivity : BaseActivity() {
             lifecycleOwner = this@UserPhotoActivity
         }
 
-        postingViewModel = ViewModelProvider(this, PostingViewModelFactory()).get(PostingViewModel::class.java).apply {
+        postingViewModel = ViewModelProvider(this, viewModelFactory).get(PostingViewModel::class.java).apply {
             postingAdapter = PostingAdapter(this@UserPhotoActivity, this)
 
             eventShowPostingDetail.observeEvent(this@UserPhotoActivity, { postingItem ->
@@ -88,8 +93,10 @@ class UserPhotoActivity : BaseActivity() {
             })
         }
 
-        userPhotoViewModel = ViewModelProvider(this, UserPhotoViewModelFactory(userId)).get(UserPhotoViewModel::class.java).apply {
+        userPhotoViewModel = ViewModelProvider(this, viewModelFactory).get(UserPhotoViewModel::class.java).apply {
             binding.viewModel = this
+
+            this.userId = userId
 
             initPagingFlow()
 
