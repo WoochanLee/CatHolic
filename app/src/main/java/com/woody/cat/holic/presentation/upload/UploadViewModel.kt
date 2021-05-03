@@ -26,8 +26,8 @@ class UploadViewModel @Inject constructor(
     private val addPosting: AddPosting
 ) : BaseViewModel() {
 
-    private val _eventSelectImage = MutableLiveData<Event<Unit>>()
-    val eventSelectImage: LiveData<Event<Unit>> get() = _eventSelectImage
+    private val _eventSelectImage = MutableLiveData<Event<Int>>()
+    val eventSelectImage: LiveData<Event<Int>> get() = _eventSelectImage
 
     private val _eventMoveToNextPreviewPage = MutableLiveData<Event<Unit>>()
     val eventMoveToNextPreviewPage: LiveData<Event<Unit>> get() = _eventMoveToNextPreviewPage
@@ -44,8 +44,8 @@ class UploadViewModel @Inject constructor(
     private val _eventFinish = MutableLiveData<Event<Unit>>()
     val eventFinish: LiveData<Event<Unit>> get() = _eventFinish
 
-    private val _eventShowPostingToast = MutableLiveData<Event<Int>>()
-    val eventShowToast: LiveData<Event<Int>> get() = _eventShowPostingToast
+    private val _eventShowToast = MutableLiveData<Event<Int>>()
+    val eventShowToast: LiveData<Event<Int>> get() = _eventShowToast
 
     private val _isLeftArrowButtonVisible = MutableLiveData(false)
     val isLeftArrowButtonVisible: LiveData<Boolean> get() = _isLeftArrowButtonVisible
@@ -61,6 +61,9 @@ class UploadViewModel @Inject constructor(
 
     private val _previewData = MutableLiveData<MutableList<UploadItem>>(mutableListOf())
     val previewData: LiveData<MutableList<UploadItem>> get() = _previewData
+
+    private val _isLoading = MutableLiveData(false)
+    val isLoading: LiveData<Boolean> get() = _isLoading
 
     private val updatePostingButtonEnableStatus = flow {
         if (previewData.value?.size == 0) {
@@ -111,7 +114,13 @@ class UploadViewModel @Inject constructor(
     }
 
     fun onClickSelectImageButton() {
-        _eventSelectImage.emit()
+        previewData.value?.size?.let { currentSelectedImageCount ->
+            if (currentSelectedImageCount >= UploadActivity.ALBUM_MAX_SELECT_COUNT) {
+                _eventShowToast.emit(R.string.you_can_upload_up_to_10_photos_at_a_time)
+            } else {
+                _eventSelectImage.emit(currentSelectedImageCount)
+            }
+        }
     }
 
     fun onClickRetryUploadPhoto(position: Int) {
@@ -124,7 +133,7 @@ class UploadViewModel @Inject constructor(
     fun onClickUploadPosting() {
         val userId = getCurrentUserId() ?: return handleNotSignedInUser()
 
-        //TODO: Loading Progress
+        _isLoading.postValue(true)
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 val uploadPostingItemList = previewData.value
@@ -133,14 +142,16 @@ class UploadViewModel @Inject constructor(
                     ?: listOf()
 
                 handleResourceResult(addPosting(userId, uploadPostingItemList), onSuccess = {
-                    _eventShowPostingToast.emit(R.string.success_to_posting)
+                    _eventShowToast.emit(R.string.success_to_posting)
                     _eventFinish.emit()
                     refreshEventBus.emitEvent(GlobalRefreshEvent.UploadPostingEvent)
                 }, onError = {
                     when (it) {
                         is NotSignedInException -> handleNotSignedInUser()
-                        else -> _eventShowPostingToast.emit(R.string.fail_to_posting)
+                        else -> _eventShowToast.emit(R.string.fail_to_posting)
                     }
+                }, onComplete = {
+                    _isLoading.postValue(false)
                 })
             }
         }
@@ -212,7 +223,7 @@ class UploadViewModel @Inject constructor(
     }
 
     private fun handleNotSignedInUser() {
-        _eventShowPostingToast.emit(R.string.need_to_sign_in)
+        _eventShowToast.emit(R.string.need_to_sign_in)
         _eventFinish.emit()
     }
 

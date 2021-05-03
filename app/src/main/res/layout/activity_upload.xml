@@ -173,7 +173,21 @@
         <include
             layout="@layout/layout_upload_guide"
             app:isVisibleGuide="@{viewModel.isVisibleGuide()}"
-            app:onClickCloseGuide="@{viewModel::onClickCloseGuide}" />
+            app:onClickCloseGuide="@{viewModel::onClickCloseGuide}"
+            tools:visibility="gone" />
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:visibility="@{viewModel.isLoading() ? View.VISIBLE : View.GONE}">
+
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

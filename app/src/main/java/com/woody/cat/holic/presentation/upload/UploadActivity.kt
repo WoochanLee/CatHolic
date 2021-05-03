@@ -44,8 +44,8 @@ class UploadActivity : BaseActivity() {
         viewModel = ViewModelProvider(this, viewModelFactory).get(UploadViewModel::class.java).apply {
             binding.viewModel = this
 
-            eventSelectImage.observeEvent(this@UploadActivity, {
-                getAlbumPhotos()
+            eventSelectImage.observeEvent(this@UploadActivity, { currentSelectedImageCount ->
+                getAlbumPhotos(currentSelectedImageCount)
             })
 
             eventMoveToNextPreviewPage.observeEvent(this@UploadActivity, {
@@ -118,13 +118,17 @@ class UploadActivity : BaseActivity() {
         refreshAdapterStatus()
     }
 
-    private fun getAlbumPhotos() {
+    private fun getAlbumPhotos(currentSelectedImageCount: Int) {
+        if(currentSelectedImageCount >= ALBUM_MAX_SELECT_COUNT) {
+            return
+        }
+
         Album.image(this)
             .multipleChoice()
             .widget(makeCustomAlbumWidget(title = R.string.select_cats))
             .camera(true)
             .columnCount(ALBUM_COLUMN_COUNT)
-            .selectCount(ALBUM_MAX_SELECT_COUNT)
+            .selectCount(ALBUM_MAX_SELECT_COUNT - currentSelectedImageCount)
             .onResult breaker@{ checkedList ->
                 if (checkedList.size == 0) {
                     return@breaker
