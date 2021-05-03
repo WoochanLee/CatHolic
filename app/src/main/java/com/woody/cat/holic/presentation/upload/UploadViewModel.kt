@@ -10,6 +10,8 @@ import com.woody.cat.holic.framework.net.common.NotSignedInException
 import com.woody.cat.holic.usecase.photo.DetectCatFromPhoto
 import com.woody.cat.holic.usecase.photo.UploadPhoto
 import com.woody.cat.holic.usecase.posting.AddPosting
+import com.woody.cat.holic.usecase.setting.GetAppSetting
+import com.woody.cat.holic.usecase.setting.UpdateAppSetting
 import com.woody.cat.holic.usecase.user.GetCurrentUserId
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collect
@@ -23,7 +25,9 @@ class UploadViewModel @Inject constructor(
     private val getCurrentUserId: GetCurrentUserId,
     private val detectCatFromPhoto: DetectCatFromPhoto,
     private val uploadPhoto: UploadPhoto,
-    private val addPosting: AddPosting
+    private val addPosting: AddPosting,
+    private val getAppSetting: GetAppSetting,
+    private val updateAppSetting: UpdateAppSetting
 ) : BaseViewModel() {
 
     private val _eventSelectImage = MutableLiveData<Event<Int>>()
@@ -56,7 +60,7 @@ class UploadViewModel @Inject constructor(
     private val _isUploadButtonEnabled = MutableLiveData(false)
     val isUploadButtonEnabled: LiveData<Boolean> get() = _isUploadButtonEnabled
 
-    private val _isVisibleGuide = MutableLiveData(true)
+    private val _isVisibleGuide = MutableLiveData(getAppSetting.getUploadGuideStatus())
     val isVisibleGuide: LiveData<Boolean> get() = _isVisibleGuide
 
     private val _previewData = MutableLiveData<MutableList<UploadItem>>(mutableListOf())
@@ -158,6 +162,7 @@ class UploadViewModel @Inject constructor(
     }
 
     fun onClickCloseGuide() {
+        updateAppSetting.setUploadGuideStatus(false)
         _isVisibleGuide.postValue(false)
     }
 

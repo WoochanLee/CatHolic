@@ -9,6 +9,8 @@ import com.woody.cat.holic.framework.base.*
 import com.woody.cat.holic.framework.paging.item.PostingItem
 import com.woody.cat.holic.usecase.posting.GetPostingOrder
 import com.woody.cat.holic.usecase.posting.UpdateLikedPosting
+import com.woody.cat.holic.usecase.setting.GetAppSetting
+import com.woody.cat.holic.usecase.setting.UpdateAppSetting
 import com.woody.cat.holic.usecase.user.GetCurrentUserId
 import com.woody.cat.holic.usecase.user.GetIsSignedIn
 import kotlinx.coroutines.Dispatchers
@@ -21,7 +23,9 @@ class MainViewModel @Inject constructor(
     private val getPostingOrder: GetPostingOrder,
     private val getIsSignedIn: GetIsSignedIn,
     private val getCurrentUserId: GetCurrentUserId,
-    private val updateLikedPosting: UpdateLikedPosting
+    private val updateLikedPosting: UpdateLikedPosting,
+    private val getAppSetting: GetAppSetting,
+    private val updateAppSetting: UpdateAppSetting
 ) : BaseViewModel() {
 
     var currentFragment = MainTab.TAB_GALLERY
@@ -44,7 +48,7 @@ class MainViewModel @Inject constructor(
     private val _eventShowLikeListDialog = MutableLiveData<Event<PostingItem>>()
     val eventShowLikeListDialog: LiveData<Event<PostingItem>> get() = _eventShowLikeListDialog
 
-    private val _isVisibleGuide = MutableLiveData(true)
+    private val _isVisibleGuide = MutableLiveData(getAppSetting.getMainGuideStatus())
     val isVisibleGuide: LiveData<Boolean> get() = _isVisibleGuide
 
     private val _toolbarTitle = MutableLiveData<String>()
@@ -128,6 +132,7 @@ class MainViewModel @Inject constructor(
     }
 
     fun onClickCloseGuide() {
+        updateAppSetting.setMainGuideStatus(false)
         _isVisibleGuide.postValue(false)
     }
 

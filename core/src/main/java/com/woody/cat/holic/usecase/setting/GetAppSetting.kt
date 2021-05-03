@@ -4,4 +4,8 @@ import com.woody.cat.holic.data.SettingRepository
 
 class GetAppSetting(private val settingRepository: SettingRepository) {
     fun getDarkMode() = settingRepository.getDarkMode()
+
+    fun getMainGuideStatus() = settingRepository.getMainGuideStatus()
+
+    fun getUploadGuideStatus() = settingRepository.getUploadGuideStatus()
 }
