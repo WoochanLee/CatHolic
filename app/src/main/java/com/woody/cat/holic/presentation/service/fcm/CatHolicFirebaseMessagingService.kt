@@ -5,6 +5,7 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.annotation.StringRes
@@ -15,7 +16,6 @@ import com.google.firebase.messaging.RemoteMessage
 import com.google.gson.Gson
 import com.woody.cat.holic.R
 import com.woody.cat.holic.framework.net.dto.NotificationDto
-import com.woody.cat.holic.presentation.splash.SplashActivity
 
 @SuppressLint("MissingFirebaseInstanceTokenRefresh")
 class CatHolicFirebaseMessagingService : FirebaseMessagingService() {
@@ -25,6 +25,8 @@ class CatHolicFirebaseMessagingService : FirebaseMessagingService() {
         const val NOTIFICATION_CHANNEL_ID_POSTING = "NOTIFICATION_CHANNEL_ID_POSTING"
         const val NOTIFICATION_CHANNEL_ID_COMMENT = "NOTIFICATION_CHANNEL_ID_COMMENT"
         const val NOTIFICATION_CHANNEL_ID_LIKE = "NOTIFICATION_CHANNEL_ID_LIKE"
+
+        const val DEEP_LINK_QUERY_POSTING_ID = "postingId"
 
         @Volatile
         private var notificationId = 0
@@ -46,8 +48,10 @@ class CatHolicFirebaseMessagingService : FirebaseMessagingService() {
                 createNotificationChannel(notificationDto.notificationType)
             }
 
-            val intent = Intent(this, SplashActivity::class.java).apply {
-                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            val intent = Intent().apply {
+                action = Intent.ACTION_VIEW
+                setData(Uri.parse(notificationDto.deepLink))
+                //TODO: intent flags (Clear top)
             }
             val pendingIntent = PendingIntent.getActivity(this, 0, intent, 0)
 

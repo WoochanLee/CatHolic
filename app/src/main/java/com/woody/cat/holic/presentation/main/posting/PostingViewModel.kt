@@ -5,9 +5,14 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.woody.cat.holic.framework.base.*
 import com.woody.cat.holic.framework.paging.item.PostingItem
+import com.woody.cat.holic.framework.paging.item.UserItem
+import com.woody.cat.holic.framework.paging.item.mapToPostingItem
+import com.woody.cat.holic.usecase.posting.GetSinglePosting
 import com.woody.cat.holic.usecase.posting.UpdateLikedPosting
 import com.woody.cat.holic.usecase.user.GetCurrentUserId
+import com.woody.cat.holic.usecase.user.GetUserProfile
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -15,7 +20,9 @@ import javax.inject.Inject
 class PostingViewModel @Inject constructor(
     private val refreshEventBus: RefreshEventBus,
     private val getCurrentUserId: GetCurrentUserId,
-    private val updateLikedPosting: UpdateLikedPosting
+    private val updateLikedPosting: UpdateLikedPosting,
+    private val getSinglePosting: GetSinglePosting,
+    private val getUserProfile: GetUserProfile
 ) : BaseViewModel() {
 
     private val _eventMoveToSignInTabWithToast = MutableLiveData<Event<Unit>>()
@@ -69,6 +76,31 @@ class PostingViewModel @Inject constructor(
                     updateLikedPosting.likePosting(userId, postingItem.postingId)
                 }
                 refreshEventBus.emitEvent(GlobalRefreshEvent.PostingLikedChangeEvent)
+            }
+        }
+    }
+
+    fun handleDeepLinkToPostingDetail(postingId: String) {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                handleResourceResult(getSinglePosting(postingId), onSuccess = { posting ->
+                    val postingItem = posting.mapToPostingItem(getCurrentUserId())
+                    getPostingUserProfile(postingItem.user)
+                    _eventShowPostingDetail.emit(postingItem)
+                }, onError = {
+                    //TODO: handle network error
+                })
+            }
+        }
+    }
+
+    private fun getPostingUserProfile(userItem: UserItem) {
+        GlobalScope.launch {
+            withContext(Dispatchers.IO) {
+                handleResourceResult(getUserProfile(userItem.userId), onSuccess = {
+                    userItem.displayName.postValue(it.displayName)
+                    userItem.userProfilePhotoUrl.postValue(it.userProfilePhotoUrl)
+                })
             }
         }
     }

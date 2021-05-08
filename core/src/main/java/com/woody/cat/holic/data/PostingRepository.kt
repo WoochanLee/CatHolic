@@ -25,4 +25,6 @@ interface PostingRepository {
     suspend fun getUserUploadedPostings(key: String?, userId: String, size: Int): Resource<List<Posting>>
 
     suspend fun getUserPostings(key: String?, userId: String, size: Int): Resource<List<Posting>>
+
+    suspend fun getSinglePosting(postingId: String): Resource<Posting>
 }

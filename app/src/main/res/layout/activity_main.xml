@@ -13,6 +13,10 @@
             name="signViewModel"
             type="com.woody.cat.holic.presentation.main.SignViewModel" />
 
+        <variable
+            name="postingViewModel"
+            type="com.woody.cat.holic.presentation.main.posting.PostingViewModel" />
+
         <import type="android.view.View" />
 
         <import type="kotlin.Unit" />

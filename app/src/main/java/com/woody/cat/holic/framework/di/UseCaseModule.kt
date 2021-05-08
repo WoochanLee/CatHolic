@@ -141,4 +141,9 @@ class UseCaseModule {
     fun provideUpdateUserProfile(userRepository: UserRepository): UpdateUserProfile {
         return UpdateUserProfile(userRepository)
     }
+
+    @Provides
+    fun provideGetSinglePosting(postingRepository: PostingRepository): GetSinglePosting {
+        return GetSinglePosting(postingRepository)
+    }
 }

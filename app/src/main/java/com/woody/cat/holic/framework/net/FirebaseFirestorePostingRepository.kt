@@ -11,6 +11,7 @@ import com.woody.cat.holic.data.common.Resource
 import com.woody.cat.holic.domain.Posting
 import com.woody.cat.holic.framework.COLLECTION_POSTING_PATH
 import com.woody.cat.holic.framework.COLLECTION_PROFILE_PATH
+import com.woody.cat.holic.framework.net.common.DataNotExistException
 import com.woody.cat.holic.framework.net.dto.PostingDto
 import com.woody.cat.holic.framework.net.dto.UserDto
 import com.woody.cat.holic.framework.net.dto.mapToPosting
@@ -199,6 +200,24 @@ class FirebaseFirestorePostingRepository(private val db: FirebaseFirestore) : Po
             }
 
             Resource.Success(postingList)
+        } catch (e: Exception) {
+            Resource.Error(e)
+        }
+    }
+
+    override suspend fun getSinglePosting(postingId: String): Resource<Posting> {
+        return try {
+            val result = db.collection(COLLECTION_POSTING_PATH)
+                .document(postingId)
+                .get()
+                .await()
+
+            val user = result.toObject(PostingDto::class.java)?.mapToPosting(postingId)
+            if (user != null) {
+                Resource.Success(user)
+            } else {
+                Resource.Error(DataNotExistException())
+            }
         } catch (e: Exception) {
             Resource.Error(e)
         }

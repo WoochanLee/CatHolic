@@ -16,9 +16,11 @@ import com.woody.cat.holic.framework.base.observeEvent
 import com.woody.cat.holic.presentation.main.gallery.GalleryFragment
 import com.woody.cat.holic.presentation.main.like.LikeFragment
 import com.woody.cat.holic.presentation.main.posting.PostingViewModel
+import com.woody.cat.holic.presentation.main.posting.detail.PostingDetailDialog
 import com.woody.cat.holic.presentation.main.posting.likelist.LikeListDialog
 import com.woody.cat.holic.presentation.main.user.UserFragment
 import com.woody.cat.holic.presentation.main.user.profile.ProfileActivity
+import com.woody.cat.holic.presentation.service.fcm.CatHolicFirebaseMessagingService.Companion.DEEP_LINK_QUERY_POSTING_ID
 import com.woody.cat.holic.presentation.upload.UploadActivity
 import javax.inject.Inject
 
@@ -75,9 +77,18 @@ class MainActivity : BaseActivity() {
         }
 
         postingViewModel = ViewModelProvider(this, viewModelFactory).get(PostingViewModel::class.java).apply {
+            binding.postingViewModel = this
+
             eventMoveToSignInTabWithToast.observeEvent(this@MainActivity, {
                 binding.tlMain.getTabAt(MainTab.TAB_USER.position)?.select()
                 Toast.makeText(applicationContext, R.string.need_to_sign_in, Toast.LENGTH_LONG).show()
+            })
+
+            eventShowPostingDetail.observeEvent(this@MainActivity, { postingItem ->
+                PostingDetailDialog.Builder()
+                    .setPostingItem(postingItem)
+                    .create()
+                    .show(supportFragmentManager, PostingDetailDialog::class.java.name)
             })
         }
 
@@ -86,10 +97,14 @@ class MainActivity : BaseActivity() {
         } else {
             restoreFragments()
         }
+
         initMainTab()
+
         if (savedInstanceState != null) {
             binding.tlMain.getTabAt(MainTab.TAB_USER.position)?.select()
         }
+
+        checkDeepLink()
     }
 
     private fun initMainTab() {
@@ -160,6 +175,12 @@ class MainActivity : BaseActivity() {
         showFragment(galleryFragment)
     }
 
+    private fun checkDeepLink() {
+        intent.data?.getQueryParameter(DEEP_LINK_QUERY_POSTING_ID)?.let { postingId ->
+            postingViewModel.handleDeepLinkToPostingDetail(postingId)
+        }
+    }
+
     private fun restoreFragments() {
         galleryFragment = supportFragmentManager.findFragmentByTag(GalleryFragment::class.java.name) as GalleryFragment
         likeFragment = supportFragmentManager.findFragmentByTag(LikeFragment::class.java.name) as LikeFragment
@@ -179,7 +200,8 @@ class MainActivity : BaseActivity() {
             .show(fragment)
             .commit()
     }
-/*
+
+    /*
     private fun showProfileMenuPopup(userId: String) {
         val popup = PopupMenu(this, binding.ibProfileMenu)
         popup.inflate(R.menu.my_profile_menu)
