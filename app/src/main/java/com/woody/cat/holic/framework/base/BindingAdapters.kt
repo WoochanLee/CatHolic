@@ -4,7 +4,6 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import androidx.annotation.ColorInt
 import androidx.appcompat.widget.PopupMenu
-import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
 import com.woody.cat.holic.R
@@ -16,7 +15,8 @@ fun ImageView.bindImage(imageUrl: String?) {
     if (!imageUrl.isNullOrEmpty()) {
         Glide.with(context)
             .load(imageUrl)
-            .error(ContextCompat.getDrawable(context, R.drawable.woody_cat))
+            .placeholder(R.drawable.congshu_cat)
+            .error(R.drawable.woody_cat)
             .into(this)
     }
 }
