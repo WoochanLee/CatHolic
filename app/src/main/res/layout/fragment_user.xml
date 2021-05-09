@@ -454,6 +454,56 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="70dp"
                                 android:backgroundTint="@android:color/transparent"
+                                android:onClick="@{() -> userViewModel.onClickGuide()}"
+                                android:foreground="?android:selectableItemBackground"
+                                app:cardCornerRadius="10dp"
+                                app:cardElevation="0dp">
+
+                                <androidx.constraintlayout.widget.ConstraintLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:paddingHorizontal="20dp">
+
+                                    <LinearLayout
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:orientation="horizontal"
+                                        app:layout_constraintBottom_toBottomOf="parent"
+                                        app:layout_constraintStart_toStartOf="parent"
+                                        app:layout_constraintTop_toTopOf="parent">
+
+                                        <ImageView
+                                            android:layout_width="25dp"
+                                            android:layout_height="25dp"
+                                            android:layout_marginEnd="10dp"
+                                            android:src="@drawable/ic_guide"
+                                            app:tint="@color/background_color_sub" />
+
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_gravity="center"
+                                            android:text="@string/guide"
+                                            android:textColor="@color/text_color"
+                                            android:textSize="17dp"
+                                            android:textStyle="bold" />
+                                    </LinearLayout>
+
+                                    <ImageView
+                                        android:layout_width="20dp"
+                                        android:layout_height="20dp"
+                                        android:src="@drawable/ic_arrow_point_to_right"
+                                        app:layout_constraintBottom_toBottomOf="parent"
+                                        app:layout_constraintEnd_toEndOf="parent"
+                                        app:layout_constraintTop_toTopOf="parent"
+                                        app:tint="@color/background_color_sub" />
+                                </androidx.constraintlayout.widget.ConstraintLayout>
+                            </androidx.cardview.widget.CardView>
+
+                            <androidx.cardview.widget.CardView
+                                android:layout_width="match_parent"
+                                android:layout_height="70dp"
+                                android:backgroundTint="@android:color/transparent"
                                 android:foreground="?android:selectableItemBackground"
                                 android:onClick="@{() -> userViewModel.changeDarkMode()}"
                                 app:cardCornerRadius="10dp"

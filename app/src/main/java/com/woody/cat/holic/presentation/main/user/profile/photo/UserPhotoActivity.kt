@@ -63,24 +63,15 @@ class UserPhotoActivity : BaseActivity() {
             postingAdapter = PostingAdapter(this@UserPhotoActivity, this)
 
             eventShowPostingDetail.observeEvent(this@UserPhotoActivity, { postingItem ->
-                PostingDetailDialog.Builder()
-                    .setPostingItem(postingItem)
-                    .create()
-                    .show(supportFragmentManager, PostingDetailDialog::class.java.name)
+                PostingDetailDialog.newInstance(supportFragmentManager, postingItem)
             })
 
             eventShowCommentDialog.observeEvent(this@UserPhotoActivity, { postingItem ->
-                CommentDialog.Builder()
-                    .setPostingItem(postingItem)
-                    .create()
-                    .show(supportFragmentManager, CommentDialog::class.java.name)
+                CommentDialog.newInstance(supportFragmentManager, postingItem)
             })
 
             eventShowLikeListDialog.observeEvent(this@UserPhotoActivity, { postingItem ->
-                LikeListDialog.Builder()
-                    .setLikeUserList(postingItem.likedUserIds)
-                    .create()
-                    .show(supportFragmentManager, LikeListDialog::class.java.name)
+                LikeListDialog.newInstance(supportFragmentManager, postingItem)
             })
 
             eventStartProfileActivity.observeEvent(this@UserPhotoActivity, { userId ->

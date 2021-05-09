@@ -2,6 +2,7 @@ package com.woody.cat.holic.presentation.main.user.myphoto
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -64,17 +65,11 @@ class MyPhotoActivity : BaseActivity() {
             })
 
             eventShowCommentDialog.observeEvent(this@MyPhotoActivity, { postingItem ->
-                CommentDialog.Builder()
-                    .setPostingItem(postingItem)
-                    .create()
-                    .show(supportFragmentManager, CommentDialog::class.java.name)
+                CommentDialog.newInstance(supportFragmentManager, postingItem)
             })
 
             eventShowLikeListDialog.observeEvent(this@MyPhotoActivity, { postingItem ->
-                LikeListDialog.Builder()
-                    .setLikeUserList(postingItem.likedUserIds)
-                    .create()
-                    .show(supportFragmentManager, LikeListDialog::class.java.name)
+                LikeListDialog.newInstance(supportFragmentManager, postingItem)
             })
 
             eventStartUploadActivity.observeEvent(this@MyPhotoActivity, {
@@ -83,6 +78,16 @@ class MyPhotoActivity : BaseActivity() {
 
             eventStartPhotoDownload.observeEvent(this@MyPhotoActivity, { imageUrl ->
                 startService(PhotoDownloadService.getIntent(this@MyPhotoActivity, imageDownloadUrl = imageUrl))
+            })
+
+            eventShowDeleteWarningDialog.observeEvent(this@MyPhotoActivity, { (userId, postingId) ->
+                AlertDialog.Builder(this@MyPhotoActivity)
+                    .setTitle(getString(R.string.delete_photo))
+                    .setMessage(getString(R.string.do_you_really_want_to_delete_this_photo))
+                    .setPositiveButton(getString(R.string.delete_2)) { _, _ ->
+                        viewModel.deletePosting(userId, postingId)
+                    }.setNegativeButton(R.string.cancel, null)
+                    .show()
             })
         }
 

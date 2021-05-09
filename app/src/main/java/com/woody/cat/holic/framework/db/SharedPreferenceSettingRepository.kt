@@ -18,7 +18,7 @@ class SharedPreferenceSettingRepository(private val settingSharedPreferences: Sh
     }
 
     override fun getDarkMode(): Boolean {
-        return settingSharedPreferences.getBoolean(KEY_DARK_MODE, false)
+        return settingSharedPreferences.getBoolean(KEY_DARK_MODE, true)
     }
 
     override fun setMainGuideStatus(isVisible: Boolean) {

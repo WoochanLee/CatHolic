@@ -5,12 +5,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.woody.cat.holic.R
 import com.woody.cat.holic.databinding.DialogLikeListBinding
 import com.woody.cat.holic.framework.base.ViewModelFactory
 import com.woody.cat.holic.framework.base.observeEvent
+import com.woody.cat.holic.framework.paging.item.PostingItem
 import com.woody.cat.holic.presentation.main.user.profile.ProfileActivity
 import dagger.android.support.DaggerDialogFragment
 import kotlinx.coroutines.flow.collectLatest
@@ -18,6 +20,15 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class LikeListDialog : DaggerDialogFragment() {
+
+    companion object {
+        fun newInstance(fragmentManager: FragmentManager, postingItem: PostingItem) {
+            Builder()
+                .setLikeUserList(postingItem.likedUserIds)
+                .create()
+                .show(fragmentManager, LikeListDialog::class.java.name)
+        }
+    }
 
     private lateinit var binding: DialogLikeListBinding
 
@@ -77,7 +88,7 @@ class LikeListDialog : DaggerDialogFragment() {
         this.likeUserList.addAll(likeUserList)
     }
 
-    class Builder {
+    private class Builder {
         private val likeListDialog = LikeListDialog()
 
         fun setLikeUserList(likeUserList: List<String>): Builder {

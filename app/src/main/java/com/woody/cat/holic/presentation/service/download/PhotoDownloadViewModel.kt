@@ -1,5 +1,6 @@
 package com.woody.cat.holic.presentation.service.download
 
+import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.woody.cat.holic.R
@@ -16,7 +17,7 @@ import javax.inject.Inject
 
 class PhotoDownloadViewModel @Inject constructor(val downloadPhoto: DownloadPhoto) : BaseViewModel() {
 
-    private val _eventShowToast = MutableLiveData<Event<Int>>()
+    private val _eventShowToast = MutableLiveData<Event<@StringRes Int>>()
     val eventShowToast: LiveData<Event<Int>> get() = _eventShowToast
 
     private val _eventStopService = MutableLiveData<Event<Unit>>()

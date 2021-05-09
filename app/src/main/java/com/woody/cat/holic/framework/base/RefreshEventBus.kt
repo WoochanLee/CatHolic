@@ -25,5 +25,6 @@ enum class GlobalRefreshEvent {
     UploadPostingEvent,
     DeletePostingEvent,
     FollowUserEvent,
-    UpdateUserProfileEvent
+    UpdateUserProfileEvent,
+
 }

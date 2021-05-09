@@ -94,17 +94,11 @@ class ProfileActivity : BaseActivity() {
             })
 
             eventShowFollowerDialog.observeEvent(this@ProfileActivity, { followerList ->
-                FollowerListDialog.Builder()
-                    .setFollowerUserList(followerList)
-                    .create()
-                    .show(supportFragmentManager, FollowerListDialog::class.java.name)
+                FollowerListDialog.newInstance(supportFragmentManager, followerList)
             })
 
             eventShowFollowingDialog.observeEvent(this@ProfileActivity, { followingList ->
-                FollowingListDialog.Builder()
-                    .setFollowingUserList(followingList)
-                    .create()
-                    .show(supportFragmentManager, FollowingListDialog::class.java.name)
+                FollowingListDialog.newInstance(supportFragmentManager, followingList)
             })
 
             eventShowToast.observeEvent(this@ProfileActivity, { stringRes ->
@@ -201,9 +195,9 @@ class ProfileActivity : BaseActivity() {
 
     private fun showUnfollowAlertDialog(myUserId: String, targetUserId: String) {
         AlertDialog.Builder(this)
-            .setTitle("Unfollow")
-            .setMessage("Do you really want to unfollow?")
-            .setPositiveButton("Unfollow") {_, _ ->
+            .setTitle(getString(R.string.unfollow_2))
+            .setMessage(getString(R.string.do_you_really_want_to_unfollow))
+            .setPositiveButton(getString(R.string.unfollow_2)) { _, _ ->
                 viewModel.unfollowUser(myUserId, targetUserId)
             }.setNegativeButton(R.string.cancel, null)
             .show()

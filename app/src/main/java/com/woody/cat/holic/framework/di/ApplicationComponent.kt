@@ -17,7 +17,8 @@ import javax.inject.Singleton
         EventBusModule::class,
         ActivitiesModule::class,
         FragmentsModule::class,
-        ViewModelModule::class
+        ViewModelModule::class,
+        ServicesModule::class,
     ]
 )
 interface ApplicationComponent : AndroidInjector<CatHolicApplication> {

@@ -38,6 +38,9 @@ class CommentViewModel @Inject constructor(
     private val _eventStartProfileActivity = MutableLiveData<Event<String>>()
     val eventStartProfileActivity: LiveData<Event<String>> get() = _eventStartProfileActivity
 
+    private val _eventHideKeyboard = MutableLiveData<Event<Unit>>()
+    val eventHideKeyboard: LiveData<Event<Unit>> get() = _eventHideKeyboard
+
     private val _writingEmojiStr = MutableLiveData("")
     val writeEmojiStr: LiveData<String> get() = _writingEmojiStr
 
@@ -80,6 +83,8 @@ class CommentViewModel @Inject constructor(
 
     fun onClickAddComment() {
         val currentUserId = getCurrentUserId() ?: return
+
+        _eventHideKeyboard.emit()
 
         viewModelScope.launch {
             withContext(Dispatchers.IO) {

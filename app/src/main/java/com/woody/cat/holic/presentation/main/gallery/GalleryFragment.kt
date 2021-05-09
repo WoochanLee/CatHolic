@@ -76,24 +76,15 @@ class GalleryFragment : BaseFragment() {
             postingAdapter = PostingAdapter(viewLifecycleOwner, this)
 
             eventShowPostingDetail.observeEvent(viewLifecycleOwner, { postingItem ->
-                PostingDetailDialog.Builder()
-                    .setPostingItem(postingItem)
-                    .create()
-                    .show(parentFragmentManager, PostingDetailDialog::class.java.name)
+                PostingDetailDialog.newInstance(parentFragmentManager, postingItem)
             })
 
             eventShowCommentDialog.observeEvent(viewLifecycleOwner, { postingItem ->
-                CommentDialog.Builder()
-                    .setPostingItem(postingItem)
-                    .create()
-                    .show(parentFragmentManager, CommentDialog::class.java.name)
+                CommentDialog.newInstance(parentFragmentManager, postingItem)
             })
 
             eventShowLikeListDialog.observeEvent(viewLifecycleOwner, { postingItem ->
-                LikeListDialog.Builder()
-                    .setLikeUserList(postingItem.likedUserIds)
-                    .create()
-                    .show(parentFragmentManager, LikeListDialog::class.java.name)
+                LikeListDialog.newInstance(parentFragmentManager, postingItem)
             })
 
             eventStartProfileActivity.observeEvent(viewLifecycleOwner, { userId ->

@@ -17,6 +17,7 @@ import com.woody.cat.holic.presentation.main.user.profile.ProfileViewModel
 import com.woody.cat.holic.presentation.main.user.profile.follower.FollowerListViewModel
 import com.woody.cat.holic.presentation.main.user.profile.following.FollowingListViewModel
 import com.woody.cat.holic.presentation.main.user.profile.photo.UserPhotoViewModel
+import com.woody.cat.holic.presentation.service.download.PhotoDownloadViewModel
 import com.woody.cat.holic.presentation.splash.SplashViewModel
 import com.woody.cat.holic.presentation.upload.UploadViewModel
 import dagger.Binds
@@ -107,6 +108,12 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(UploadViewModel::class)
     abstract fun provideUploadViewModel(uploadViewModel: UploadViewModel): ViewModel
+
+    /**
+     * This ViewModel not be created by ViewModelFactory, only be used in PhotoDownloadService.kt.
+     */
+    @Binds
+    abstract fun providePhotoDownloadViewModel(photoDownloadViewModel: PhotoDownloadViewModel): ViewModel
 
     @Binds
     abstract fun provideViewModelFactory(viewModelFactory: ViewModelFactory): ViewModelProvider.Factory

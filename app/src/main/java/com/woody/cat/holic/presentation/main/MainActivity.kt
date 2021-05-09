@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.tabs.TabLayout
 import com.woody.cat.holic.R
@@ -19,12 +18,19 @@ import com.woody.cat.holic.presentation.main.posting.PostingViewModel
 import com.woody.cat.holic.presentation.main.posting.detail.PostingDetailDialog
 import com.woody.cat.holic.presentation.main.posting.likelist.LikeListDialog
 import com.woody.cat.holic.presentation.main.user.UserFragment
+import com.woody.cat.holic.presentation.main.user.UserViewModel
 import com.woody.cat.holic.presentation.main.user.profile.ProfileActivity
 import com.woody.cat.holic.presentation.service.fcm.CatHolicFirebaseMessagingService.Companion.DEEP_LINK_QUERY_POSTING_ID
 import com.woody.cat.holic.presentation.upload.UploadActivity
+import java.util.*
 import javax.inject.Inject
+import kotlin.reflect.KClass
 
 class MainActivity : BaseActivity() {
+
+    companion object {
+        private const val KEY_CURRENT_TAB_POSITION = "KEY_CURRENT_TAB_POSITION"
+    }
 
     private lateinit var binding: ActivityMainBinding
 
@@ -33,12 +39,8 @@ class MainActivity : BaseActivity() {
 
     private lateinit var mainViewModel: MainViewModel
     private lateinit var signViewModel: SignViewModel
+    private lateinit var userViewModel: UserViewModel
     private lateinit var postingViewModel: PostingViewModel
-
-    private lateinit var galleryFragment: GalleryFragment
-    private lateinit var likeFragment: LikeFragment
-    private lateinit var userFragment: UserFragment
-    private lateinit var fragments: Array<Fragment>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,15 +67,27 @@ class MainActivity : BaseActivity() {
             })
 
             eventShowLikeListDialog.observeEvent(this@MainActivity, { postingItem ->
-                LikeListDialog.Builder()
-                    .setLikeUserList(postingItem.likedUserIds)
-                    .create()
-                    .show(supportFragmentManager, LikeListDialog::class.java.name)
+                LikeListDialog.newInstance(supportFragmentManager, postingItem)
+            })
+
+            eventShowToast.observeEvent(this@MainActivity, { stringRes ->
+                Toast.makeText(this@MainActivity, stringRes, Toast.LENGTH_SHORT).show()
+            })
+
+            eventFinishApp.observeEvent(this@MainActivity, {
+                finish()
             })
         }
 
         signViewModel = ViewModelProvider(this, viewModelFactory).get(SignViewModel::class.java).apply {
             binding.signViewModel = this
+        }
+
+        userViewModel = ViewModelProvider(this, viewModelFactory).get(UserViewModel::class.java).apply {
+            eventShowGuide.observeEvent(this@MainActivity, {
+                binding.tlMain.getTabAt(MainTab.TAB_GALLERY.position)?.select()
+                mainViewModel.setGuideVisible(true)
+            })
         }
 
         postingViewModel = ViewModelProvider(this, viewModelFactory).get(PostingViewModel::class.java).apply {
@@ -85,23 +99,19 @@ class MainActivity : BaseActivity() {
             })
 
             eventShowPostingDetail.observeEvent(this@MainActivity, { postingItem ->
-                PostingDetailDialog.Builder()
-                    .setPostingItem(postingItem)
-                    .create()
-                    .show(supportFragmentManager, PostingDetailDialog::class.java.name)
+                PostingDetailDialog.newInstance(supportFragmentManager, postingItem)
             })
         }
 
         if (savedInstanceState == null) {
-            initFragments()
+            createFragments()
+            initMainTab()
         } else {
-            restoreFragments()
-        }
-
-        initMainTab()
-
-        if (savedInstanceState != null) {
-            binding.tlMain.getTabAt(MainTab.TAB_USER.position)?.select()
+            initMainTab()
+            val beforeTabPosition = savedInstanceState.getInt(KEY_CURRENT_TAB_POSITION)
+            if (beforeTabPosition >= 0) {
+                binding.tlMain.getTabAt(beforeTabPosition)?.select()
+            }
         }
 
         checkDeepLink()
@@ -122,11 +132,11 @@ class MainActivity : BaseActivity() {
 
             override fun onTabSelected(tab: TabLayout.Tab) {
                 val selectedTab = MainTab.tabFromPosition(tab.position)
-                mainViewModel.currentFragment = selectedTab
+                mainViewModel.currentTab = selectedTab
 
                 val iconId = when (selectedTab) {
                     MainTab.TAB_GALLERY -> {
-                        showFragment(galleryFragment)
+                        showFragment(GalleryFragment::class)
                         mainViewModel.apply {
                             setToolbarTitle(getString(R.string.gallery))
                             setVisibleUploadFab(true)
@@ -136,7 +146,7 @@ class MainActivity : BaseActivity() {
                         R.drawable.ic_cloud_data_fill
                     }
                     MainTab.TAB_LIKE -> {
-                        showFragment(likeFragment)
+                        showFragment(LikeFragment::class)
                         mainViewModel.apply {
                             setToolbarTitle(getString(R.string.like))
                             setVisibleUploadFab(true)
@@ -146,7 +156,7 @@ class MainActivity : BaseActivity() {
                         R.drawable.ic_heart_fill
                     }
                     MainTab.TAB_USER -> {
-                        showFragment(userFragment)
+                        showFragment(UserFragment::class)
                         mainViewModel.apply {
                             setToolbarTitle(getString(R.string.profile))
                             setVisibleUploadFab(false)
@@ -161,18 +171,14 @@ class MainActivity : BaseActivity() {
         })
     }
 
-    private fun initFragments() {
+    private fun createFragments() {
         supportFragmentManager.beginTransaction()
-            .add(R.id.main_container, GalleryFragment().apply { galleryFragment = this }, GalleryFragment::class.java.name)
-            .add(R.id.main_container, LikeFragment().apply { likeFragment = this }, LikeFragment::class.java.name)
-            .add(R.id.main_container, UserFragment().apply { userFragment = this }, UserFragment::class.java.name)
-            .commit()
+            .add(R.id.main_container, GalleryFragment(), GalleryFragment::class.java.name)
+            .add(R.id.main_container, LikeFragment(), LikeFragment::class.java.name)
+            .add(R.id.main_container, UserFragment(), UserFragment::class.java.name)
+            .commitNow()
 
-        supportFragmentManager.fragments.size
-
-        fragments = arrayOf(galleryFragment, likeFragment, userFragment)
-
-        showFragment(galleryFragment)
+        showFragment(GalleryFragment::class)
     }
 
     private fun checkDeepLink() {
@@ -181,24 +187,33 @@ class MainActivity : BaseActivity() {
         }
     }
 
-    private fun restoreFragments() {
-        galleryFragment = supportFragmentManager.findFragmentByTag(GalleryFragment::class.java.name) as GalleryFragment
-        likeFragment = supportFragmentManager.findFragmentByTag(LikeFragment::class.java.name) as LikeFragment
-        userFragment = supportFragmentManager.findFragmentByTag(UserFragment::class.java.name) as UserFragment
+    private fun showFragment(fragmentClass: KClass<*>) {
+        supportFragmentManager.apply {
+            fragments.forEach { fragment ->
+                beginTransaction()
+                    .hide(fragment)
+                    .commit()
+            }
 
-        fragments = arrayOf(galleryFragment, likeFragment, userFragment)
-    }
-
-    private fun showFragment(fragment: Fragment) {
-        fragments.forEach {
-            supportFragmentManager.beginTransaction()
-                .hide(it)
+            beginTransaction()
+                .show(findFragmentByTag(fragmentClass.java.name)!!)
                 .commit()
         }
+    }
 
-        supportFragmentManager.beginTransaction()
-            .show(fragment)
-            .commit()
+    override fun onBackPressed() {
+        binding.tlMain.apply {
+            if (selectedTabPosition == 0) {
+                mainViewModel.handleBackKeyFinish()
+            } else {
+                selectTab(getTabAt(0))
+            }
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt(KEY_CURRENT_TAB_POSITION, binding.tlMain.selectedTabPosition)
     }
 
     /*

@@ -1,5 +1,6 @@
 package com.woody.cat.holic.presentation.main.user.profile
 
+import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -54,7 +55,7 @@ class ProfileViewModel @Inject constructor(
     private val _eventFinishActivity = MutableLiveData<Event<Unit>>()
     val eventFinishActivity: LiveData<Event<Unit>> get() = _eventFinishActivity
 
-    private val _eventShowToast = MutableLiveData<Event<Int>>()
+    private val _eventShowToast = MutableLiveData<Event<@StringRes Int>>()
     val eventShowToast: LiveData<Event<Int>> get() = _eventShowToast
 
     private val _eventShowUnfollowAlertDialog = MutableLiveData<Event<Pair<String, String>>>()

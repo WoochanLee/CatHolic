@@ -41,6 +41,9 @@ class UserViewModel @Inject constructor(
     private val _eventStartNotificationSetting = MutableLiveData<Event<Unit>>()
     val eventStartNotificationSetting: LiveData<Event<Unit>> get() = _eventStartNotificationSetting
 
+    private val _eventShowGuide = MutableLiveData<Event<Unit>>()
+    val eventShowGuide: LiveData<Event<Unit>> get() = _eventShowGuide
+
     fun changeDarkMode() {
         val changedDarkMode = isDarkMode.value != true
         updateAppSetting.setDarkMode(changedDarkMode)
@@ -71,5 +74,13 @@ class UserViewModel @Inject constructor(
 
     fun onClickNotificationSetting() {
         _eventStartNotificationSetting.emit()
+    }
+
+    fun onClickGuide() {
+        updateAppSetting.apply {
+            setMainGuideStatus(true)
+            setUploadGuideStatus(true)
+        }
+        _eventShowGuide.emit()
     }
 }

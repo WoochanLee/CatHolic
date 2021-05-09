@@ -39,6 +39,9 @@ class MyPhotoViewModel @Inject constructor(
     private val _eventShowLikeListDialog = MutableLiveData<Event<PostingItem>>()
     val eventShowLikeListDialog: LiveData<Event<PostingItem>> get() = _eventShowLikeListDialog
 
+    private val _eventShowDeleteWarningDialog = MutableLiveData<Event<Pair<String, String>>>()
+    val eventShowDeleteWarningDialog: LiveData<Event<Pair<String, String>>> get() = _eventShowDeleteWarningDialog
+
     private val _eventStartUploadActivity = MutableLiveData<Event<Unit>>()
     val eventStartUploadActivity: LiveData<Event<Unit>> get() = _eventStartUploadActivity
 
@@ -55,16 +58,7 @@ class MyPhotoViewModel @Inject constructor(
         override fun onClickDelete(postingId: String) {
             val userId = getCurrentUserId() ?: return
 
-            viewModelScope.launch {
-                withContext(Dispatchers.IO) {
-                    handleResourceResult(removeUserPosting(userId, postingId), onSuccess = {
-                        refreshEventBus.emitEvent(GlobalRefreshEvent.DeletePostingEvent)
-                    }, onError = {
-                        it.printStackTraceIfDebug()
-                        //TODO : handle network error
-                    })
-                }
-            }
+            _eventShowDeleteWarningDialog.emit(Pair(userId, postingId))
         }
 
         override fun onClickDownload(imageUrl: String) {
@@ -109,6 +103,19 @@ class MyPhotoViewModel @Inject constructor(
 
     fun onClickUploadFab() {
         _eventStartUploadActivity.emit()
+    }
+
+    fun deletePosting(userId: String, postingId: String) {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                handleResourceResult(removeUserPosting(userId, postingId), onSuccess = {
+                    refreshEventBus.emitEvent(GlobalRefreshEvent.DeletePostingEvent)
+                }, onError = {
+                    it.printStackTraceIfDebug()
+                    //TODO : handle network error
+                })
+            }
+        }
     }
 
     private fun initEventBusSubscribe() {

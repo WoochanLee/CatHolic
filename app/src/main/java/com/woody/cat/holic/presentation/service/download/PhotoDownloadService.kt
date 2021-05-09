@@ -5,12 +5,16 @@ import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.lifecycle.LifecycleService
 import com.woody.cat.holic.R
+import com.woody.cat.holic.framework.base.observeEvent
+import dagger.android.AndroidInjection
+import javax.inject.Inject
 
-class PhotoDownloadService : LifecycleService() {
+class PhotoDownloadService @Inject constructor() : LifecycleService() {
 
     companion object {
         private const val NOTIFICATION_CHANNEL_ID_PHOTO_DOWNLOAD = "NOTIFICATION_CHANNEL_ID_PHOTO_DOWNLOAD"
@@ -24,20 +28,22 @@ class PhotoDownloadService : LifecycleService() {
         }
     }
 
+    @Inject
     lateinit var viewModel: PhotoDownloadViewModel
 
     override fun onCreate() {
+        AndroidInjection.inject(this)
         super.onCreate()
 
-        /*viewModel = PhotoDownloadViewModel(DownloadPhoto(CatHolicApplication.application.fileManager)).apply {
-            eventShowToast.observeEvent(this@PhotoDownloadService, { stringId ->
-                Toast.makeText(this@PhotoDownloadService, stringId, Toast.LENGTH_SHORT).show()
+        viewModel.apply {
+            eventShowToast.observeEvent(this@PhotoDownloadService, { stringRes ->
+                Toast.makeText(this@PhotoDownloadService, stringRes, Toast.LENGTH_SHORT).show()
             })
 
             eventStopService.observeEvent(this@PhotoDownloadService, {
                 stopSelf()
             })
-        }*/
+        }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             createNotificationChannel()

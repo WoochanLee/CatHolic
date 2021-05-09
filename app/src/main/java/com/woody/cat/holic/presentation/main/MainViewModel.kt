@@ -1,5 +1,6 @@
 package com.woody.cat.holic.presentation.main
 
+import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -16,6 +17,7 @@ import com.woody.cat.holic.usecase.user.GetIsSignedIn
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.*
 import javax.inject.Inject
 
 class MainViewModel @Inject constructor(
@@ -28,7 +30,11 @@ class MainViewModel @Inject constructor(
     private val updateAppSetting: UpdateAppSetting
 ) : BaseViewModel() {
 
-    var currentFragment = MainTab.TAB_GALLERY
+    companion object {
+        const val BACK_KEY_APP_CLOSE_DELAY = 3000
+    }
+
+    var currentTab = MainTab.TAB_GALLERY
 
     private val _eventStartUploadActivity = MutableLiveData<Event<Unit>>()
     val eventStartUploadActivity: LiveData<Event<Unit>> get() = _eventStartUploadActivity
@@ -48,6 +54,12 @@ class MainViewModel @Inject constructor(
     private val _eventShowLikeListDialog = MutableLiveData<Event<PostingItem>>()
     val eventShowLikeListDialog: LiveData<Event<PostingItem>> get() = _eventShowLikeListDialog
 
+    private val _eventShowToast = MutableLiveData<Event<@StringRes Int>>()
+    val eventShowToast: LiveData<Event<Int>> get() = _eventShowToast
+
+    private val _eventFinishApp = MutableLiveData<Event<Unit>>()
+    val eventFinishApp: LiveData<Event<Unit>> get() = _eventFinishApp
+
     private val _isVisibleGuide = MutableLiveData(getAppSetting.getMainGuideStatus())
     val isVisibleGuide: LiveData<Boolean> get() = _isVisibleGuide
 
@@ -62,6 +74,8 @@ class MainViewModel @Inject constructor(
 
     private val _currentVisiblePostingOrder = MutableLiveData(PostingOrder.LIKED)
     val currentVisiblePostingOrder: LiveData<PostingOrder> get() = _currentVisiblePostingOrder
+
+    private var lastBackKeyPressedTimeMills = 0L
 
     fun refreshVisiblePostingOrder(mainTab: MainTab) {
         when (mainTab) {
@@ -120,9 +134,9 @@ class MainViewModel @Inject constructor(
     }
 
     fun onClickChangePostingOrder() {
-        if (currentFragment == MainTab.TAB_GALLERY) {
+        if (currentTab == MainTab.TAB_GALLERY) {
             _eventChangeGalleryPostingOrder.emit()
-        } else if (currentFragment == MainTab.TAB_LIKE) {
+        } else if (currentTab == MainTab.TAB_LIKE) {
             _eventChangeLikePostingOrder.emit()
         }
     }
@@ -136,12 +150,26 @@ class MainViewModel @Inject constructor(
         _isVisibleGuide.postValue(false)
     }
 
+    fun handleBackKeyFinish() {
+        val currentTimeMills = Date().time
+        if (lastBackKeyPressedTimeMills + BACK_KEY_APP_CLOSE_DELAY > currentTimeMills) {
+            _eventFinishApp.emit()
+        } else {
+            lastBackKeyPressedTimeMills = currentTimeMills
+            _eventShowToast.emit(R.string.press_back_again_to_exit)
+        }
+    }
+
     fun setVisibleUploadFab(isVisible: Boolean) {
         _isVisibleUploadFab.postValue(isVisible)
     }
 
     fun setVisibleOrderSwitch(isVisible: Boolean) {
         _isVisibleOrderSwitch.postValue(isVisible)
+    }
+
+    fun setGuideVisible(isVisible: Boolean) {
+        _isVisibleGuide.postValue(isVisible)
     }
 
     fun callEventMoveToSignInTabWithToast() {

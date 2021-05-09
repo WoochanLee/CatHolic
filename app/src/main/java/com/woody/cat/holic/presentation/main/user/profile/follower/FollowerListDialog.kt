@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.woody.cat.holic.R
@@ -18,6 +19,15 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class FollowerListDialog : DaggerDialogFragment() {
+
+    companion object {
+        fun newInstance(fragmentManager: FragmentManager, followerList: List<String>) {
+            Builder()
+                .setFollowerUserList(followerList)
+                .create()
+                .show(fragmentManager, FollowerListDialog::class.java.name)
+        }
+    }
 
     private lateinit var binding: DialogFollowerListBinding
 
@@ -77,7 +87,7 @@ class FollowerListDialog : DaggerDialogFragment() {
         this.followerUserList.addAll(likeUserList)
     }
 
-    class Builder {
+    private class Builder {
         private val followerListDialog = FollowerListDialog()
 
         fun setFollowerUserList(followerUserList: List<String>): Builder {

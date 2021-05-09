@@ -1,5 +1,6 @@
 package com.woody.cat.holic.presentation.upload
 
+import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -48,7 +49,7 @@ class UploadViewModel @Inject constructor(
     private val _eventFinish = MutableLiveData<Event<Unit>>()
     val eventFinish: LiveData<Event<Unit>> get() = _eventFinish
 
-    private val _eventShowToast = MutableLiveData<Event<Int>>()
+    private val _eventShowToast = MutableLiveData<Event<@StringRes Int>>()
     val eventShowToast: LiveData<Event<Int>> get() = _eventShowToast
 
     private val _isLeftArrowButtonVisible = MutableLiveData(false)

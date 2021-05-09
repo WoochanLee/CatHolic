@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.core.widget.doOnTextChanged
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
@@ -16,6 +17,7 @@ import com.vdurmont.emoji.EmojiParser
 import com.woody.cat.holic.R
 import com.woody.cat.holic.databinding.DialogPostingCommentBinding
 import com.woody.cat.holic.framework.base.ViewModelFactory
+import com.woody.cat.holic.framework.base.hideKeyboard
 import com.woody.cat.holic.framework.base.observeEvent
 import com.woody.cat.holic.framework.net.common.NotSignedInException
 import com.woody.cat.holic.framework.paging.item.PostingItem
@@ -28,6 +30,15 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class CommentDialog : DaggerDialogFragment() {
+
+    companion object {
+        fun newInstance(fragmentManager: FragmentManager, postingItem: PostingItem) {
+            Builder()
+                .setPostingItem(postingItem)
+                .create()
+                .show(fragmentManager, CommentDialog::class.java.name)
+        }
+    }
 
     private lateinit var binding: DialogPostingCommentBinding
 
@@ -106,6 +117,10 @@ class CommentDialog : DaggerDialogFragment() {
             eventStartProfileActivity.observeEvent(viewLifecycleOwner, { userId ->
                 startActivity(ProfileActivity.getIntent(requireContext(), userId))
             })
+
+            eventHideKeyboard.observeEvent(viewLifecycleOwner, {
+                hideKeyboard(requireContext(), binding.eetPostingComment)
+            })
         }
 
         initEmojiInput()
@@ -139,7 +154,7 @@ class CommentDialog : DaggerDialogFragment() {
         }
     }
 
-    class Builder {
+    private class Builder {
         private val postingCommentDialog = CommentDialog()
 
         fun setPostingItem(postingItem: PostingItem): Builder {

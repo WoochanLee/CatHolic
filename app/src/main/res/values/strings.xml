@@ -9,6 +9,7 @@
     <string name="privacy_policy">Privacy Policy</string>
     <string name="sign_out">Sign Out</string>
     <string name="notification">Notification</string>
+    <string name="guide">Guide</string>
     <string name="my_cat_photo">My Cat Photo</string>
     <string name="welcome_to_cat_holic">Welcome to Cat Holic !</string>
     <string name="please_sign_in_to_manage_your_cat_photos">Please sign in to manage your cat photos.</string>
@@ -74,4 +75,10 @@
     <string name="click_here_to_retry_uploading_a_photo_that_failed_to_upload">Click here to retry uploading a photo that failed to upload.</string>
     <string name="if_you_try_to_upload_a_photo_that_is_not_a_cat_it_fails_as_shown_on_the_left_click_to_delete_the_photo">If you try to upload a photo that is not a cat, it fails as shown on the left. Click to delete the photo.</string>
     <string name="you_can_upload_up_to_10_photos_at_a_time">You can upload up to 10 photos at a time.</string>
+    <string name="unfollow_2">Unfollow</string>
+    <string name="do_you_really_want_to_unfollow">Do you really want to unfollow?</string>
+    <string name="delete_photo">Delete Photo</string>
+    <string name="do_you_really_want_to_delete_this_photo">Do you really want to delete this photo?</string>
+    <string name="delete_2">Delete</string>
+    <string name="press_back_again_to_exit">Press BACK again to exit</string>
 </resources>

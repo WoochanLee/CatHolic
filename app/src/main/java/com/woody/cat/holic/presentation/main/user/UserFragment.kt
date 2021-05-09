@@ -95,17 +95,11 @@ class UserFragment : BaseFragment() {
             })
 
             eventShowFollowerDialog.observeEvent(viewLifecycleOwner, { followerList ->
-                FollowerListDialog.Builder()
-                    .setFollowerUserList(followerList)
-                    .create()
-                    .show(parentFragmentManager, FollowerListDialog::class.java.name)
+                FollowerListDialog.newInstance(parentFragmentManager, followerList)
             })
 
             eventShowFollowingDialog.observeEvent(viewLifecycleOwner, { followingList ->
-                FollowingListDialog.Builder()
-                    .setFollowingUserList(followingList)
-                    .create()
-                    .show(parentFragmentManager, FollowingListDialog::class.java.name)
+                FollowingListDialog.newInstance(parentFragmentManager, followingList)
             })
 
             eventStartMyCatPhotos.observeEvent(viewLifecycleOwner, {

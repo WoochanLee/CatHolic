@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import com.woody.cat.holic.R
 import com.woody.cat.holic.databinding.DialogPostingDetailBinding
@@ -17,6 +18,15 @@ import dagger.android.support.DaggerDialogFragment
 import javax.inject.Inject
 
 class PostingDetailDialog : DaggerDialogFragment() {
+
+    companion object {
+        fun newInstance(fragmentManager: FragmentManager, postingItem: PostingItem) {
+            Builder()
+                .setPostingItem(postingItem)
+                .create()
+                .show(fragmentManager, PostingDetailDialog::class.java.name)
+        }
+    }
 
     private lateinit var binding: DialogPostingDetailBinding
 
@@ -63,10 +73,7 @@ class PostingDetailDialog : DaggerDialogFragment() {
             this.postingItem = postingItem
 
             eventShowCommentDialog.observeEvent(viewLifecycleOwner, {
-                CommentDialog.Builder()
-                    .setPostingItem(postingItem)
-                    .create()
-                    .show(parentFragmentManager, CommentDialog::class.java.name)
+                CommentDialog.newInstance(parentFragmentManager, postingItem)
             })
         }
     }
@@ -75,7 +82,7 @@ class PostingDetailDialog : DaggerDialogFragment() {
         this.postingItem = postingItem
     }
 
-    class Builder {
+    private class Builder {
         private val postingDetailDialog = PostingDetailDialog()
 
         fun setPostingItem(postingItem: PostingItem): Builder {
