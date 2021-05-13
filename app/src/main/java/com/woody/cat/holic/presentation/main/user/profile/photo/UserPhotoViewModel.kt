@@ -29,10 +29,6 @@ class UserPhotoViewModel @Inject constructor(
         const val PAGE_SIZE = 10
     }
 
-    init {
-        getProfile()
-    }
-
     private val _eventRefreshData = MutableLiveData<Event<Unit>>()
     val eventRefreshData: LiveData<Event<Unit>> get() = _eventRefreshData
 
@@ -45,7 +41,7 @@ class UserPhotoViewModel @Inject constructor(
     private val _userDisplayName = MutableLiveData("")
     val userDisplayName: LiveData<String> get() = _userDisplayName
 
-    private fun getProfile() {
+    fun getProfile() {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 handleResourceResult(getUserProfile(userId), onSuccess = { user ->

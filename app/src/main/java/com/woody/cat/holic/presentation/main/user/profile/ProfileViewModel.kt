@@ -70,6 +70,9 @@ class ProfileViewModel @Inject constructor(
     private val _isUserFollowed = MutableLiveData<Boolean>()
     val isUserFollowed: LiveData<Boolean> get() = _isUserFollowed
 
+    private val _isLoading = MutableLiveData(false)
+    val isLoading: LiveData<Boolean> get() = _isLoading
+
     fun getProfile(targetUserId: String) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
@@ -88,12 +91,15 @@ class ProfileViewModel @Inject constructor(
     fun uploadUserBackgroundPhoto(imageUri: String) {
         val userId = getCurrentUserId() ?: return
 
+        _isLoading.postValue(true)
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 handleResourceResult(uploadPhoto.uploadUserBackgroundPhoto(userId, File(imageUri)), onSuccess = {
                     updateUserBackgroundPhotoUrl(userId, it.imageUrl)
                 }, onError = {
                     _eventShowToast.emit(R.string.network_fail)
+                }, onComplete = {
+                    _isLoading.postValue(false)
                 })
             }
         }
@@ -102,12 +108,15 @@ class ProfileViewModel @Inject constructor(
     fun uploadUserProfilePhoto(imageUri: String) {
         val userId = getCurrentUserId() ?: return
 
+        _isLoading.postValue(true)
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 handleResourceResult(uploadPhoto.uploadUserProfilePhoto(userId, File(imageUri)), onSuccess = {
                     updateUserProfilePhotoUrl(userId, it.imageUrl)
                 }, onError = {
                     _eventShowToast.emit(R.string.network_fail)
+                }, onComplete = {
+                    _isLoading.postValue(false)
                 })
             }
         }
@@ -167,6 +176,7 @@ class ProfileViewModel @Inject constructor(
     private fun followUser(myUserId: String, targetUserId: String) {
         _isUserFollowed.postValue(isUserFollowed.value != true)
 
+        _isLoading.postValue(true)
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 handleResourceResult(updateFollowUser.followUser(myUserId, targetUserId), onSuccess = {
@@ -174,6 +184,8 @@ class ProfileViewModel @Inject constructor(
                     getProfile(targetUserId)
                 }, onError = {
                     _eventShowToast.emit(R.string.something_went_wrong)
+                }, onComplete = {
+                    _isLoading.postValue(false)
                 })
             }
         }
@@ -182,6 +194,7 @@ class ProfileViewModel @Inject constructor(
     fun unfollowUser(myUserId: String, targetUserId: String) {
         _isUserFollowed.postValue(isUserFollowed.value != true)
 
+        _isLoading.postValue(true)
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 handleResourceResult(updateFollowUser.unfollowUser(myUserId, targetUserId), onSuccess = {
@@ -189,6 +202,8 @@ class ProfileViewModel @Inject constructor(
                     getProfile(targetUserId)
                 }, onError = {
                     _eventShowToast.emit(R.string.something_went_wrong)
+                }, onComplete = {
+                    _isLoading.postValue(false)
                 })
             }
         }
@@ -201,18 +216,22 @@ class ProfileViewModel @Inject constructor(
     }
 
     private fun updateUserBackgroundPhotoUrl(userId: String, imageUrl: String) {
+        _isLoading.postValue(true)
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 handleResourceResult(updateUserProfile.updateUserBackgroundPhotoUrl(userId, imageUrl), onSuccess = {
                     getProfile(userId)
                 }, onError = {
                     _eventShowToast.emit(R.string.network_fail)
+                }, onComplete = {
+                    _isLoading.postValue(false)
                 })
             }
         }
     }
 
     private fun updateUserProfilePhotoUrl(userId: String, imageUrl: String) {
+        _isLoading.postValue(true)
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 handleResourceResult(updateUserProfile.updateUserProfilePhotoUrl(userId, imageUrl), onSuccess = {
@@ -220,6 +239,8 @@ class ProfileViewModel @Inject constructor(
                     getProfile(userId)
                 }, onError = {
                     _eventShowToast.emit(R.string.network_fail)
+                }, onComplete = {
+                    _isLoading.postValue(false)
                 })
             }
         }
@@ -228,6 +249,7 @@ class ProfileViewModel @Inject constructor(
     fun updateUserDisplayName(displayName: String) {
         val userId = getCurrentUserId() ?: return
 
+        _isLoading.postValue(true)
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 handleResourceResult(updateUserProfile.updateDisplayName(userId, displayName), onSuccess = {
@@ -235,6 +257,8 @@ class ProfileViewModel @Inject constructor(
                     getProfile(userId)
                 }, onError = {
                     _eventShowToast.emit(R.string.network_fail)
+                }, onComplete = {
+                    _isLoading.postValue(false)
                 })
             }
         }
@@ -243,12 +267,15 @@ class ProfileViewModel @Inject constructor(
     fun updateUserGreetings(greetings: String) {
         val userId = getCurrentUserId() ?: return
 
+        _isLoading.postValue(true)
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 handleResourceResult(updateUserProfile.updateGreetings(userId, greetings), onSuccess = {
                     getProfile(userId)
                 }, onError = {
                     _eventShowToast.emit(R.string.network_fail)
+                }, onComplete = {
+                    _isLoading.postValue(false)
                 })
             }
         }

@@ -89,6 +89,8 @@ class UserPhotoActivity : BaseActivity() {
 
             this.userId = userId
 
+            getProfile()
+
             initPagingFlow()
 
             lifecycleScope.launch {

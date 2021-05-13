@@ -55,7 +55,7 @@
     <string name="something_went_wrong">Something went wrong !\nPlease try again.</string>
     <string name="photos">Photos</string>
     <string name="select_photo">SELECT PHOTO</string>
-    <string name="cat_photo">"%s Cat Photo"</string>
+    <string name="cat_photo">"%s's Cat Photo"</string>
     <string name="new_follower">New Follower</string>
     <string name="new_posting_from_you_follow">New Posting</string>
     <string name="new_comment">New Comment</string>

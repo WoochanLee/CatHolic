@@ -29,18 +29,34 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <TextView
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@{@string/cat_photo(viewModel.userDisplayName)}"
-                    android:textAllCaps="true"
-                    android:textColor="@color/text_color"
-                    android:textSize="20dp"
-                    android:textStyle="bold"
+                    android:orientation="horizontal"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:text="Woody's Cat Photo"/>
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="2dp"
+                        android:text="@{viewModel.userDisplayName}"
+                        android:textAllCaps="true"
+                        android:textColor="@color/red"
+                        android:textSize="20dp"
+                        android:textStyle="bold"
+                        tools:text="Woody" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="'s Cat Photo"
+                        android:textAllCaps="true"
+                        android:textColor="@color/text_color"
+                        android:textSize="17dp"
+                        android:textStyle="bold" />
+                </LinearLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.appcompat.widget.Toolbar>
