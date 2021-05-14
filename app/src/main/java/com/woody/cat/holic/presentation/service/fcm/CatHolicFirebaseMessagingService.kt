@@ -27,6 +27,8 @@ class CatHolicFirebaseMessagingService : FirebaseMessagingService() {
         const val NOTIFICATION_CHANNEL_ID_LIKE = "NOTIFICATION_CHANNEL_ID_LIKE"
 
         const val DEEP_LINK_QUERY_POSTING_ID = "postingId"
+        const val DEEP_LINK_QUERY_COMMENT_ID = "commentId"
+        const val DEEP_LINK_QUERY_USER_ID = "userId"
 
         @Volatile
         private var notificationId = 0
@@ -50,6 +52,7 @@ class CatHolicFirebaseMessagingService : FirebaseMessagingService() {
 
             val intent = Intent().apply {
                 action = Intent.ACTION_VIEW
+                addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP)
                 notificationDto.deepLink?.let { deepLink ->
                     setData(Uri.parse(deepLink))
                 }

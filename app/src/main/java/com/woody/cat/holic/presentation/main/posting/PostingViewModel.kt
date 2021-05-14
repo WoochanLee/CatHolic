@@ -80,13 +80,17 @@ class PostingViewModel @Inject constructor(
         }
     }
 
-    fun handleDeepLinkToPostingDetail(postingId: String) {
+    fun handleDeepLinkToPostingDetail(postingId: String, showComment: Boolean) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 handleResourceResult(getSinglePosting(postingId), onSuccess = { posting ->
                     val postingItem = posting.mapToPostingItem(getCurrentUserId())
                     getPostingUserProfile(postingItem.user)
                     _eventShowPostingDetail.emit(postingItem)
+
+                    if (showComment) {
+                        _eventShowCommentDialog.emit(postingItem)
+                    }
                 }, onError = {
                     //TODO: handle network error
                 })

@@ -19,7 +19,7 @@
 
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-2149251688296092~7808746566"/>
+            android:value="ca-app-pub-2149251688296092~7808746566" />
 
         <service
             android:name=".presentation.service.fcm.CatHolicFirebaseMessagingService"
@@ -36,15 +36,19 @@
 
         <activity
             android:name=".presentation.main.user.profile.photo.UserPhotoActivity"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity
             android:name=".presentation.main.user.profile.ProfileActivity"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity
             android:name=".presentation.upload.UploadActivity"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity
             android:name=".presentation.splash.SplashActivity"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -54,21 +58,25 @@
         </activity>
         <activity
             android:name=".presentation.main.MainActivity"
-            android:screenOrientation="portrait" >
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait">
 
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:scheme="app"
+                <data
                     android:host="www.woodycatholic.com"
-                    android:pathPrefix="/posting" />
+                    android:pathPrefix="/main"
+                    android:scheme="app" />
 
             </intent-filter>
         </activity>
         <activity
             android:name=".presentation.main.user.myphoto.MyPhotoActivity"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait" />
     </application>
 

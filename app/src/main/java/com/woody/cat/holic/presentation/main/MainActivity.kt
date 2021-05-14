@@ -16,12 +16,15 @@ import com.woody.cat.holic.presentation.main.follow.FollowFragment
 import com.woody.cat.holic.presentation.main.gallery.GalleryFragment
 import com.woody.cat.holic.presentation.main.like.LikeFragment
 import com.woody.cat.holic.presentation.main.posting.PostingViewModel
+import com.woody.cat.holic.presentation.main.posting.comment.CommentDialog
 import com.woody.cat.holic.presentation.main.posting.detail.PostingDetailDialog
 import com.woody.cat.holic.presentation.main.posting.likelist.LikeListDialog
 import com.woody.cat.holic.presentation.main.user.UserFragment
 import com.woody.cat.holic.presentation.main.user.UserViewModel
 import com.woody.cat.holic.presentation.main.user.profile.ProfileActivity
+import com.woody.cat.holic.presentation.service.fcm.CatHolicFirebaseMessagingService.Companion.DEEP_LINK_QUERY_COMMENT_ID
 import com.woody.cat.holic.presentation.service.fcm.CatHolicFirebaseMessagingService.Companion.DEEP_LINK_QUERY_POSTING_ID
+import com.woody.cat.holic.presentation.service.fcm.CatHolicFirebaseMessagingService.Companion.DEEP_LINK_QUERY_USER_ID
 import com.woody.cat.holic.presentation.upload.UploadActivity
 import java.util.*
 import javax.inject.Inject
@@ -110,6 +113,10 @@ class MainActivity : BaseActivity() {
             eventShowPostingDetail.observeEvent(this@MainActivity, { postingItem ->
                 PostingDetailDialog.newInstance(supportFragmentManager, postingItem)
             })
+
+            eventShowCommentDialog.observeEvent(this@MainActivity, { postingItem ->
+                CommentDialog.newInstance(supportFragmentManager, postingItem)
+            })
         }
 
         if (savedInstanceState == null) {
@@ -123,7 +130,14 @@ class MainActivity : BaseActivity() {
             }
         }
 
-        checkDeepLink()
+        checkDeepLink(intent)
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        intent?.let {
+            checkDeepLink(intent)
+        }
     }
 
     private fun initMainTab() {
@@ -220,9 +234,19 @@ class MainActivity : BaseActivity() {
         showFragment(GalleryFragment::class)
     }
 
-    private fun checkDeepLink() {
-        intent.data?.getQueryParameter(DEEP_LINK_QUERY_POSTING_ID)?.let { postingId ->
-            postingViewModel.handleDeepLinkToPostingDetail(postingId)
+    private fun checkDeepLink(intent: Intent) {
+        intent.data?.run {
+            val postingId = getQueryParameter(DEEP_LINK_QUERY_POSTING_ID)
+            val commentId = getQueryParameter(DEEP_LINK_QUERY_COMMENT_ID)
+            val userId = getQueryParameter(DEEP_LINK_QUERY_USER_ID)
+            postingId?.let {
+                //TODO: highlight
+                postingViewModel.handleDeepLinkToPostingDetail(postingId, commentId != null)
+            }
+
+            userId?.let {
+                startActivity(ProfileActivity.getIntent(this@MainActivity, userId))
+            }
         }
     }
 
