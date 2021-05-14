@@ -1,4 +1,4 @@
-package com.woody.cat.holic.presentation.main.posting
+package com.woody.cat.holic.presentation.main.like
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -9,13 +9,14 @@ import androidx.recyclerview.widget.DiffUtil
 import com.google.android.gms.ads.AdRequest
 import com.woody.cat.holic.R
 import com.woody.cat.holic.databinding.ItemAdmobBinding
-import com.woody.cat.holic.databinding.ItemGalleryPostingBinding
+import com.woody.cat.holic.databinding.ItemLikePostingBinding
 import com.woody.cat.holic.framework.base.BaseViewHolder
 import com.woody.cat.holic.framework.paging.item.AdItem
 import com.woody.cat.holic.framework.paging.item.PostingItem
 import com.woody.cat.holic.framework.paging.item.RecyclerViewItem
+import com.woody.cat.holic.presentation.main.posting.PostingViewModel
 
-class PostingAdapter(
+class LikePostingAdapter(
     private val lifecycleOwner: LifecycleOwner,
     private val postingViewModel: PostingViewModel
 ) : PagingDataAdapter<RecyclerViewItem, BaseViewHolder<RecyclerViewItem, PostingViewModel>>(object : DiffUtil.ItemCallback<RecyclerViewItem>() {
@@ -38,9 +39,9 @@ class PostingAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<RecyclerViewItem, PostingViewModel> {
         val binding = if (viewType == NORMAL_VIEW_TYPE) {
-            DataBindingUtil.inflate<ItemGalleryPostingBinding>(
+            DataBindingUtil.inflate<ItemLikePostingBinding>(
                 LayoutInflater.from(parent.context),
-                R.layout.item_gallery_posting,
+                R.layout.item_like_posting,
                 parent,
                 false
             )

@@ -1,26 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
         <variable
-            name="mainViewModel"
-            type="com.woody.cat.holic.presentation.main.MainViewModel" />
-
-        <variable
-            name="userViewModel"
-            type="com.woody.cat.holic.presentation.main.SignViewModel" />
-
-        <variable
-            name="likeViewModel"
-            type="com.woody.cat.holic.presentation.main.like.LikeViewModel" />
+            name="viewModel"
+            type="com.woody.cat.holic.presentation.main.follow.FollowViewModel" />
 
         <import type="android.view.View" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/background_color_main"
@@ -29,19 +20,15 @@
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:onRefreshListener="@{() -> likeViewModel.initData()}"
-            app:refreshing="@{likeViewModel.isLoading()}">
+            app:onRefreshListener="@{() -> viewModel.initData()}"
+            app:refreshing="@{viewModel.isLoading()}">
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_main_like"
+                android:id="@+id/rv_follow"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/background_color_main"
-                android:scrollbars="none"
-                android:visibility="@{likeViewModel.isListEmpty() ? View.GONE : View.VISIBLE}"
-                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-                app:spanCount="3"
-                tools:listitem="@layout/item_like_posting" />
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/item_follow_list" />
 
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
@@ -50,7 +37,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="vertical"
-            android:visibility="@{likeViewModel.isListEmpty() ? View.VISIBLE : View.GONE}"
+            android:visibility="@{viewModel.isListEmpty() ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -70,7 +57,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:lineSpacingExtra="10dp"
-                android:text="@string/your_like_list_is_empty_n_choose_photos_you_like_in_the_gallery"
+                android:text="@string/you_are_not_following_anyone_yet_follow_uploaders_you_want"
                 android:textColor="@color/text_color"
                 android:textSize="16dp" />
         </LinearLayout>

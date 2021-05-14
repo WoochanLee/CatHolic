@@ -53,6 +53,9 @@ class GalleryPostingDataSource(
                 handleResourceResult(getUserProfile(userItem.userId), onSuccess = {
                     userItem.displayName.postValue(it.displayName)
                     userItem.userProfilePhotoUrl.postValue(it.userProfilePhotoUrl)
+                    userItem.postingCount.postValue(it.postingCount.toString())
+                    userItem.followerCount.postValue(it.followerCount.toString())
+                    userItem.followingCount.postValue(it.followingCount.toString())
                 })
             }
         }

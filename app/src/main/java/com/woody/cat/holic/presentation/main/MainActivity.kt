@@ -12,6 +12,7 @@ import com.woody.cat.holic.databinding.ActivityMainBinding
 import com.woody.cat.holic.framework.base.BaseActivity
 import com.woody.cat.holic.framework.base.ViewModelFactory
 import com.woody.cat.holic.framework.base.observeEvent
+import com.woody.cat.holic.presentation.main.follow.FollowFragment
 import com.woody.cat.holic.presentation.main.gallery.GalleryFragment
 import com.woody.cat.holic.presentation.main.like.LikeFragment
 import com.woody.cat.holic.presentation.main.posting.PostingViewModel
@@ -70,6 +71,14 @@ class MainActivity : BaseActivity() {
                 LikeListDialog.newInstance(supportFragmentManager, postingItem)
             })
 
+            eventMoveToFollowTab.observeEvent(this@MainActivity, {
+                moveToFollowTab()
+            })
+
+            eventMoveToLikeTab.observeEvent(this@MainActivity, {
+                moveToLikeTab()
+            })
+
             eventShowToast.observeEvent(this@MainActivity, { stringRes ->
                 Toast.makeText(this@MainActivity, stringRes, Toast.LENGTH_SHORT).show()
             })
@@ -123,6 +132,7 @@ class MainActivity : BaseActivity() {
             override fun onTabUnselected(tab: TabLayout.Tab) {
                 val iconId = when (MainTab.tabFromPosition(tab.position)) {
                     MainTab.TAB_GALLERY -> R.drawable.ic_cloud_data_empty
+                    MainTab.TAB_FOLLOW -> R.drawable.ic_friends_empty
                     MainTab.TAB_LIKE -> R.drawable.ic_heart_empty
                     MainTab.TAB_USER -> R.drawable.ic_user_empty
                 }
@@ -134,46 +144,75 @@ class MainActivity : BaseActivity() {
                 val selectedTab = MainTab.tabFromPosition(tab.position)
                 mainViewModel.currentTab = selectedTab
 
-                val iconId = when (selectedTab) {
-                    MainTab.TAB_GALLERY -> {
-                        showFragment(GalleryFragment::class)
-                        mainViewModel.apply {
-                            setToolbarTitle(getString(R.string.gallery))
-                            setVisibleUploadFab(true)
-                            setVisibleOrderSwitch(true)
-                            refreshVisiblePostingOrder(MainTab.TAB_GALLERY)
-                        }
-                        R.drawable.ic_cloud_data_fill
-                    }
-                    MainTab.TAB_LIKE -> {
-                        showFragment(LikeFragment::class)
-                        mainViewModel.apply {
-                            setToolbarTitle(getString(R.string.like))
-                            setVisibleUploadFab(true)
-                            setVisibleOrderSwitch(true)
-                            refreshVisiblePostingOrder(MainTab.TAB_LIKE)
-                        }
-                        R.drawable.ic_heart_fill
-                    }
-                    MainTab.TAB_USER -> {
-                        showFragment(UserFragment::class)
-                        mainViewModel.apply {
-                            setToolbarTitle(getString(R.string.profile))
-                            setVisibleUploadFab(false)
-                            setVisibleOrderSwitch(false)
-                        }
-                        R.drawable.ic_user_fill
-                    }
+                //val iconId: Int
+                when (selectedTab) {
+                    MainTab.TAB_GALLERY -> moveToGalleryTab()
+                    MainTab.TAB_FOLLOW -> mainViewModel.onClickFollowTab()
+                    MainTab.TAB_LIKE -> mainViewModel.onClickLikeTab()
+                    MainTab.TAB_USER -> moveToUserTab()
                 }
-
-                tab.icon = ContextCompat.getDrawable(this@MainActivity, iconId)
             }
         })
+    }
+
+    private fun moveToGalleryTab() {
+        val selectedTab = binding.tlMain.getTabAt(MainTab.TAB_GALLERY.position)
+
+        showFragment(GalleryFragment::class)
+        mainViewModel.apply {
+            setToolbarTitle(getString(R.string.gallery))
+            setVisibleUploadFab(true)
+            setVisibleOrderSwitch(true)
+            setVisibleEditProfile(false)
+            refreshVisiblePostingOrder(MainTab.TAB_GALLERY)
+        }
+        selectedTab?.icon = ContextCompat.getDrawable(this@MainActivity, R.drawable.ic_cloud_data_fill)
+    }
+
+    private fun moveToFollowTab() {
+        val selectedTab = binding.tlMain.getTabAt(MainTab.TAB_FOLLOW.position)
+
+        showFragment(FollowFragment::class)
+        mainViewModel.apply {
+            setToolbarTitle(getString(R.string.following).toUpperCase(Locale.getDefault()))
+            setVisibleUploadFab(true)
+            setVisibleOrderSwitch(false)
+            setVisibleEditProfile(false)
+        }
+        selectedTab?.icon = ContextCompat.getDrawable(this@MainActivity, R.drawable.ic_friends_fill)
+    }
+
+    private fun moveToLikeTab() {
+        val selectedTab = binding.tlMain.getTabAt(MainTab.TAB_LIKE.position)
+
+        showFragment(LikeFragment::class)
+        mainViewModel.apply {
+            setToolbarTitle(getString(R.string.like))
+            setVisibleUploadFab(true)
+            setVisibleOrderSwitch(true)
+            setVisibleEditProfile(false)
+            refreshVisiblePostingOrder(MainTab.TAB_LIKE)
+        }
+        selectedTab?.icon = ContextCompat.getDrawable(this@MainActivity, R.drawable.ic_heart_fill)
+    }
+
+    private fun moveToUserTab() {
+        val selectedTab = binding.tlMain.getTabAt(MainTab.TAB_USER.position)
+
+        showFragment(UserFragment::class)
+        mainViewModel.apply {
+            setToolbarTitle(getString(R.string.profile))
+            setVisibleUploadFab(false)
+            setVisibleOrderSwitch(false)
+            setVisibleEditProfile(true)
+        }
+        selectedTab?.icon = ContextCompat.getDrawable(this@MainActivity, R.drawable.ic_user_fill)
     }
 
     private fun createFragments() {
         supportFragmentManager.beginTransaction()
             .add(R.id.main_container, GalleryFragment(), GalleryFragment::class.java.name)
+            .add(R.id.main_container, FollowFragment(), FollowFragment::class.java.name)
             .add(R.id.main_container, LikeFragment(), LikeFragment::class.java.name)
             .add(R.id.main_container, UserFragment(), UserFragment::class.java.name)
             .commitNow()
@@ -215,20 +254,4 @@ class MainActivity : BaseActivity() {
         super.onSaveInstanceState(outState)
         outState.putInt(KEY_CURRENT_TAB_POSITION, binding.tlMain.selectedTabPosition)
     }
-
-    /*
-    private fun showProfileMenuPopup(userId: String) {
-        val popup = PopupMenu(this, binding.ibProfileMenu)
-        popup.inflate(R.menu.my_profile_menu)
-        popup.setOnMenuItemClickListener {
-            when (it.itemId) {
-                R.id.menu_my_profile -> {
-                    startActivity(ProfileActivity.getIntent(this, userId))
-                    return@setOnMenuItemClickListener true
-                }
-            }
-            false
-        }
-        popup.show()
-    }*/
 }

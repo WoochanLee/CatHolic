@@ -24,7 +24,7 @@ class LikeListViewModel @Inject constructor(private val getUserProfile: GetUserP
     private val _eventStartProfileActivity = MutableLiveData<Event<String>>()
     val eventStartProfileActivity: LiveData<Event<String>> get() = _eventStartProfileActivity
 
-    fun getCommentFlow() = Pager(
+    fun getLikeListFlow() = Pager(
         config = PagingConfig(pageSize = PAGE_SIZE),
         pagingSourceFactory = {
             LikeListDataSource(

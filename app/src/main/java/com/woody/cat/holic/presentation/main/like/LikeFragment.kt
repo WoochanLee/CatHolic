@@ -18,7 +18,6 @@ import com.woody.cat.holic.framework.net.common.NotSignedInException
 import com.woody.cat.holic.presentation.main.MainTab
 import com.woody.cat.holic.presentation.main.MainViewModel
 import com.woody.cat.holic.presentation.main.SignViewModel
-import com.woody.cat.holic.presentation.main.posting.PostingAdapter
 import com.woody.cat.holic.presentation.main.posting.PostingViewModel
 import com.woody.cat.holic.presentation.main.posting.comment.CommentDialog
 import com.woody.cat.holic.presentation.main.posting.detail.PostingDetailDialog
@@ -42,7 +41,7 @@ class LikeFragment : BaseFragment() {
     private lateinit var likeViewModel: LikeViewModel
     private lateinit var postingViewModel: PostingViewModel
 
-    private lateinit var postingAdapter: PostingAdapter
+    private lateinit var postingAdapter: LikePostingAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return DataBindingUtil.inflate<FragmentLikeBinding>(inflater, R.layout.fragment_like, container, false).apply {
@@ -79,7 +78,7 @@ class LikeFragment : BaseFragment() {
         }
 
         postingViewModel = ViewModelProvider(this, viewModelFactory).get(PostingViewModel::class.java).apply {
-            postingAdapter = PostingAdapter(viewLifecycleOwner, this)
+            postingAdapter = LikePostingAdapter(viewLifecycleOwner, this)
 
             eventShowPostingDetail.observeEvent(viewLifecycleOwner, { postingItem ->
                 PostingDetailDialog.newInstance(parentFragmentManager, postingItem)
@@ -122,7 +121,7 @@ class LikeFragment : BaseFragment() {
                         }
 
                         if (refreshState is LoadState.NotLoading) {
-                            binding.rvMainGallery.scrollToPosition(0)
+                            binding.rvMainLike.scrollToPosition(0)
                         }
 
                         if (loadStates.refresh is LoadState.NotLoading) {
@@ -136,7 +135,7 @@ class LikeFragment : BaseFragment() {
             })
         }
 
-        binding.rvMainGallery.adapter = postingAdapter
+        binding.rvMainLike.adapter = postingAdapter
     }
 
     private var pagingJob: Job? = null

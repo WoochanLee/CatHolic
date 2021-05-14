@@ -1,5 +1,6 @@
 package com.woody.cat.holic.framework.di
 
+import com.woody.cat.holic.presentation.main.follow.FollowFragment
 import com.woody.cat.holic.presentation.main.gallery.GalleryFragment
 import com.woody.cat.holic.presentation.main.like.LikeFragment
 import com.woody.cat.holic.presentation.main.posting.comment.CommentDialog
@@ -16,6 +17,9 @@ abstract class FragmentsModule {
 
     @ContributesAndroidInjector
     abstract fun contributeGalleryFragment(): GalleryFragment
+
+    @ContributesAndroidInjector
+    abstract fun contributeFollowFragment(): FollowFragment
 
     @ContributesAndroidInjector
     abstract fun contributeLikeFragment(): LikeFragment

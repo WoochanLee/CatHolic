@@ -41,6 +41,9 @@ class CommentViewModel @Inject constructor(
     private val _eventHideKeyboard = MutableLiveData<Event<Unit>>()
     val eventHideKeyboard: LiveData<Event<Unit>> get() = _eventHideKeyboard
 
+    private val _eventCopyEmojiComment = MutableLiveData<Event<String>>()
+    val eventCopyEmojiComment: LiveData<Event<String>> get() = _eventCopyEmojiComment
+
     private val _writingEmojiStr = MutableLiveData("")
     val writeEmojiStr: LiveData<String> get() = _writingEmojiStr
 
@@ -79,6 +82,10 @@ class CommentViewModel @Inject constructor(
 
     fun onClickProfile(userId: String) {
         _eventStartProfileActivity.emit(userId)
+    }
+
+    fun onLongClickComment(emojiComment: String) {
+        _eventCopyEmojiComment.emit(emojiComment)
     }
 
     fun onClickAddComment() {

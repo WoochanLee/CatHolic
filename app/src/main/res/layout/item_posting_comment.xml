@@ -66,6 +66,8 @@
             <androidx.cardview.widget.CardView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                app:onLongClick="@{() -> viewModel.onLongClickComment(model.commentEmojis)}"
+                android:foreground="?android:selectableItemBackground"
                 app:cardBackgroundColor="@color/gray"
                 app:cardCornerRadius="20dp">
 
@@ -81,7 +83,7 @@
                         android:text="@{model.commentEmojis}"
                         android:textColor="@color/text_color"
                         android:textSize="20dp"
-                        tools:text="😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋" />
+                        tools:text="😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋😋" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 

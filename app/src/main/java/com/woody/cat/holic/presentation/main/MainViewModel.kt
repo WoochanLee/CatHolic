@@ -23,7 +23,7 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(
     private val refreshEventBus: RefreshEventBus,
     private val getPostingOrder: GetPostingOrder,
-    private val getIsSignedIn: GetIsSignedIn,
+    val getIsSignedIn: GetIsSignedIn,
     private val getCurrentUserId: GetCurrentUserId,
     private val updateLikedPosting: UpdateLikedPosting,
     private val getAppSetting: GetAppSetting,
@@ -54,6 +54,12 @@ class MainViewModel @Inject constructor(
     private val _eventShowLikeListDialog = MutableLiveData<Event<PostingItem>>()
     val eventShowLikeListDialog: LiveData<Event<PostingItem>> get() = _eventShowLikeListDialog
 
+    private val _eventMoveToFollowTab = MutableLiveData<Event<Unit>>()
+    val eventMoveToFollowTab: LiveData<Event<Unit>> get() = _eventMoveToFollowTab
+
+    private val _eventMoveToLikeTab = MutableLiveData<Event<Unit>>()
+    val eventMoveToLikeTab: LiveData<Event<Unit>> get() = _eventMoveToLikeTab
+
     private val _eventShowToast = MutableLiveData<Event<@StringRes Int>>()
     val eventShowToast: LiveData<Event<Int>> get() = _eventShowToast
 
@@ -72,6 +78,9 @@ class MainViewModel @Inject constructor(
     private val _isVisibleOrderSwitch = MutableLiveData(true)
     val isVisibleOrderSwitch: LiveData<Boolean> get() = _isVisibleOrderSwitch
 
+    private val _isVisibleEditProfile = MutableLiveData(false)
+    val isVisibleEditProfile: LiveData<Boolean> get() = _isVisibleEditProfile
+
     private val _currentVisiblePostingOrder = MutableLiveData(PostingOrder.LIKED)
     val currentVisiblePostingOrder: LiveData<PostingOrder> get() = _currentVisiblePostingOrder
 
@@ -81,7 +90,7 @@ class MainViewModel @Inject constructor(
         when (mainTab) {
             MainTab.TAB_GALLERY -> _currentVisiblePostingOrder.postValue(getPostingOrder.getGalleryPostingOrder())
             MainTab.TAB_LIKE -> _currentVisiblePostingOrder.postValue(getPostingOrder.getLikePostingOrder())
-            MainTab.TAB_USER -> Unit
+            else -> Unit
         }
     }
 
@@ -133,6 +142,22 @@ class MainViewModel @Inject constructor(
         }
     }
 
+    fun onClickFollowTab() {
+        if (getIsSignedIn()) {
+            _eventMoveToFollowTab.emit()
+        } else {
+            _eventMoveToSignInTabWithToast.emit()
+        }
+    }
+
+    fun onClickLikeTab() {
+        if (getIsSignedIn()) {
+            _eventMoveToLikeTab.emit()
+        } else {
+            _eventMoveToSignInTabWithToast.emit()
+        }
+    }
+
     fun onClickChangePostingOrder() {
         if (currentTab == MainTab.TAB_GALLERY) {
             _eventChangeGalleryPostingOrder.emit()
@@ -166,6 +191,10 @@ class MainViewModel @Inject constructor(
 
     fun setVisibleOrderSwitch(isVisible: Boolean) {
         _isVisibleOrderSwitch.postValue(isVisible)
+    }
+
+    fun setVisibleEditProfile(isVisible: Boolean) {
+        _isVisibleEditProfile.postValue(isVisible)
     }
 
     fun setGuideVisible(isVisible: Boolean) {

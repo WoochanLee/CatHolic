@@ -72,7 +72,7 @@ class LikeListDialog : DaggerDialogFragment() {
             likeListAdapter = LikeListAdapter(viewLifecycleOwner, this)
 
             viewLifecycleOwner.lifecycleScope.launch {
-                getCommentFlow().collectLatest { pagingData ->
+                getLikeListFlow().collectLatest { pagingData ->
                     likeListAdapter.submitData(pagingData)
                 }
             }

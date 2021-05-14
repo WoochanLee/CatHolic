@@ -1,10 +1,14 @@
 package com.woody.cat.holic.presentation.main.posting.comment
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context.CLIPBOARD_SERVICE
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.widget.Toast
 import androidx.core.widget.doOnTextChanged
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.FragmentManager
@@ -28,6 +32,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+
 
 class CommentDialog : DaggerDialogFragment() {
 
@@ -120,6 +125,14 @@ class CommentDialog : DaggerDialogFragment() {
 
             eventHideKeyboard.observeEvent(viewLifecycleOwner, {
                 hideKeyboard(requireContext(), binding.eetPostingComment)
+            })
+
+            eventCopyEmojiComment.observeEvent(viewLifecycleOwner, { emojiComment ->
+                context?.let { context ->
+                    val clipboard = context.getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
+                    clipboard.setPrimaryClip(ClipData.newPlainText(getString(R.string.emoji_comment), emojiComment))
+                    Toast.makeText(context, R.string.emoji_comment_copied, Toast.LENGTH_SHORT).show()
+                }
             })
         }
 

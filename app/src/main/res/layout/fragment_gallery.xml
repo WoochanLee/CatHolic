@@ -27,7 +27,7 @@
                 android:background="@color/background_color_main"
                 android:scrollbars="none"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                tools:listitem="@layout/item_main_posting" />
+                tools:listitem="@layout/item_gallery_posting" />
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
     </LinearLayout>
 </layout>

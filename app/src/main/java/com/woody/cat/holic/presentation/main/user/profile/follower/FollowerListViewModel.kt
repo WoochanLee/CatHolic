@@ -24,7 +24,7 @@ class FollowerListViewModel @Inject constructor(private val getUserProfile: GetU
     private val _eventStartProfileActivity = MutableLiveData<Event<String>>()
     val eventStartProfileActivity: LiveData<Event<String>> get() = _eventStartProfileActivity
 
-    fun getCommentFlow() = Pager(
+    fun getFollowerListFlow() = Pager(
         config = PagingConfig(pageSize = PAGE_SIZE),
         pagingSourceFactory = {
             FollowerListDataSource(

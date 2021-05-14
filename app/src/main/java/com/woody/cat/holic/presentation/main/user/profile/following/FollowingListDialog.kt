@@ -71,7 +71,7 @@ class FollowingListDialog : DaggerDialogFragment() {
             followingListAdapter = FollowingListAdapter(viewLifecycleOwner, this)
 
             viewLifecycleOwner.lifecycleScope.launch {
-                getCommentFlow().collectLatest { pagingData ->
+                getFollowingListFlow().collectLatest { pagingData ->
                     followingListAdapter.submitData(pagingData)
                 }
             }

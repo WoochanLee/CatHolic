@@ -102,7 +102,7 @@
                         android:scaleType="centerInside"
                         android:src="@drawable/ic_edit"
                         android:tint="@color/background_color_sub"
-                        android:visibility="@{mainViewModel.isVisibleOrderSwitch() ? View.GONE : View.VISIBLE}"
+                        android:visibility="@{mainViewModel.isVisibleEditProfile() ? View.VISIBLE : View.GONE}"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
@@ -155,6 +155,12 @@
                 <com.google.android.material.tabs.TabItem
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:icon="@drawable/ic_friends_empty"
+                    android:textSize="14dp" />
+
+                <com.google.android.material.tabs.TabItem
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:icon="@drawable/ic_heart_empty"
                     android:textSize="14dp" />
 
@@ -169,6 +175,7 @@
         <include
             layout="@layout/layout_main_guide"
             app:isVisibleGuide="@{mainViewModel.isVisibleGuide()}"
-            app:onClickCloseGuide="@{mainViewModel::onClickCloseGuide}" />
+            app:onClickCloseGuide="@{mainViewModel::onClickCloseGuide}"
+            tools:visibility="gone" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

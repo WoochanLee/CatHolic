@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.woody.cat.holic.framework.base.ViewModelFactory
 import com.woody.cat.holic.presentation.main.MainViewModel
 import com.woody.cat.holic.presentation.main.SignViewModel
+import com.woody.cat.holic.presentation.main.follow.FollowViewModel
 import com.woody.cat.holic.presentation.main.gallery.GalleryViewModel
 import com.woody.cat.holic.presentation.main.like.LikeViewModel
 import com.woody.cat.holic.presentation.main.posting.PostingViewModel
@@ -108,6 +109,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(UploadViewModel::class)
     abstract fun provideUploadViewModel(uploadViewModel: UploadViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(FollowViewModel::class)
+    abstract fun provideFollowViewModel(followViewModel: FollowViewModel): ViewModel
 
     /**
      * This ViewModel not be created by ViewModelFactory, only be used in PhotoDownloadService.kt.
