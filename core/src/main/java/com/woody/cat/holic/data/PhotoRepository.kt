@@ -7,8 +7,8 @@ import java.io.File
 interface PhotoRepository {
 
     companion object {
-        const val MAX_USER_PROFILE_PHOTO_IMAGE_SIZE = 256
-        const val MAX_USER_BACKGROUND_PHOTO_IMAGE_SIZE = 512
+        const val MAX_USER_PROFILE_PHOTO_IMAGE_SIZE = 1024
+        const val MAX_USER_BACKGROUND_PHOTO_IMAGE_SIZE = 1024
         const val MAX_CAT_PHOTO_IMAGE_SIZE = 1024
     }
 

@@ -43,6 +43,7 @@
                     android:layout_height="0dp"
                     android:background="@color/background_color_main"
                     android:fitsSystemWindows="false"
+                    android:onClick="@{() -> viewModel.onClickProfilePhoto(viewModel.userProfile.userBackgroundPhotoUrl)}"
                     android:scaleType="centerCrop"
                     android:src="@drawable/woody_cat"
                     app:imageUrl="@{viewModel.userProfile.userBackgroundPhotoUrl}"
@@ -77,6 +78,7 @@
                         <androidx.cardview.widget.CardView
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
+                            android:onClick="@{() -> viewModel.onClickProfilePhoto(viewModel.userProfile.userProfilePhotoUrl)}"
                             app:cardBackgroundColor="@color/gray"
                             app:cardCornerRadius="50dp"
                             app:cardElevation="0dp">
@@ -284,11 +286,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:clickable="true"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
                 android:focusable="true"
                 android:gravity="center"
-                android:visibility="@{viewModel.isLoading() ? View.VISIBLE : View.GONE}">
+                android:visibility="@{viewModel.isLoading() ? View.VISIBLE : View.GONE}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
                 <ProgressBar
                     android:layout_width="wrap_content"

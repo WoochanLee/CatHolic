@@ -14,6 +14,7 @@ data class PostingDto(
     val reportedUserIds: List<String> = listOf(),
     val commentCount: Int = 0,
     val commentIds: List<String> = listOf(),
+    val commentUserIds: List<String> = listOf(),
     val deleted: Boolean = false,
 
     @ServerTimestamp
@@ -33,6 +34,7 @@ fun Posting.mapToPostingDto(): PostingDto {
         reportedUserIds = reportedUserIds,
         commentCount = commentCount,
         commentIds = commentIds,
+        commentUserIds = commentUserIds,
         created = null,
         updated = null
     )
@@ -48,6 +50,7 @@ fun PostingDto.mapToPosting(postingId: String): Posting {
         reportedUserIds = reportedUserIds,
         commentCount = commentCount,
         commentIds = commentIds,
+        commentUserIds = commentUserIds,
         postingId = postingId,
         created = created.makePostingDateString(),
         updated = updated.makePostingDateString()

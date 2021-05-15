@@ -9,6 +9,7 @@ import com.woody.cat.holic.presentation.main.posting.likelist.LikeListDialog
 import com.woody.cat.holic.presentation.main.user.UserFragment
 import com.woody.cat.holic.presentation.main.user.profile.follower.FollowerListDialog
 import com.woody.cat.holic.presentation.main.user.profile.following.FollowingListDialog
+import com.woody.cat.holic.presentation.main.user.profile.photozoom.PhotoZoomDialog
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
@@ -41,4 +42,7 @@ abstract class FragmentsModule {
 
     @ContributesAndroidInjector
     abstract fun contributeLikeListDialog(): LikeListDialog
+
+    @ContributesAndroidInjector
+    abstract fun contributePhotoZoomDialog(): PhotoZoomDialog
 }

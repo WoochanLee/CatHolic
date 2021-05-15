@@ -15,7 +15,7 @@ class GoogleMLPhotoAnalyzer(private val context: Context) : PhotoAnalyzer {
 
     companion object {
         const val DETECT_CAT_TEXT = "Cat"
-        const val DETECT_CAT_CONFIDENCE = 0.95
+        const val DETECT_CAT_CONFIDENCE = 0.85
     }
 
     private val imageLabeler = ImageLabeling.getClient(ImageLabelerOptions.DEFAULT_OPTIONS)

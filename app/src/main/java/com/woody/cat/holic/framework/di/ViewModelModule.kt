@@ -18,6 +18,7 @@ import com.woody.cat.holic.presentation.main.user.profile.ProfileViewModel
 import com.woody.cat.holic.presentation.main.user.profile.follower.FollowerListViewModel
 import com.woody.cat.holic.presentation.main.user.profile.following.FollowingListViewModel
 import com.woody.cat.holic.presentation.main.user.profile.photo.UserPhotoViewModel
+import com.woody.cat.holic.presentation.main.user.profile.photozoom.PhotoZoomViewModel
 import com.woody.cat.holic.presentation.service.download.PhotoDownloadViewModel
 import com.woody.cat.holic.presentation.splash.SplashViewModel
 import com.woody.cat.holic.presentation.upload.UploadViewModel
@@ -114,6 +115,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(FollowViewModel::class)
     abstract fun provideFollowViewModel(followViewModel: FollowViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(PhotoZoomViewModel::class)
+    abstract fun providePhotoZoomViewModel(photoZoomViewModel: PhotoZoomViewModel): ViewModel
 
     /**
      * This ViewModel not be created by ViewModelFactory, only be used in PhotoDownloadService.kt.

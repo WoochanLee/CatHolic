@@ -159,20 +159,22 @@
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toTopOf="parent"
-                                app:tint="@color/background_color_sub" />
+                                app:tint="@{model.currentUserCommented ? @color/red : @color/text_color}"
+                                tools:tint="@color/red" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="25dp"
                                 android:text="@{String.valueOf(model.commentCount)}"
-                                android:textColor="@color/text_color"
+                                android:textColor="@{model.currentUserCommented ? @color/red : @color/text_color}"
                                 android:textSize="17dp"
                                 android:textStyle="bold"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toTopOf="parent"
-                                tools:text="0" />
+                                tools:text="0"
+                                tools:textColor="@color/red" />
 
                         </androidx.constraintlayout.widget.ConstraintLayout>
                     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -240,15 +242,17 @@
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toTopOf="parent"
-                                app:tint="@color/background_color_sub" />
+                                app:tint="@{model.currentUserCommented ? @color/red : @color/text_color}"
+                                tools:tint="@color/red" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="EMOJI"
-                                android:textColor="@color/text_color"
+                                android:text="@string/emoji"
+                                android:textColor="@{model.currentUserCommented ? @color/red : @color/text_color}"
                                 android:textSize="15dp"
-                                android:textStyle="bold" />
+                                android:textStyle="bold"
+                                tools:textColor="@color/red" />
                         </LinearLayout>
 
                         <View

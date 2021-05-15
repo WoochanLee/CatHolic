@@ -40,7 +40,6 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".presentation.main.user.profile.ProfileActivity"
-            android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity
             android:name=".presentation.upload.UploadActivity"

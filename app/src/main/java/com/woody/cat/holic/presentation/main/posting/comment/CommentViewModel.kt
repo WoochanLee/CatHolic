@@ -13,6 +13,7 @@ import com.woody.cat.holic.framework.paging.item.PostingItem
 import com.woody.cat.holic.usecase.posting.comment.AddComment
 import com.woody.cat.holic.usecase.posting.comment.GetComments
 import com.woody.cat.holic.usecase.user.GetCurrentUserId
+import com.woody.cat.holic.usecase.user.GetIsSignedIn
 import com.woody.cat.holic.usecase.user.GetUserProfile
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -20,6 +21,7 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class CommentViewModel @Inject constructor(
+    private val getIsSignedIn: GetIsSignedIn,
     private val getCurrentUserId: GetCurrentUserId,
     private val addComment: AddComment,
     private val getComments: GetComments,
@@ -52,6 +54,8 @@ class CommentViewModel @Inject constructor(
 
     private val _isListEmpty = MutableLiveData<Boolean>()
     val isListEmpty: LiveData<Boolean> get() = _isListEmpty
+
+    val isSignedIn = getIsSignedIn()
 
     fun getCommentFlow() = Pager(
         config = PagingConfig(pageSize = PAGE_SIZE),
@@ -115,6 +119,10 @@ class CommentViewModel @Inject constructor(
 
                 handleResourceResult(result, onSuccess = {
                     initData()
+
+                    val currentUserCommented = postingItem.currentUserCommented.value == true
+
+                    postingItem.currentUserCommented.postValue(!currentUserCommented)
                     postingItem.commentCount.apply { postValue((value ?: 0) + 1) }
                     //_eventShowToast.emit("success to add comment")
                 }, onError = {

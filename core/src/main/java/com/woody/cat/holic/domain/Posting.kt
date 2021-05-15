@@ -10,6 +10,7 @@ data class Posting(
     val reportedUserIds: List<String> = listOf(),
     val commentCount: Int = 0,
     val commentIds: List<String> = listOf(),
+    val commentUserIds: List<String> = listOf(),
     val created: String? = null,
     val updated: String? = null
 )

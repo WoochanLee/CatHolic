@@ -61,6 +61,9 @@ class ProfileViewModel @Inject constructor(
     private val _eventShowUnfollowAlertDialog = MutableLiveData<Event<Pair<String, String>>>()
     val eventShowUnfollowAlertDialog: LiveData<Event<Pair<String, String>>> get() = _eventShowUnfollowAlertDialog
 
+    private val _eventShowPhotoZoomDialog = MutableLiveData<Event<String>>()
+    val eventShowPhotoZoomDialog: LiveData<Event<String>> get() = _eventShowPhotoZoomDialog
+
     private val _userProfile = MutableLiveData<User>()
     val userProfile: LiveData<User> get() = _userProfile
 
@@ -171,6 +174,10 @@ class ProfileViewModel @Inject constructor(
         } else {
             followUser(myUserId, targetUserId)
         }
+    }
+
+    fun onClickProfilePhoto(imageUrl: String) {
+        _eventShowPhotoZoomDialog.emit(imageUrl)
     }
 
     private fun followUser(myUserId: String, targetUserId: String) {

@@ -85,4 +85,5 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="emoji_comment_copied">Emoji Comment Copied!</string>
+    <string name="emoji">EMOJI</string>
 </resources>

@@ -15,7 +15,7 @@ import com.woody.cat.holic.framework.base.BaseFragment
 import com.woody.cat.holic.framework.base.ViewModelFactory
 import com.woody.cat.holic.framework.base.observeEvent
 import com.woody.cat.holic.framework.net.common.NotSignedInException
-import com.woody.cat.holic.presentation.main.user.profile.ProfileActivity
+import com.woody.cat.holic.presentation.main.user.profile.photo.UserPhotoActivity
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChangedBy
@@ -48,8 +48,8 @@ class FollowFragment @Inject constructor() : BaseFragment() {
 
             followAdapter = FollowAdapter(viewLifecycleOwner, this)
 
-            eventStartProfileActivity.observeEvent(this@FollowFragment, { userId ->
-                startActivity(ProfileActivity.getIntent(requireContext(), userId))
+            eventUserPhotoActivity.observeEvent(this@FollowFragment, { userId ->
+                startActivity(UserPhotoActivity.getIntent(requireContext(), userId))
             })
 
             eventRefreshData.observeEvent(this@FollowFragment, {

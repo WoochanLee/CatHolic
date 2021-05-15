@@ -31,8 +31,8 @@ class FollowViewModel @Inject constructor(
         initEventBusSubscribe()
     }
 
-    private val _eventStartProfileActivity = MutableLiveData<Event<String>>()
-    val eventStartProfileActivity: LiveData<Event<String>> get() = _eventStartProfileActivity
+    private val _eventUserPhotoActivity = MutableLiveData<Event<String>>()
+    val eventUserPhotoActivity: LiveData<Event<String>> get() = _eventUserPhotoActivity
 
     private val _eventRefreshData = MutableLiveData<Event<Unit>>()
     val eventRefreshData: LiveData<Event<Unit>> get() = _eventRefreshData
@@ -62,7 +62,7 @@ class FollowViewModel @Inject constructor(
     }
 
     fun onClickProfile(userId: String) {
-        _eventStartProfileActivity.emit(userId)
+        _eventUserPhotoActivity.emit(userId)
     }
 
     fun initData() {

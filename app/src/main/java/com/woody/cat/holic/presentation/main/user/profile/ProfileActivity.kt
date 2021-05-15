@@ -24,6 +24,7 @@ import com.woody.cat.holic.framework.base.*
 import com.woody.cat.holic.presentation.main.user.profile.follower.FollowerListDialog
 import com.woody.cat.holic.presentation.main.user.profile.following.FollowingListDialog
 import com.woody.cat.holic.presentation.main.user.profile.photo.UserPhotoActivity
+import com.woody.cat.holic.presentation.main.user.profile.photozoom.PhotoZoomDialog
 import com.woody.cat.holic.presentation.upload.UploadActivity
 import com.yanzhenjie.album.Album
 import javax.inject.Inject
@@ -107,6 +108,10 @@ class ProfileActivity : BaseActivity() {
 
             eventShowUnfollowAlertDialog.observeEvent(this@ProfileActivity, { (myUserId, targetUserId) ->
                 showUnfollowAlertDialog(myUserId, targetUserId)
+            })
+
+            eventShowPhotoZoomDialog.observeEvent(this@ProfileActivity, { imageUrl ->
+                PhotoZoomDialog.newInstance(supportFragmentManager, imageUrl)
             })
 
             eventFinishActivity.observeEvent(this@ProfileActivity, {

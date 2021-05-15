@@ -149,20 +149,22 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:tint="@color/white" />
+                        app:tint="@{postingDetailViewModel.postingItem.currentUserCommented ? @color/red : @color/white}"
+                        tools:tint="@color/red" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="25dp"
                         android:text="@{String.valueOf(postingDetailViewModel.postingItem.commentCount)}"
-                        android:textColor="@color/white"
+                        android:textColor="@{postingDetailViewModel.postingItem.currentUserCommented ? @color/red : @color/white}"
                         android:textSize="17dp"
                         android:textStyle="bold"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        tools:text="0" />
+                        tools:text="0"
+                        tools:textColor="@color/red" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -230,15 +232,17 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:tint="@color/white" />
+                        app:tint="@{postingDetailViewModel.postingItem.currentUserCommented ? @color/red : @color/white}"
+                        tools:tint="@color/red" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="EMOJI"
-                        android:textColor="@color/white"
+                        android:text="@string/emoji"
+                        android:textColor="@{postingDetailViewModel.postingItem.currentUserCommented ? @color/red : @color/white}"
                         android:textSize="15dp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        tools:textColor="@color/red" />
                 </LinearLayout>
 
                 <View
