@@ -19,3 +19,11 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+-dontwarn com.yanzhenjie.curban.**
+-keep class com.yanzhenjie.curban.**{*;}
+
+-dontwarn com.yanzhenjie.loading.**
+-keep class com.yanzhenjie.loading.**{*;}
+
+-keep class androidx.appcompat.widget.** { *; }

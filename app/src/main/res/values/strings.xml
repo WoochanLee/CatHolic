@@ -86,4 +86,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="emoji_comment_copied">Emoji Comment Copied!</string>
     <string name="emoji">EMOJI</string>
+    <string name="crop_photo">Crop Photo</string>
+    <string name="fail_to_get_photo">Fail to get photo</string>
+    <string name="need_permission_to_download_photos">Need permission to download photos</string>
 </resources>

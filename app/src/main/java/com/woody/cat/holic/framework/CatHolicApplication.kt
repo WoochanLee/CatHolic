@@ -4,14 +4,10 @@ import androidx.appcompat.app.AppCompatDelegate
 import com.vanniktech.emoji.EmojiManager
 import com.vanniktech.emoji.twitter.TwitterEmojiProvider
 import com.woody.cat.holic.data.SettingRepository
-import com.woody.cat.holic.framework.base.AlbumMediaLoader
 import com.woody.cat.holic.framework.di.ApplicationModule
 import com.woody.cat.holic.framework.di.DaggerApplicationComponent
-import com.yanzhenjie.album.Album
-import com.yanzhenjie.album.AlbumConfig
 import dagger.android.AndroidInjector
 import dagger.android.DaggerApplication
-import java.util.*
 import javax.inject.Inject
 
 
@@ -28,7 +24,6 @@ class CatHolicApplication : DaggerApplication() {
         super.onCreate()
         application = this
 
-        initLibraryAlbum()
         initSetting()
         initEmoji()
     }
@@ -37,15 +32,6 @@ class CatHolicApplication : DaggerApplication() {
         return DaggerApplicationComponent.builder()
             .applicationModule(ApplicationModule(this))
             .build()
-    }
-
-    private fun initLibraryAlbum() {
-        Album.initialize(
-            AlbumConfig.newBuilder(this)
-                .setAlbumLoader(AlbumMediaLoader())
-                .setLocale(Locale.KOREAN)
-                .build()
-        )
     }
 
     private fun initSetting() {

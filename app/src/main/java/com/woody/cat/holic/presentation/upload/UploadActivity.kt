@@ -1,24 +1,25 @@
 package com.woody.cat.holic.presentation.upload
 
+import android.app.Activity
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
+import com.canhub.cropper.CropImage
+import com.canhub.cropper.CropImageView
 import com.woody.cat.holic.R
 import com.woody.cat.holic.databinding.ActivityUploadBinding
 import com.woody.cat.holic.framework.base.BaseActivity
 import com.woody.cat.holic.framework.base.ViewModelFactory
-import com.woody.cat.holic.framework.base.makeCustomAlbumWidget
 import com.woody.cat.holic.framework.base.observeEvent
-import com.yanzhenjie.album.Album
 import javax.inject.Inject
 
 
 class UploadActivity : BaseActivity() {
 
     companion object {
-        const val ALBUM_COLUMN_COUNT = 3
         const val ALBUM_MAX_SELECT_COUNT = 10
     }
 
@@ -33,6 +34,15 @@ class UploadActivity : BaseActivity() {
     }
     private val uploadBigPreviewAdapter: UploadBigPreviewAdapter by lazy {
         UploadBigPreviewAdapter(this, viewModel)
+    }
+
+    private var cropResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            CropImage.getActivityResult(result.data)?.getUriFilePath(this, true)?.let { imageUri ->
+                viewModel.addPreviewData(listOf(imageUri))
+                refreshAdapterStatus()
+            }
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -123,21 +133,12 @@ class UploadActivity : BaseActivity() {
             return
         }
 
-        Album.image(this)
-            .multipleChoice()
-            .widget(makeCustomAlbumWidget(title = R.string.select_cats))
-            .camera(true)
-            .columnCount(ALBUM_COLUMN_COUNT)
-            .selectCount(ALBUM_MAX_SELECT_COUNT - currentSelectedImageCount)
-            .onResult breaker@{ checkedList ->
-                if (checkedList.size == 0) {
-                    return@breaker
-                }
+        val intent = CropImage.activity()
+            .setOutputCompressQuality(100)
+            .setGuidelines(CropImageView.Guidelines.ON)
+            .getIntent(this)
 
-                viewModel.addPreviewData(checkedList.map { it.path })
-                refreshAdapterStatus()
-            }
-            .start()
+        cropResultLauncher.launch(intent)
     }
 
     private fun refreshAdapterStatus() {

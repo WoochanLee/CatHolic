@@ -26,7 +26,7 @@ class AndroidFileManager(private val context: Context) : FileManager {
 
         try {
             val bitmap = getPhotoBitmap(imageUrl)
-            val filename = "${(0..Long.MAX_VALUE).random()}.jpeg"
+            val filename = "${(0..Long.MAX_VALUE).random()}.jpg"
             val mimeType = "image/jpeg"
             val directory = Environment.DIRECTORY_PICTURES
             val mediaContentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI

@@ -54,6 +54,8 @@ class MyPhotoViewModel @Inject constructor(
     private val _isListEmpty = MutableLiveData<Boolean>()
     val isListEmpty: LiveData<Boolean> get() = _isListEmpty
 
+    var imageUrlWaitingForPermission: String? = null
+
     val myPhotoItemMenuListener = object: MyPhotoItemMenuListener {
         override fun onClickDelete(postingId: String) {
             val userId = getCurrentUserId() ?: return

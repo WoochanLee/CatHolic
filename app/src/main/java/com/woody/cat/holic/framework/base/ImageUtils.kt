@@ -11,7 +11,7 @@ fun getJpegByteArray(filePath: String, maxSize: Int): ByteArray {
     val orientation = getOrientationOfImage(filePath)
     val bitmap = BitmapFactory.decodeFile(filePath).run { getResizedBitmap(this, maxSize) }.run { getRotatedBitmap(this, orientation) }
     val byteStream = ByteArrayOutputStream()
-    bitmap.compress(Bitmap.CompressFormat.JPEG, 50, byteStream)
+    bitmap.compress(Bitmap.CompressFormat.JPEG, 60, byteStream)
     return byteStream.toByteArray()
 }
 

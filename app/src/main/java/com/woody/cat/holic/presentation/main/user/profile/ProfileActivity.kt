@@ -1,5 +1,6 @@
 package com.woody.cat.holic.presentation.main.user.profile
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Build
@@ -12,12 +13,16 @@ import android.view.WindowManager
 import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.DimenRes
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
 import androidx.core.widget.addTextChangedListener
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import com.canhub.cropper.CropImage
+import com.canhub.cropper.CropImageView
 import com.woody.cat.holic.R
 import com.woody.cat.holic.databinding.ActivityProfileBinding
 import com.woody.cat.holic.framework.base.*
@@ -25,8 +30,6 @@ import com.woody.cat.holic.presentation.main.user.profile.follower.FollowerListD
 import com.woody.cat.holic.presentation.main.user.profile.following.FollowingListDialog
 import com.woody.cat.holic.presentation.main.user.profile.photo.UserPhotoActivity
 import com.woody.cat.holic.presentation.main.user.profile.photozoom.PhotoZoomDialog
-import com.woody.cat.holic.presentation.upload.UploadActivity
-import com.yanzhenjie.album.Album
 import javax.inject.Inject
 import kotlin.math.min
 
@@ -51,6 +54,22 @@ class ProfileActivity : BaseActivity() {
 
     private lateinit var viewModel: ProfileViewModel
 
+    private var profilePhotoSelectLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            CropImage.getActivityResult(result.data)?.getUriFilePath(this)?.let { imageUri ->
+                viewModel.uploadUserProfilePhoto(imageUri)
+            }
+        }
+    }
+
+    private var backgroundPhotoSelectLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            CropImage.getActivityResult(result.data)?.getUriFilePath(this)?.let { imageUri ->
+                viewModel.uploadUserBackgroundPhoto(imageUri)
+            }
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView<ActivityProfileBinding>(this, R.layout.activity_profile).apply {
@@ -67,15 +86,11 @@ class ProfileActivity : BaseActivity() {
             getProfile(userId)
 
             eventSelectBackgroundPhoto.observeEvent(this@ProfileActivity, {
-                getUserBackgroundPhotoFromAlbum { path ->
-                    viewModel.uploadUserBackgroundPhoto(path)
-                }
+                startPhotoSelect(backgroundPhotoSelectLauncher)
             })
 
             eventSelectProfilePhoto.observeEvent(this@ProfileActivity, {
-                getUserBackgroundPhotoFromAlbum { path ->
-                    viewModel.uploadUserProfilePhoto(path)
-                }
+                startPhotoSelect(profilePhotoSelectLauncher)
             })
 
             eventShowEditDisplayNameDialog.observeEvent(this@ProfileActivity, {
@@ -130,19 +145,13 @@ class ProfileActivity : BaseActivity() {
         }
     }
 
-    private fun getUserBackgroundPhotoFromAlbum(onPhotoSelected: (String) -> Unit) {
-        Album.image(this)
-            .singleChoice()
-            .widget(makeCustomAlbumWidget(title = R.string.select_photo))
-            .camera(true)
-            .columnCount(UploadActivity.ALBUM_COLUMN_COUNT)
-            .onResult breaker@{ checkedList ->
-                if (checkedList.size != 0) {
-                    onPhotoSelected(checkedList[0].path)
-                }
+    private fun startPhotoSelect(launcher: ActivityResultLauncher<Intent>) {
+        val intent = CropImage.activity()
+            .setOutputCompressQuality(100)
+            .setGuidelines(CropImageView.Guidelines.ON)
+            .getIntent(this)
 
-            }
-            .start()
+        launcher.launch(intent)
     }
 
     private fun showEditTextAlertDialog(type: EditTextDialogType, prevText: String, onConfirm: (String) -> Unit) {
