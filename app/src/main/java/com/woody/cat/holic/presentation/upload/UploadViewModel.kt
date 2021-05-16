@@ -167,6 +167,14 @@ class UploadViewModel @Inject constructor(
         _isVisibleGuide.postValue(false)
     }
 
+    fun setUploadGuideStatus(isVisible: Boolean) {
+        updateAppSetting.setUploadGuideStatus(isVisible)
+    }
+
+    fun setVisibleGuide(isVisible: Boolean) {
+        _isVisibleGuide.postValue(isVisible)
+    }
+
     fun changeArrowButtonStatus(currentPosition: Int, dataSize: Int) {
         _isLeftArrowButtonVisible.postValue(currentPosition != 0)
         _isRightArrowButtonVisible.postValue(dataSize != 0 && currentPosition < dataSize - 1)

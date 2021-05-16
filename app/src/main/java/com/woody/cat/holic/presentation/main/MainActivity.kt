@@ -98,7 +98,7 @@ class MainActivity : BaseActivity() {
         userViewModel = ViewModelProvider(this, viewModelFactory).get(UserViewModel::class.java).apply {
             eventShowGuide.observeEvent(this@MainActivity, {
                 binding.tlMain.getTabAt(MainTab.TAB_GALLERY.position)?.select()
-                mainViewModel.setGuideVisible(true)
+                mainViewModel.setVisibleGuide(true)
             })
         }
 
@@ -265,6 +265,12 @@ class MainActivity : BaseActivity() {
     }
 
     override fun onBackPressed() {
+        if (mainViewModel.isVisibleGuide.value == true) {
+            mainViewModel.setMainGuideStatus(false)
+            mainViewModel.setVisibleGuide(false)
+            return
+        }
+
         binding.tlMain.apply {
             if (selectedTabPosition == 0) {
                 mainViewModel.handleBackKeyFinish()

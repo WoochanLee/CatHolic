@@ -56,7 +56,6 @@ class CatHolicFirebaseMessagingService : FirebaseMessagingService() {
                 notificationDto.deepLink?.let { deepLink ->
                     setData(Uri.parse(deepLink))
                 }
-                //TODO: intent flags (Clear top)
             }
             val pendingIntent = PendingIntent.getActivity(this, 0, intent, 0)
 

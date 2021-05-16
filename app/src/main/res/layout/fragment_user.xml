@@ -254,8 +254,8 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="70dp"
                                 android:backgroundTint="@android:color/transparent"
-                                android:onClick="@{() -> userViewModel.onClickNotificationSetting()}"
                                 android:foreground="?android:selectableItemBackground"
+                                android:onClick="@{() -> userViewModel.onClickNotificationSetting()}"
                                 app:cardCornerRadius="10dp"
                                 app:cardElevation="0dp">
 
@@ -305,6 +305,7 @@
                                 android:layout_height="70dp"
                                 android:backgroundTint="@android:color/transparent"
                                 android:foreground="?android:selectableItemBackground"
+                                android:onClick="@{() -> userViewModel.onClickShare()}"
                                 app:cardCornerRadius="10dp"
                                 app:cardElevation="0dp">
 
@@ -454,8 +455,8 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="70dp"
                                 android:backgroundTint="@android:color/transparent"
-                                android:onClick="@{() -> userViewModel.onClickGuide()}"
                                 android:foreground="?android:selectableItemBackground"
+                                android:onClick="@{() -> userViewModel.onClickGuide()}"
                                 app:cardCornerRadius="10dp"
                                 app:cardElevation="0dp">
 

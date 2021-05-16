@@ -23,7 +23,7 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(
     private val refreshEventBus: RefreshEventBus,
     private val getPostingOrder: GetPostingOrder,
-    val getIsSignedIn: GetIsSignedIn,
+    private val getIsSignedIn: GetIsSignedIn,
     private val getCurrentUserId: GetCurrentUserId,
     private val updateLikedPosting: UpdateLikedPosting,
     private val getAppSetting: GetAppSetting,
@@ -197,7 +197,11 @@ class MainViewModel @Inject constructor(
         _isVisibleEditProfile.postValue(isVisible)
     }
 
-    fun setGuideVisible(isVisible: Boolean) {
+    fun setMainGuideStatus(isVisible: Boolean) {
+        updateAppSetting.setMainGuideStatus(isVisible)
+    }
+
+    fun setVisibleGuide(isVisible: Boolean) {
         _isVisibleGuide.postValue(isVisible)
     }
 

@@ -2,15 +2,26 @@ package com.woody.cat.holic.presentation.main.user
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.woody.cat.holic.BuildConfig
+import com.woody.cat.holic.R
 import com.woody.cat.holic.framework.base.BaseViewModel
 import com.woody.cat.holic.framework.base.Event
 import com.woody.cat.holic.framework.base.emit
+import com.woody.cat.holic.framework.base.handleResourceResult
+import com.woody.cat.holic.framework.manager.AndroidStringResourceManager
+import com.woody.cat.holic.framework.manager.FirebaseDynamicLinkManager
 import com.woody.cat.holic.usecase.setting.GetAppSetting
 import com.woody.cat.holic.usecase.setting.UpdateAppSetting
+import com.woody.cat.holic.usecase.share.GetDynamicLink
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class UserViewModel @Inject constructor(
+    private val androidStringResourceManager: AndroidStringResourceManager,
+    private val getDynamicLink: GetDynamicLink,
     private val getAppSetting: GetAppSetting,
     private val updateAppSetting: UpdateAppSetting
 ) : BaseViewModel() {
@@ -43,6 +54,9 @@ class UserViewModel @Inject constructor(
 
     private val _eventShowGuide = MutableLiveData<Event<Unit>>()
     val eventShowGuide: LiveData<Event<Unit>> get() = _eventShowGuide
+
+    private val _eventSharePosting = MutableLiveData<Event<String>>()
+    val eventSharePosting: LiveData<Event<String>> get() = _eventSharePosting
 
     fun changeDarkMode() {
         val changedDarkMode = isDarkMode.value != true
@@ -82,5 +96,23 @@ class UserViewModel @Inject constructor(
             setUploadGuideStatus(true)
         }
         _eventShowGuide.emit()
+    }
+
+    fun onClickShare() {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                val deepLink = FirebaseDynamicLinkManager.SHARE_PHOTO_PREFIX
+
+                handleResourceResult(
+                    getDynamicLink(
+                        deepLink = deepLink,
+                        description = androidStringResourceManager.getString(R.string.cat_photo_sharing_sns),
+                        imageUrl = FirebaseDynamicLinkManager.WOODY_CAT_IMAGE_URL
+                    ),
+                    onSuccess = { dynamicLink ->
+                        _eventSharePosting.emit(dynamicLink)
+                    })
+            }
+        }
     }
 }

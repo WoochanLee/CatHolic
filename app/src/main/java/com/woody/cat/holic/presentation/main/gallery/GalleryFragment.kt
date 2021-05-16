@@ -14,6 +14,7 @@ import com.woody.cat.holic.databinding.FragmentGalleryBinding
 import com.woody.cat.holic.framework.base.BaseFragment
 import com.woody.cat.holic.framework.base.ViewModelFactory
 import com.woody.cat.holic.framework.base.observeEvent
+import com.woody.cat.holic.framework.base.shareDynamicLink
 import com.woody.cat.holic.framework.net.common.NotSignedInException
 import com.woody.cat.holic.presentation.main.MainTab
 import com.woody.cat.holic.presentation.main.MainViewModel
@@ -29,6 +30,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+
 
 class GalleryFragment : BaseFragment() {
 
@@ -93,6 +95,10 @@ class GalleryFragment : BaseFragment() {
 
             eventMoveToSignInTabWithToast.observeEvent(viewLifecycleOwner, {
                 mainViewModel.callEventMoveToSignInTabWithToast()
+            })
+
+            eventSharePosting.observeEvent(viewLifecycleOwner, { dynamicLink ->
+                context?.shareDynamicLink(R.string.I_really_want_to_show_you_this_cat, dynamicLink)
             })
         }
 

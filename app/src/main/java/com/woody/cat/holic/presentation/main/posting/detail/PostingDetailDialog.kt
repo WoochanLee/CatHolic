@@ -11,6 +11,7 @@ import com.woody.cat.holic.R
 import com.woody.cat.holic.databinding.DialogPostingDetailBinding
 import com.woody.cat.holic.framework.base.ViewModelFactory
 import com.woody.cat.holic.framework.base.observeEvent
+import com.woody.cat.holic.framework.base.shareDynamicLink
 import com.woody.cat.holic.framework.paging.item.PostingItem
 import com.woody.cat.holic.presentation.main.MainViewModel
 import com.woody.cat.holic.presentation.main.posting.comment.CommentDialog
@@ -74,6 +75,10 @@ class PostingDetailDialog : DaggerDialogFragment() {
 
             eventShowCommentDialog.observeEvent(viewLifecycleOwner, {
                 CommentDialog.newInstance(parentFragmentManager, postingItem)
+            })
+
+            eventSharePosting.observeEvent(viewLifecycleOwner, { dynamicLink ->
+                context?.shareDynamicLink(R.string.I_really_want_to_show_you_this_cat, dynamicLink)
             })
         }
     }

@@ -3,6 +3,7 @@ package com.woody.cat.holic.presentation.main.user.myphoto
 import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -119,7 +120,11 @@ class MyPhotoActivity : BaseActivity() {
     }
 
     private fun checkPermissionAndStartPhotoDownloadService(imageUrl: String) {
-        val isPermissionGranted = ContextCompat.checkSelfPermission(this, WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+        val isPermissionGranted = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) { //TODO: check is it right >= Q (or P?)
+            true
+        } else {
+            ContextCompat.checkSelfPermission(this, WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+        }
         if (isPermissionGranted) {
             startService(PhotoDownloadService.getIntent(this@MyPhotoActivity, imageDownloadUrl = imageUrl))
         } else {

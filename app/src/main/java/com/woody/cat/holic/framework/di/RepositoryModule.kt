@@ -10,6 +10,8 @@ import com.google.firebase.storage.StorageReference
 import com.woody.cat.holic.data.*
 import com.woody.cat.holic.framework.db.SharedPreferenceSettingRepository
 import com.woody.cat.holic.framework.manager.AndroidFileManager
+import com.woody.cat.holic.framework.manager.AndroidStringResourceManager
+import com.woody.cat.holic.framework.manager.FirebaseDynamicLinkManager
 import com.woody.cat.holic.framework.manager.GoogleMLPhotoAnalyzer
 import com.woody.cat.holic.framework.net.*
 import dagger.Module
@@ -91,4 +93,12 @@ class RepositoryModule {
     @Provides
     @Singleton
     fun provideFileManager(context: Context): FileManager = AndroidFileManager(context)
+
+    @Provides
+    @Singleton
+    fun provideDynamicLinkManager(): DynamicLinkManager = FirebaseDynamicLinkManager()
+
+    @Provides
+    @Singleton
+    fun provideAndroidStringResourceManager(context: Context): AndroidStringResourceManager = AndroidStringResourceManager(context)
 }

@@ -146,4 +146,14 @@ class UploadActivity : BaseActivity() {
         uploadBigPreviewAdapter.notifyDataSetChanged()
         uploadBigPreviewAdapter.changeArrowButtonStatus(binding.vpUploadBig.currentItem)
     }
+
+    override fun onBackPressed() {
+        if (viewModel.isVisibleGuide.value == true) {
+            viewModel.setUploadGuideStatus(false)
+            viewModel.setVisibleGuide(false)
+            return
+        }
+
+        super.onBackPressed()
+    }
 }

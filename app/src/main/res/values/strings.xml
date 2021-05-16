@@ -90,4 +90,10 @@
     <string name="fail_to_get_photo">Fail to get photo</string>
     <string name="need_permission_to_download_photos">Need permission to download photos</string>
     <string name="photo_list_is_empty">Photo list is empty !</string>
+    <string name="s_cat_photo">%s\'s Cat Photo</string>
+    <string name="choose_an_app_to_share">Choose an app to share</string>
+    <string name="I_really_want_to_show_you_this_cat">I really want to show you this cat!\n%s</string>
+    <string name="cat_photo_sharing_sns">Cat Photo Sharing SNS</string>
+    <string name="cat_photo_sharing_sns_s">Cat Photo Sharing SNS\n%s</string>
+    <string name="share">SHARE</string>
 </resources>

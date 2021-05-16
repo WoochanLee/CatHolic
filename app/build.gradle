@@ -76,6 +76,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-firestore-ktx'
     implementation 'com.google.firebase:firebase-messaging-ktx'
     implementation 'com.google.firebase:firebase-ads'
+    implementation 'com.google.firebase:firebase-dynamic-links-ktx'
 
     implementation "com.google.dagger:dagger:$dagger_version"
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'

@@ -3,12 +3,16 @@ package com.woody.cat.holic.presentation.main.posting
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.woody.cat.holic.R
 import com.woody.cat.holic.framework.base.*
+import com.woody.cat.holic.framework.manager.AndroidStringResourceManager
+import com.woody.cat.holic.framework.manager.FirebaseDynamicLinkManager
 import com.woody.cat.holic.framework.paging.item.PostingItem
 import com.woody.cat.holic.framework.paging.item.UserItem
 import com.woody.cat.holic.framework.paging.item.mapToPostingItem
 import com.woody.cat.holic.usecase.posting.GetSinglePosting
 import com.woody.cat.holic.usecase.posting.UpdateLikedPosting
+import com.woody.cat.holic.usecase.share.GetDynamicLink
 import com.woody.cat.holic.usecase.user.GetCurrentUserId
 import com.woody.cat.holic.usecase.user.GetUserProfile
 import kotlinx.coroutines.Dispatchers
@@ -18,11 +22,13 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class PostingViewModel @Inject constructor(
+    private val androidStringResourceManager: AndroidStringResourceManager,
     private val refreshEventBus: RefreshEventBus,
     private val getCurrentUserId: GetCurrentUserId,
     private val updateLikedPosting: UpdateLikedPosting,
     private val getSinglePosting: GetSinglePosting,
-    private val getUserProfile: GetUserProfile
+    private val getUserProfile: GetUserProfile,
+    private val getDynamicLink: GetDynamicLink,
 ) : BaseViewModel() {
 
     private val _eventMoveToSignInTabWithToast = MutableLiveData<Event<Unit>>()
@@ -40,6 +46,9 @@ class PostingViewModel @Inject constructor(
     private val _eventStartProfileActivity = MutableLiveData<Event<String>>()
     val eventStartProfileActivity: LiveData<Event<String>> get() = _eventStartProfileActivity
 
+    private val _eventSharePosting = MutableLiveData<Event<String>>()
+    val eventSharePosting: LiveData<Event<String>> get() = _eventSharePosting
+
     fun onClickPostingImage(postingItem: PostingItem) {
         _eventShowPostingDetail.emit(postingItem)
     }
@@ -54,6 +63,24 @@ class PostingViewModel @Inject constructor(
 
     fun onClickProfile(userId: String) {
         _eventStartProfileActivity.emit(userId)
+    }
+
+    fun onClickShare(postingId: String, displayName: String, imageUrl: String) {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                val deepLink = "${FirebaseDynamicLinkManager.SHARE_PHOTO_PREFIX}?postingId=$postingId"
+
+                handleResourceResult(
+                    getDynamicLink(
+                        deepLink = deepLink,
+                        description = androidStringResourceManager.getString(R.string.s_cat_photo, displayName),
+                        imageUrl = imageUrl
+                    ),
+                    onSuccess = { dynamicLink ->
+                        _eventSharePosting.emit(dynamicLink)
+                    })
+            }
+        }
     }
 
     fun onClickLike(postingItem: PostingItem) {

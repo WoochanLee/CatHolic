@@ -10,6 +10,7 @@ import com.woody.cat.holic.usecase.posting.comment.GetComments
 import com.woody.cat.holic.usecase.setting.GetAppSetting
 import com.woody.cat.holic.usecase.setting.GetPushToken
 import com.woody.cat.holic.usecase.setting.UpdateAppSetting
+import com.woody.cat.holic.usecase.share.GetDynamicLink
 import com.woody.cat.holic.usecase.user.*
 import dagger.Module
 import dagger.Provides
@@ -145,5 +146,10 @@ class UseCaseModule {
     @Provides
     fun provideGetSinglePosting(postingRepository: PostingRepository): GetSinglePosting {
         return GetSinglePosting(postingRepository)
+    }
+
+    @Provides
+    fun provideGetDynamicLink(dynamicLinkManager: DynamicLinkManager): GetDynamicLink {
+        return GetDynamicLink(dynamicLinkManager)
     }
 }

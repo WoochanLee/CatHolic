@@ -1,9 +1,12 @@
 package com.woody.cat.holic.framework.base
 
 import android.content.Context
+import android.content.Intent
 import android.util.TypedValue
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import androidx.annotation.StringRes
+import com.woody.cat.holic.R
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -42,4 +45,12 @@ fun hideKeyboard(context: Context, focusView: View) {
 
 fun Context.dpToPx(dp: Float): Float {
     return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, resources.displayMetrics)
+}
+
+fun Context.shareDynamicLink(@StringRes stringRes: Int, dynamicLink: String) {
+    val intent = Intent(Intent.ACTION_SEND)
+    val shareBody = getString(stringRes, dynamicLink)
+    intent.type = "text/plain"
+    intent.putExtra(Intent.EXTRA_TEXT, shareBody)
+    startActivity(Intent.createChooser(intent, getString(R.string.choose_an_app_to_share)))
 }

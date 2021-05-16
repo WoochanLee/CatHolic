@@ -18,6 +18,7 @@ import com.woody.cat.holic.databinding.FragmentUserBinding
 import com.woody.cat.holic.framework.base.BaseFragment
 import com.woody.cat.holic.framework.base.ViewModelFactory
 import com.woody.cat.holic.framework.base.observeEvent
+import com.woody.cat.holic.framework.base.shareDynamicLink
 import com.woody.cat.holic.presentation.main.SignViewModel
 import com.woody.cat.holic.presentation.main.user.myphoto.MyPhotoActivity
 import com.woody.cat.holic.presentation.main.user.profile.ProfileActivity
@@ -108,6 +109,10 @@ class UserFragment : BaseFragment() {
 
             eventStartNotificationSetting.observeEvent(viewLifecycleOwner, {
                 startNotificationSetting()
+            })
+
+            eventSharePosting.observeEvent(viewLifecycleOwner, { dynamicLink ->
+                context?.shareDynamicLink(R.string.cat_photo_sharing_sns_s, dynamicLink)
             })
         }
 

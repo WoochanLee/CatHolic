@@ -13,6 +13,7 @@ import com.woody.cat.holic.databinding.ActivityUserPhotoBinding
 import com.woody.cat.holic.framework.base.BaseActivity
 import com.woody.cat.holic.framework.base.ViewModelFactory
 import com.woody.cat.holic.framework.base.observeEvent
+import com.woody.cat.holic.framework.base.shareDynamicLink
 import com.woody.cat.holic.presentation.main.posting.PostingAdapter
 import com.woody.cat.holic.presentation.main.posting.PostingViewModel
 import com.woody.cat.holic.presentation.main.posting.comment.CommentDialog
@@ -82,6 +83,10 @@ class UserPhotoActivity : BaseActivity() {
             eventMoveToSignInTabWithToast.observeEvent(this@UserPhotoActivity, {
                 Toast.makeText(applicationContext, R.string.need_to_sign_in, Toast.LENGTH_LONG).show()
                 finish()
+            })
+
+            eventSharePosting.observeEvent(this@UserPhotoActivity, { dynamicLink ->
+                shareDynamicLink(R.string.I_really_want_to_show_you_this_cat, dynamicLink)
             })
         }
 
