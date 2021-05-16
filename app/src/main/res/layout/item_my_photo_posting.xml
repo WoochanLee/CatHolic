@@ -21,24 +21,29 @@
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        tools:layout_width="110dp">
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
+            android:layout_margin="5dp"
+            android:foreground="?android:selectableItemBackground"
+            android:onClick="@{() -> viewModel.onClickPosting(model)}"
             app:cardBackgroundColor="@color/gray"
-            app:cardCornerRadius="20dp"
-            app:cardElevation="5dp">
+            app:cardCornerRadius="10dp"
+            app:cardElevation="5dp"
+            tools:layout_width="100dp">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                tools:layout_width="100dp">
 
-                <ImageView
+                <com.woody.cat.holic.presentation.base.view.SquareImageView
                     android:id="@+id/iv_image"
                     android:layout_width="match_parent"
-                    android:layout_height="400dp"
+                    android:layout_height="wrap_content"
                     android:scaleType="centerCrop"
                     app:imageUrl="@{model.downloadUrl}"
                     app:layout_constraintTop_toTopOf="parent"
@@ -47,14 +52,14 @@
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_height="25dp"
                     android:alpha="0.5"
                     android:background="@color/background_color_main"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_height="25dp"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
                     app:layout_constraintTop_toTopOf="parent">
@@ -62,10 +67,10 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="20dp"
+                        android:layout_marginStart="5dp"
                         android:text="@{model.created}"
                         android:textColor="@color/text_color"
-                        android:textSize="15dp"
+                        android:textSize="10dp"
                         android:textStyle="bold"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -74,32 +79,32 @@
 
                     <ImageButton
                         android:id="@+id/ib_my_photo_posting_menu"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:layout_marginEnd="5dp"
+                        android:layout_width="29dp"
+                        android:layout_height="25dp"
                         android:background="@null"
-                        android:padding="10dp"
+                        android:paddingHorizontal="7dp"
+                        android:paddingVertical="5dp"
                         android:scaleType="centerInside"
                         android:src="@drawable/ic_menu"
                         android:tint="@color/background_color_sub"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:postingItem="@{model}"
-                        app:myPhotoItemMenuListener="@{viewModel.myPhotoItemMenuListener}" />
+                        app:myPhotoItemMenuListener="@{viewModel.myPhotoItemMenuListener}"
+                        app:postingItem="@{model}" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_height="25dp"
                     android:alpha="0.5"
                     android:background="@color/background_color_main"
                     app:layout_constraintBottom_toBottomOf="parent" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_height="25dp"
                     android:orientation="horizontal"
                     app:layout_constraintBottom_toBottomOf="parent">
 
@@ -108,25 +113,24 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:onClick="@{() -> viewModel.onClickLikeList(model)}"
                         android:orientation="horizontal">
 
                         <ImageView
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:layout_marginEnd="5dp"
+                            android:layout_width="13dp"
+                            android:layout_height="13dp"
+                            android:layout_marginEnd="3dp"
                             android:src="@drawable/ic_heart_empty"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
-                            app:tint="@color/background_color_sub" />
+                            app:tint="@{model.likeCount > 0 ? @color/red : @color/text_color}" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@{String.valueOf(model.likeCount)}"
-                            android:textColor="@color/text_color"
-                            android:textSize="17dp"
+                            android:textColor="@{model.likeCount > 0 ? @color/red : @color/text_color}"
+                            android:textSize="12dp"
                             android:textStyle="bold"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
@@ -137,72 +141,38 @@
                     <View
                         android:layout_width="1dp"
                         android:layout_height="match_parent"
-                        android:layout_marginVertical="10dp"
-                        android:background="@color/background_color_sub" />
+                        android:layout_marginVertical="5dp"
+                        android:background="@color/text_color" />
 
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:onClick="@{() -> viewModel.onClickComment(model)}"
                         android:orientation="horizontal">
 
                         <ImageView
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:layout_marginEnd="5dp"
+                            android:layout_width="13dp"
+                            android:layout_height="13dp"
+                            android:layout_marginEnd="3dp"
                             android:src="@drawable/ic_emoji_comment"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
-                            app:tint="@color/background_color_sub" />
+                            app:tint="@{model.commentCount > 0 ? @color/red : @color/text_color}" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@{String.valueOf(model.commentCount)}"
-                            android:textColor="@color/text_color"
-                            android:textSize="17dp"
+                            android:textColor="@{model.commentCount > 0 ? @color/red : @color/text_color}"
+                            android:textSize="12dp"
                             android:textStyle="bold"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
                             tools:text="0" />
                     </LinearLayout>
-
-                    <View
-                        android:layout_width="1dp"
-                        android:layout_height="match_parent"
-                        android:layout_marginVertical="10dp"
-                        android:background="@color/background_color_sub" />
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:orientation="horizontal">
-
-                        <ImageView
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:layout_marginEnd="5dp"
-                            android:src="@drawable/ic_share_2"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:tint="@color/background_color_sub" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="SHARE"
-                            android:textColor="@color/text_color"
-                            android:textSize="15dp"
-                            android:textStyle="bold" />
-                    </LinearLayout>
-
                 </LinearLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>

@@ -8,4 +8,7 @@ class GetPostingOrder(private val postingRepository: PostingRepository) {
 
     fun getLikePostingOrder() = postingRepository.currentLikePostingOrder
 
+    fun getUserPostingOrder() = postingRepository.currentUserPostingOrder
+
+    fun getMyPhotoPostingOrder() = postingRepository.currentMyPhotoPostingOrder
 }

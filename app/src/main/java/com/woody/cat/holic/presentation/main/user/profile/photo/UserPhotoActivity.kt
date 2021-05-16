@@ -21,6 +21,7 @@ import com.woody.cat.holic.presentation.main.posting.likelist.LikeListDialog
 import com.woody.cat.holic.presentation.main.user.profile.ProfileActivity
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -94,19 +95,28 @@ class UserPhotoActivity : BaseActivity() {
             initPagingFlow()
 
             lifecycleScope.launch {
-                postingAdapter.loadStateFlow.collectLatest { loadStates ->
-                    val refreshState = loadStates.refresh
-                    setLoading(refreshState is LoadState.Loading)
+                postingAdapter.loadStateFlow
+                    .distinctUntilChangedBy { it.refresh }
+                    .collectLatest { loadStates ->
+                        val refreshState = loadStates.refresh
+                        setLoading(refreshState is LoadState.Loading)
 
-                    if (refreshState is LoadState.Error) {
-                        //TODO: handle network error
-                    }
+                        if (refreshState is LoadState.Error) {
+                            //TODO: handle network error
+                        }
 
-                    if (refreshState is LoadState.NotLoading) {
-                        setIsListEmpty(postingAdapter.itemCount == 0)
+                        if (refreshState is LoadState.NotLoading) {
+                            setIsListEmpty(postingAdapter.itemCount == 0)
+                            binding.rvUserPhoto.scrollToPosition(0)
+                        }
                     }
-                }
             }
+
+            eventChangeUserPostingOrder.observeEvent(this@UserPhotoActivity, {
+                userPhotoViewModel.changeToNextPostingOrder()
+                userPhotoViewModel.refreshVisiblePostingOrder()
+                postingAdapter.refresh()
+            })
 
             eventRefreshData.observeEvent(this@UserPhotoActivity, {
                 initPagingFlow()

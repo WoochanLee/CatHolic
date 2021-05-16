@@ -23,10 +23,11 @@ class GalleryPostingDataSource(
 ) : PagingSource<String, RecyclerViewItem>() {
 
     override suspend fun load(params: LoadParams<String>): LoadResult<String, RecyclerViewItem> {
+        val currentUserId = getCurrentUserId()
         getGalleryPostings(params.key).let { result ->
             return if (result is Resource.Success) {
                 result.data
-                    .map { it.mapToPostingItem(getCurrentUserId()) }
+                    .map { it.mapToPostingItem(currentUserId) }
                     .let { postingList ->
 
                         postingList.forEach {

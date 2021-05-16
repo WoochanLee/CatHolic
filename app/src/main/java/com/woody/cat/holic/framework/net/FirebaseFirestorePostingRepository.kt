@@ -23,12 +23,15 @@ class FirebaseFirestorePostingRepository(private val db: FirebaseFirestore) : Po
 
     override var currentGalleryPostingOrder = PostingOrder.LIKED
     override var currentLikePostingOrder = PostingOrder.CREATED
+    override var currentUserPostingOrder = PostingOrder.CREATED
+    override var currentMyPhotoPostingOrder = PostingOrder.CREATED
 
     override fun getPostingOrder(postingType: PostingType): PostingOrder {
         return when (postingType) {
             PostingType.GALLERY -> currentGalleryPostingOrder
             PostingType.LIKED -> currentLikePostingOrder
-            PostingType.USER -> PostingOrder.LIKED
+            PostingType.USER -> currentUserPostingOrder
+            PostingType.MY_PHOTO -> currentMyPhotoPostingOrder
         }
     }
 
@@ -36,7 +39,8 @@ class FirebaseFirestorePostingRepository(private val db: FirebaseFirestore) : Po
         when (postingType) {
             PostingType.GALLERY -> currentGalleryPostingOrder = currentGalleryPostingOrder.getNextPostingOrder()
             PostingType.LIKED -> currentLikePostingOrder = currentLikePostingOrder.getNextPostingOrder()
-            PostingType.USER -> Unit
+            PostingType.USER -> currentUserPostingOrder = currentUserPostingOrder.getNextPostingOrder()
+            PostingType.MY_PHOTO -> currentMyPhotoPostingOrder = currentMyPhotoPostingOrder.getNextPostingOrder()
         }
     }
 
@@ -154,8 +158,13 @@ class FirebaseFirestorePostingRepository(private val db: FirebaseFirestore) : Po
             val querySnapshot = db.collection(COLLECTION_POSTING_PATH)
                 .whereEqualTo(PostingDto::deleted.name, false)
                 .whereEqualTo(PostingDto::userId.name, userId)
-                .orderBy(PostingDto::created.name, Query.Direction.DESCENDING)
                 .run {
+                    when (currentMyPhotoPostingOrder) {
+                        PostingOrder.CREATED -> orderBy(PostingDto::created.name, Query.Direction.DESCENDING)
+                        PostingOrder.LIKED -> orderBy(PostingDto::likeCount.name, Query.Direction.DESCENDING)
+                        PostingOrder.RANDOM -> this
+                    }
+                }.run {
                     if (key != null && lastDoc.data != null) {
                         startAfter(lastDoc.data as DocumentSnapshot)
                     } else this
@@ -185,8 +194,13 @@ class FirebaseFirestorePostingRepository(private val db: FirebaseFirestore) : Po
             val querySnapshot = db.collection(COLLECTION_POSTING_PATH)
                 .whereEqualTo(PostingDto::deleted.name, false)
                 .whereEqualTo(PostingDto::userId.name, userId)
-                .orderBy(PostingDto::created.name, Query.Direction.DESCENDING)
                 .run {
+                    when (currentUserPostingOrder) {
+                        PostingOrder.CREATED -> orderBy(PostingDto::created.name, Query.Direction.DESCENDING)
+                        PostingOrder.LIKED -> orderBy(PostingDto::likeCount.name, Query.Direction.DESCENDING)
+                        PostingOrder.RANDOM -> this
+                    }
+                }.run {
                     if (key != null && lastDoc.data != null) {
                         startAfter(lastDoc.data as DocumentSnapshot)
                     } else this

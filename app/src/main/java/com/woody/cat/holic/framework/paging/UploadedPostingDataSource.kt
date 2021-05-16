@@ -23,11 +23,11 @@ class UploadedPostingDataSource(
 ) : PagingSource<String, PostingItem>() {
 
     override suspend fun load(params: LoadParams<String>): LoadResult<String, PostingItem> {
-        getCurrentUserId()?.let { userId ->
-            getUserUploadedPostings(params.key, userId).let { result ->
+        getCurrentUserId()?.let { currentUserId ->
+            getUserUploadedPostings(params.key, currentUserId).let { result ->
                 return if (result is Resource.Success) {
                     result.data
-                        .map { it.mapToPostingItem(userId) }
+                        .map { it.mapToPostingItem(currentUserId) }
                         .let { postingList ->
 
                             postingList.forEach {

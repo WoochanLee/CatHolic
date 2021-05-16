@@ -8,7 +8,7 @@ enum class PostingOrder {
     fun getNextPostingOrder(): PostingOrder {
         return when (this) {
             LIKED -> CREATED
-            CREATED -> RANDOM
+            CREATED -> LIKED
             RANDOM -> LIKED
         }
     }

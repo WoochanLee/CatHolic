@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             app:cardBackgroundColor="@color/gray"
-            app:cardCornerRadius="20dp"
+            app:cardCornerRadius="10dp"
             app:cardElevation="5dp"
             tools:layout_width="100dp">
 
@@ -51,22 +51,22 @@
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="30dp"
+                    android:layout_height="25dp"
                     android:alpha="0.5"
                     android:background="@color/background_color_main"
-                    app:layout_constraintBottom_toBottomOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="30dp"
+                    android:layout_height="25dp"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
-                    app:layout_constraintBottom_toBottomOf="parent">
+                    app:layout_constraintTop_toTopOf="parent">
 
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="7dp"
+                        android:layout_marginHorizontal="5dp"
                         android:gravity="center"
                         android:onClick="@{() -> viewModel.onClickProfile(model.user.userId)}"
                         android:orientation="horizontal">
@@ -90,12 +90,99 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@{model.user.displayName}"
-                            android:singleLine="true"
                             android:ellipsize="end"
+                            android:singleLine="true"
+                            android:text="@{model.user.displayName}"
                             android:textColor="@color/text_color"
                             android:textSize="10dp"
                             tools:text="Woody" />
+                    </LinearLayout>
+                </LinearLayout>
+
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="25dp"
+                    android:alpha="0.5"
+                    android:background="@color/background_color_main"
+                    app:layout_constraintBottom_toBottomOf="parent" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="25dp"
+                    android:orientation="horizontal"
+                    app:layout_constraintBottom_toBottomOf="parent">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="13dp"
+                            android:layout_height="13dp"
+                            android:layout_marginEnd="3dp"
+                            android:src="@{model.currentUserLiked ? @drawable/ic_heart_fill : @drawable/ic_heart_empty}"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:tint="@{model.currentUserLiked ? @color/red : @color/text_color}"
+                            tools:src="@drawable/ic_heart_fill"
+                            tools:tint="@color/red" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@{String.valueOf(model.likeCount)}"
+                            android:textColor="@{model.currentUserLiked ? @color/red : @color/text_color}"
+                            android:textSize="12dp"
+                            android:textStyle="bold"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            tools:text="10"
+                            tools:textColor="@color/red" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginVertical="5dp"
+                        android:background="@color/text_color" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="13dp"
+                            android:layout_height="13dp"
+                            android:layout_marginEnd="3dp"
+                            android:src="@drawable/ic_emoji_comment"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:tint="@{model.currentUserCommented ? @color/red : @color/text_color}"
+                            tools:src="@drawable/ic_emoji_comment"
+                            tools:tint="@color/red" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@{String.valueOf(model.commentCount)}"
+                            android:textColor="@{model.currentUserCommented ? @color/red : @color/text_color}"
+                            android:textSize="12dp"
+                            android:textStyle="bold"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            tools:text="0"
+                            tools:textColor="@color/red" />
                     </LinearLayout>
                 </LinearLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>

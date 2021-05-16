@@ -9,6 +9,8 @@ interface PostingRepository {
 
     var currentGalleryPostingOrder: PostingOrder
     var currentLikePostingOrder: PostingOrder
+    var currentUserPostingOrder: PostingOrder
+    var currentMyPhotoPostingOrder: PostingOrder
 
     fun getPostingOrder(postingType: PostingType): PostingOrder
 

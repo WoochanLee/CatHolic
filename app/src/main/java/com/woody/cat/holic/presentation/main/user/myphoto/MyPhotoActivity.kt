@@ -17,12 +17,12 @@ import com.woody.cat.holic.databinding.ActivityMyPhotoBinding
 import com.woody.cat.holic.framework.base.BaseActivity
 import com.woody.cat.holic.framework.base.ViewModelFactory
 import com.woody.cat.holic.framework.base.observeEvent
-import com.woody.cat.holic.presentation.main.posting.comment.CommentDialog
-import com.woody.cat.holic.presentation.main.posting.likelist.LikeListDialog
+import com.woody.cat.holic.presentation.main.posting.detail.PostingDetailDialog
 import com.woody.cat.holic.presentation.service.download.PhotoDownloadService
 import com.woody.cat.holic.presentation.upload.UploadActivity
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.distinctUntilChangedBy
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -33,7 +33,7 @@ class MyPhotoActivity : BaseActivity() {
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
 
-    private lateinit var viewModel: MyPhotoViewModel
+    private lateinit var myPhotoViewModel: MyPhotoViewModel
 
     private lateinit var postingAdapter: MyPhotoPostingAdapter
 
@@ -41,7 +41,7 @@ class MyPhotoActivity : BaseActivity() {
         ActivityResultContracts.RequestPermission()
     ) { isGranted: Boolean ->
         if (isGranted) {
-            viewModel.imageUrlWaitingForPermission?.let { imageUrl ->
+            myPhotoViewModel.imageUrlWaitingForPermission?.let { imageUrl ->
                 startService(PhotoDownloadService.getIntent(this@MyPhotoActivity, imageDownloadUrl = imageUrl))
             }
         } else {
@@ -56,37 +56,36 @@ class MyPhotoActivity : BaseActivity() {
             lifecycleOwner = this@MyPhotoActivity
         }
 
-        viewModel = ViewModelProvider(this, viewModelFactory).get(MyPhotoViewModel::class.java).apply {
+        myPhotoViewModel = ViewModelProvider(this, viewModelFactory).get(MyPhotoViewModel::class.java).apply {
             binding.viewModel = this
             postingAdapter = MyPhotoPostingAdapter(this@MyPhotoActivity, this)
 
             initPagingFlow()
 
             lifecycleScope.launch {
-                postingAdapter.loadStateFlow.collectLatest { loadStates ->
-                    val refreshState = loadStates.refresh
-                    setLoading(refreshState is LoadState.Loading)
+                postingAdapter.loadStateFlow
+                    .distinctUntilChangedBy { it.refresh }
+                    .collectLatest { loadStates ->
+                        val refreshState = loadStates.refresh
+                        setLoading(refreshState is LoadState.Loading)
 
-                    if (refreshState is LoadState.Error) {
-                        //TODO: handle network error
-                    }
+                        if (refreshState is LoadState.Error) {
+                            //TODO: handle network error
+                        }
 
-                    if (refreshState is LoadState.NotLoading) {
-                        setIsListEmpty(postingAdapter.itemCount == 0)
+                        if (refreshState is LoadState.NotLoading) {
+                            setIsListEmpty(postingAdapter.itemCount == 0)
+                            binding.rvMyPhoto.scrollToPosition(0)
+                        }
                     }
-                }
             }
 
             eventRefreshData.observeEvent(this@MyPhotoActivity, {
                 initPagingFlow()
             })
 
-            eventShowCommentDialog.observeEvent(this@MyPhotoActivity, { postingItem ->
-                CommentDialog.newInstance(supportFragmentManager, postingItem)
-            })
-
-            eventShowLikeListDialog.observeEvent(this@MyPhotoActivity, { postingItem ->
-                LikeListDialog.newInstance(supportFragmentManager, postingItem)
+            eventShowPostingDetail.observeEvent(this@MyPhotoActivity, { postingItem ->
+                PostingDetailDialog.newInstance(supportFragmentManager, postingItem)
             })
 
             eventStartUploadActivity.observeEvent(this@MyPhotoActivity, {
@@ -102,13 +101,19 @@ class MyPhotoActivity : BaseActivity() {
                     .setTitle(getString(R.string.delete_photo))
                     .setMessage(getString(R.string.do_you_really_want_to_delete_this_photo))
                     .setPositiveButton(getString(R.string.delete_2)) { _, _ ->
-                        viewModel.deletePosting(userId, postingId)
+                        myPhotoViewModel.deletePosting(userId, postingId)
                     }.setNegativeButton(R.string.cancel, null)
                     .show()
             })
+
+            eventChangeUserPostingOrder.observeEvent(this@MyPhotoActivity, {
+                myPhotoViewModel.changeToNextPostingOrder()
+                myPhotoViewModel.refreshVisiblePostingOrder()
+                postingAdapter.refresh()
+            })
         }
 
-        binding.rvMainGallery.adapter = postingAdapter
+        binding.rvMyPhoto.adapter = postingAdapter
 
         initToolbar()
     }
@@ -118,7 +123,7 @@ class MyPhotoActivity : BaseActivity() {
         if (isPermissionGranted) {
             startService(PhotoDownloadService.getIntent(this@MyPhotoActivity, imageDownloadUrl = imageUrl))
         } else {
-            viewModel.imageUrlWaitingForPermission = imageUrl
+            myPhotoViewModel.imageUrlWaitingForPermission = imageUrl
             requestPermissionLauncher.launch(WRITE_EXTERNAL_STORAGE)
         }
     }

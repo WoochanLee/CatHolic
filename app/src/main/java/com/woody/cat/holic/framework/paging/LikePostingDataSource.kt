@@ -23,11 +23,12 @@ class LikePostingDataSource(
 ) : PagingSource<String, RecyclerViewItem>() {
 
     override suspend fun load(params: LoadParams<String>): LoadResult<String, RecyclerViewItem> {
+        val currentUserId = getCurrentUserId()
         getCurrentUserId()?.let { userId ->
             getUserLikePostings(params.key, userId).let { result ->
                 return if (result is Resource.Success) {
                     result.data
-                        .map { it.mapToPostingItem(getCurrentUserId()) }
+                        .map { it.mapToPostingItem(currentUserId) }
                         .let { postingList ->
 
                             postingList.forEach {

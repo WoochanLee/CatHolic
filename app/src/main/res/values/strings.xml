@@ -89,4 +89,5 @@
     <string name="crop_photo">Crop Photo</string>
     <string name="fail_to_get_photo">Fail to get photo</string>
     <string name="need_permission_to_download_photos">Need permission to download photos</string>
+    <string name="photo_list_is_empty">Photo list is empty !</string>
 </resources>

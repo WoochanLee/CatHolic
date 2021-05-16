@@ -6,9 +6,13 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
+import com.woody.cat.holic.data.common.PostingOrder
+import com.woody.cat.holic.data.common.PostingType
 import com.woody.cat.holic.framework.base.*
 import com.woody.cat.holic.framework.paging.UploadedPostingDataSource
 import com.woody.cat.holic.framework.paging.item.PostingItem
+import com.woody.cat.holic.usecase.posting.ChangeToNextPostingOrder
+import com.woody.cat.holic.usecase.posting.GetPostingOrder
 import com.woody.cat.holic.usecase.posting.GetUserUploadedPostings
 import com.woody.cat.holic.usecase.posting.RemoveUserPosting
 import com.woody.cat.holic.usecase.user.GetCurrentUserId
@@ -23,7 +27,9 @@ class MyPhotoViewModel @Inject constructor(
     private val getCurrentUserId: GetCurrentUserId,
     private val getUserUploadedPostings: GetUserUploadedPostings,
     private val removeUserPosting: RemoveUserPosting,
-    private val getUserProfile: GetUserProfile
+    private val getUserProfile: GetUserProfile,
+    private val getPostingOrder: GetPostingOrder,
+    private val changeToNextPostingOrder: ChangeToNextPostingOrder
 ) : BaseViewModel() {
 
     companion object {
@@ -33,11 +39,8 @@ class MyPhotoViewModel @Inject constructor(
     private val _eventRefreshData = MutableLiveData<Event<Unit>>()
     val eventRefreshData: LiveData<Event<Unit>> get() = _eventRefreshData
 
-    private val _eventShowCommentDialog = MutableLiveData<Event<PostingItem>>()
-    val eventShowCommentDialog: LiveData<Event<PostingItem>> get() = _eventShowCommentDialog
-
-    private val _eventShowLikeListDialog = MutableLiveData<Event<PostingItem>>()
-    val eventShowLikeListDialog: LiveData<Event<PostingItem>> get() = _eventShowLikeListDialog
+    private val _eventShowPostingDetail = MutableLiveData<Event<PostingItem>>()
+    val eventShowPostingDetail: LiveData<Event<PostingItem>> get() = _eventShowPostingDetail
 
     private val _eventShowDeleteWarningDialog = MutableLiveData<Event<Pair<String, String>>>()
     val eventShowDeleteWarningDialog: LiveData<Event<Pair<String, String>>> get() = _eventShowDeleteWarningDialog
@@ -47,6 +50,12 @@ class MyPhotoViewModel @Inject constructor(
 
     private val _eventStartPhotoDownload = MutableLiveData<Event<String>>()
     val eventStartPhotoDownload: LiveData<Event<String>> get() = _eventStartPhotoDownload
+
+    private val _eventChangeUserPostingOrder = MutableLiveData<Event<Unit>>()
+    val eventChangeUserPostingOrder: LiveData<Event<Unit>> get() = _eventChangeUserPostingOrder
+
+    private val _currentVisiblePostingOrder = MutableLiveData(getPostingOrder.getMyPhotoPostingOrder())
+    val currentVisiblePostingOrder: LiveData<PostingOrder> get() = _currentVisiblePostingOrder
 
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> get() = _isLoading
@@ -95,16 +104,24 @@ class MyPhotoViewModel @Inject constructor(
         _isListEmpty.postValue(isListEmpty)
     }
 
-    fun onClickComment(postingItem: PostingItem) {
-        _eventShowCommentDialog.emit(postingItem)
-    }
-
-    fun onClickLikeList(postingItem: PostingItem) {
-        _eventShowLikeListDialog.emit(postingItem)
+    fun onClickPosting(postingItem: PostingItem) {
+        _eventShowPostingDetail.emit(postingItem)
     }
 
     fun onClickUploadFab() {
         _eventStartUploadActivity.emit()
+    }
+
+    fun onClickChangePostingOrder() {
+        _eventChangeUserPostingOrder.emit()
+    }
+
+    fun changeToNextPostingOrder() {
+        changeToNextPostingOrder(PostingType.MY_PHOTO)
+    }
+
+    fun refreshVisiblePostingOrder() {
+        _currentVisiblePostingOrder.postValue(getPostingOrder.getMyPhotoPostingOrder())
     }
 
     fun deletePosting(userId: String, postingId: String) {

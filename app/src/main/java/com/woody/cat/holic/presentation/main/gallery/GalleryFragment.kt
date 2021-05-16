@@ -106,17 +106,17 @@ class GalleryFragment : BaseFragment() {
                 postingAdapter.loadStateFlow
                     .distinctUntilChangedBy { it.refresh }
                     .collectLatest { loadStates ->
-                        val loadState = loadStates.refresh
-                        setLoading(loadState is LoadState.Loading)
+                        val refreshState = loadStates.refresh
+                        setLoading(refreshState is LoadState.Loading)
 
-                        if (loadState is LoadState.Error) {
+                        if (refreshState is LoadState.Error) {
                             //TODO: handle network error
-                            if (loadState.error is NotSignedInException) {
+                            if (refreshState.error is NotSignedInException) {
                                 postingAdapter.submitData(PagingData.empty())
                             }
                         }
 
-                        if (loadState is LoadState.NotLoading) {
+                        if (refreshState is LoadState.NotLoading) {
                             binding.rvMainGallery.scrollToPosition(0)
                         }
                     }

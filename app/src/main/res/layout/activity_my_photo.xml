@@ -8,6 +8,8 @@
             type="com.woody.cat.holic.presentation.main.user.myphoto.MyPhotoViewModel" />
 
         <import type="android.view.View" />
+
+        <import type="com.woody.cat.holic.data.common.PostingOrder" />
     </data>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -41,6 +43,45 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="100dp"
+                    android:layout_height="34dp"
+                    android:layout_marginEnd="10dp"
+                    android:foreground="?android:selectableItemBackground"
+                    android:onClick="@{() -> viewModel.onClickChangePostingOrder()}"
+                    android:padding="0dp"
+                    app:cardBackgroundColor="@color/background_color_sub"
+                    app:cardCornerRadius="15dp"
+                    app:cardElevation="0dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="5dp"
+                            android:text="@string/order_by"
+                            android:textColor="@color/background_color_main"
+                            android:textSize="12dp"
+                            android:textStyle="bold" />
+
+                        <ImageView
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            android:src="@{viewModel.currentVisiblePostingOrder == PostingOrder.CREATED ? @drawable/ic_clock_fill : @drawable/ic_heart_fill}"
+                            app:tint="@color/background_color_main"
+                            tools:src="@drawable/ic_heart_fill" />
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.appcompat.widget.Toolbar>
 
@@ -55,13 +96,14 @@
                 app:refreshing="@{viewModel.isLoading()}">
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rv_main_gallery"
+                    android:id="@+id/rv_my_photo"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@color/background_color_main"
                     android:scrollbars="none"
                     android:visibility="@{viewModel.isListEmpty() ? View.GONE : View.VISIBLE}"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                    app:spanCount="3"
                     tools:listitem="@layout/item_my_photo_posting" />
 
             </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

@@ -81,7 +81,7 @@ class MainViewModel @Inject constructor(
     private val _isVisibleEditProfile = MutableLiveData(false)
     val isVisibleEditProfile: LiveData<Boolean> get() = _isVisibleEditProfile
 
-    private val _currentVisiblePostingOrder = MutableLiveData(PostingOrder.LIKED)
+    private val _currentVisiblePostingOrder = MutableLiveData(getPostingOrder.getGalleryPostingOrder())
     val currentVisiblePostingOrder: LiveData<PostingOrder> get() = _currentVisiblePostingOrder
 
     private var lastBackKeyPressedTimeMills = 0L
