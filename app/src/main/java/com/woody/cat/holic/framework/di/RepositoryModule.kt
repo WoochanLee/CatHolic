@@ -8,6 +8,7 @@ import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.woody.cat.holic.data.*
+import com.woody.cat.holic.framework.db.RoomNotificationRepository
 import com.woody.cat.holic.framework.db.SharedPreferenceSettingRepository
 import com.woody.cat.holic.framework.manager.AndroidFileManager
 import com.woody.cat.holic.framework.manager.AndroidStringResourceManager
@@ -85,6 +86,10 @@ class RepositoryModule {
     @Provides
     @Singleton
     fun providePhotoRepository(db: StorageReference): PhotoRepository = FirebaseStoragePhotoRepository(db)
+
+    @Provides
+    @Singleton
+    fun provideNotificationRepository(context: Context): NotificationRepository = RoomNotificationRepository(context)
 
     @Provides
     @Singleton

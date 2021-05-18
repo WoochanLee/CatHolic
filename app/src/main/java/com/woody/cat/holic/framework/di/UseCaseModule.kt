@@ -1,6 +1,10 @@
 package com.woody.cat.holic.framework.di
 
 import com.woody.cat.holic.data.*
+import com.woody.cat.holic.usecase.notification.AddNotification
+import com.woody.cat.holic.usecase.notification.GetNotifications
+import com.woody.cat.holic.usecase.notification.RemoveNotifications
+import com.woody.cat.holic.usecase.notification.UpdateNotification
 import com.woody.cat.holic.usecase.photo.DetectCatFromPhoto
 import com.woody.cat.holic.usecase.photo.DownloadPhoto
 import com.woody.cat.holic.usecase.photo.UploadPhoto
@@ -151,5 +155,25 @@ class UseCaseModule {
     @Provides
     fun provideGetDynamicLink(dynamicLinkManager: DynamicLinkManager): GetDynamicLink {
         return GetDynamicLink(dynamicLinkManager)
+    }
+
+    @Provides
+    fun provideAddNotification(notificationRepository: NotificationRepository): AddNotification {
+        return AddNotification(notificationRepository)
+    }
+
+    @Provides
+    fun provideGetNotifications(notificationRepository: NotificationRepository): GetNotifications {
+        return GetNotifications(notificationRepository)
+    }
+
+    @Provides
+    fun provideRemoveNotifications(notificationRepository: NotificationRepository): RemoveNotifications {
+        return RemoveNotifications(notificationRepository)
+    }
+
+    @Provides
+    fun provideUpdateNotification(notificationRepository: NotificationRepository): UpdateNotification {
+        return UpdateNotification(notificationRepository)
     }
 }

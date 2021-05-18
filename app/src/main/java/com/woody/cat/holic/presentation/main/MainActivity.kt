@@ -15,6 +15,7 @@ import com.woody.cat.holic.framework.base.observeEvent
 import com.woody.cat.holic.presentation.main.follow.FollowFragment
 import com.woody.cat.holic.presentation.main.gallery.GalleryFragment
 import com.woody.cat.holic.presentation.main.like.LikeFragment
+import com.woody.cat.holic.presentation.main.notification.NotificationListDialog
 import com.woody.cat.holic.presentation.main.posting.PostingViewModel
 import com.woody.cat.holic.presentation.main.posting.comment.CommentDialog
 import com.woody.cat.holic.presentation.main.posting.detail.PostingDetailDialog
@@ -72,6 +73,10 @@ class MainActivity : BaseActivity() {
 
             eventShowLikeListDialog.observeEvent(this@MainActivity, { postingItem ->
                 LikeListDialog.newInstance(supportFragmentManager, postingItem)
+            })
+
+            eventShowNotificationDialog.observeEvent(this@MainActivity, {
+                NotificationListDialog.newInstance(supportFragmentManager)
             })
 
             eventMoveToFollowTab.observeEvent(this@MainActivity, {
@@ -177,6 +182,7 @@ class MainActivity : BaseActivity() {
             setToolbarTitle(getString(R.string.gallery))
             setVisibleUploadFab(true)
             setVisibleOrderSwitch(true)
+            setVisibleNotification(true)
             setVisibleEditProfile(false)
             refreshVisiblePostingOrder(MainTab.TAB_GALLERY)
         }
@@ -191,6 +197,7 @@ class MainActivity : BaseActivity() {
             setToolbarTitle(getString(R.string.following).toUpperCase(Locale.getDefault()))
             setVisibleUploadFab(true)
             setVisibleOrderSwitch(false)
+            setVisibleNotification(false)
             setVisibleEditProfile(false)
         }
         selectedTab?.icon = ContextCompat.getDrawable(this@MainActivity, R.drawable.ic_friends_fill)
@@ -204,6 +211,7 @@ class MainActivity : BaseActivity() {
             setToolbarTitle(getString(R.string.like))
             setVisibleUploadFab(true)
             setVisibleOrderSwitch(true)
+            setVisibleNotification(false)
             setVisibleEditProfile(false)
             refreshVisiblePostingOrder(MainTab.TAB_LIKE)
         }
@@ -218,6 +226,7 @@ class MainActivity : BaseActivity() {
             setToolbarTitle(getString(R.string.profile))
             setVisibleUploadFab(false)
             setVisibleOrderSwitch(false)
+            setVisibleNotification(false)
             setVisibleEditProfile(true)
         }
         selectedTab?.icon = ContextCompat.getDrawable(this@MainActivity, R.drawable.ic_user_fill)

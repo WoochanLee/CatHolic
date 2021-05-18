@@ -34,7 +34,11 @@ class GalleryPostingDataSource(
                             getPostingUserProfile(it.user)
                         }
 
-                        val list = mutableListOf<RecyclerViewItem>(*postingList.toTypedArray()).apply { add(AdItem((0..Long.MAX_VALUE).random().toString())) }
+                        val list = mutableListOf<RecyclerViewItem>(*postingList.toTypedArray()).apply {
+                            if (size > 0) {
+                                add(AdItem((0..Long.MAX_VALUE).random().toString()))
+                            }
+                        }
 
                         LoadResult.Page(
                             data = list,

@@ -8,6 +8,7 @@ import com.woody.cat.holic.presentation.main.SignViewModel
 import com.woody.cat.holic.presentation.main.follow.FollowViewModel
 import com.woody.cat.holic.presentation.main.gallery.GalleryViewModel
 import com.woody.cat.holic.presentation.main.like.LikeViewModel
+import com.woody.cat.holic.presentation.main.notification.NotificationListViewModel
 import com.woody.cat.holic.presentation.main.posting.PostingViewModel
 import com.woody.cat.holic.presentation.main.posting.comment.CommentViewModel
 import com.woody.cat.holic.presentation.main.posting.detail.PostingDetailViewModel
@@ -19,7 +20,6 @@ import com.woody.cat.holic.presentation.main.user.profile.follower.FollowerListV
 import com.woody.cat.holic.presentation.main.user.profile.following.FollowingListViewModel
 import com.woody.cat.holic.presentation.main.user.profile.photo.UserPhotoViewModel
 import com.woody.cat.holic.presentation.main.user.profile.photozoom.PhotoZoomViewModel
-import com.woody.cat.holic.presentation.service.download.PhotoDownloadViewModel
 import com.woody.cat.holic.presentation.splash.SplashViewModel
 import com.woody.cat.holic.presentation.upload.UploadViewModel
 import dagger.Binds
@@ -121,11 +121,10 @@ abstract class ViewModelModule {
     @ViewModelKey(PhotoZoomViewModel::class)
     abstract fun providePhotoZoomViewModel(photoZoomViewModel: PhotoZoomViewModel): ViewModel
 
-    /**
-     * This ViewModel not be created by ViewModelFactory, only be used in PhotoDownloadService.kt.
-     */
     @Binds
-    abstract fun providePhotoDownloadViewModel(photoDownloadViewModel: PhotoDownloadViewModel): ViewModel
+    @IntoMap
+    @ViewModelKey(NotificationListViewModel::class)
+    abstract fun provideNotificationListViewModel(notificationListViewModel: NotificationListViewModel): ViewModel
 
     @Binds
     abstract fun provideViewModelFactory(viewModelFactory: ViewModelFactory): ViewModelProvider.Factory

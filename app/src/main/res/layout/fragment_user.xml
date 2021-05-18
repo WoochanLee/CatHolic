@@ -283,7 +283,7 @@
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
                                             android:layout_gravity="center"
-                                            android:text="@string/notification"
+                                            android:text="@string/notification_setting"
                                             android:textColor="@color/text_color"
                                             android:textSize="17dp"
                                             android:textStyle="bold" />

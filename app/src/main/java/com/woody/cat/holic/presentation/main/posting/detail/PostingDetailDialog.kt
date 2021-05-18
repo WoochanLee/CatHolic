@@ -18,7 +18,7 @@ import com.woody.cat.holic.presentation.main.posting.comment.CommentDialog
 import dagger.android.support.DaggerDialogFragment
 import javax.inject.Inject
 
-class PostingDetailDialog : DaggerDialogFragment() {
+class PostingDetailDialog @Inject constructor() : DaggerDialogFragment() {
 
     companion object {
         fun newInstance(fragmentManager: FragmentManager, postingItem: PostingItem) {

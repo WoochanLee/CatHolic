@@ -72,7 +72,7 @@ class UserFragment : BaseFragment() {
             })
 
             eventSignInFail.observeEvent(viewLifecycleOwner, {
-                Toast.makeText(activity, "fail to sign in", Toast.LENGTH_SHORT).show()
+                Toast.makeText(activity, R.string.fail_to_sign_in, Toast.LENGTH_SHORT).show()
             })
         }
 
@@ -127,10 +127,9 @@ class UserFragment : BaseFragment() {
     }
 
     private fun signOut() {
-        signViewModel.let { signViewModel ->
-            GoogleSignIn.getClient(requireActivity(), signViewModel.gso).signOut()
-            signViewModel.signOutFirebase()
-        }
+        GoogleSignIn.getClient(requireActivity(), signViewModel.gso).signOut()
+        signViewModel.signOutFirebase()
+        signViewModel.removeUserNotifications()
     }
 
     private fun startNotificationSetting() {

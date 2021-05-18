@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout>
+
+    <data>
+
+        <variable
+            name="onClickNotification"
+            type="Function2&lt;Integer, String, Unit>" />
+
+        <variable
+            name="position"
+            type="Integer" />
+
+        <variable
+            name="model"
+            type="com.woody.cat.holic.domain.Notification" />
+
+        <import type="android.view.View" />
+
+        <import type="kotlin.jvm.functions.Function2" />
+
+        <import type="kotlin.Unit" />
+
+        <import type="com.woody.cat.holic.framework.base.CommonUtilsKt" />
+    </data>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@{model.isChecked ? @color/background_color_main : @color/red}"
+            android:foreground="?android:selectableItemBackground"
+            android:onClick="@{() -> onClickNotification.invoke(model.id, model.deepLink)}">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:text="@{model.title}"
+                    android:textColor="@color/text_color"
+                    android:textSize="15dp"
+                    android:textStyle="bold"
+                    tools:text="Notification title" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:text="@{model.body}"
+                    android:textColor="@color/text_color"
+                    android:textSize="15dp"
+                    tools:text="Notification body Notification body Notification body Notification body Notification body" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:text="@{CommonUtilsKt.makeCommentDateString(model.created)}"
+                    android:textColor="@color/text_color"
+                    android:textSize="12dp"
+                    tools:text="2021-05-15, 20:18:30" />
+            </LinearLayout>
+        </FrameLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/gray" />
+    </LinearLayout>
+</layout>

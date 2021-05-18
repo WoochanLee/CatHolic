@@ -71,7 +71,7 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:host="woodycatholic.com"
+                    android:host="www.woodycatholic.com"
                     android:pathPrefix="/main"
                     android:scheme="https" />
 

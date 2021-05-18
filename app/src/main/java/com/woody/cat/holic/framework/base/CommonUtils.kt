@@ -29,14 +29,9 @@ fun Date?.makeCommentDateString(): String {
     return SimpleDateFormat("yyyy-MM-dd, hh:mm:ss", Locale.getDefault()).format(this ?: return "")
 }
 
-/*fun Context.makeCustomAlbumWidget(@StringRes title: Int): Widget {
-    return Widget.newDarkBuilder(this)
-        .title(getString(title))
-        .statusBarColor(Color.BLACK)
-        .toolBarColor(Color.BLACK)
-        .navigationBarColor(Color.BLACK)
-        .build()
-}*/
+fun makeCommentDateString(time: Long): String {
+    return SimpleDateFormat("yyyy-MM-dd, hh:mm:ss", Locale.getDefault()).format(Date(time))
+}
 
 fun hideKeyboard(context: Context, focusView: View) {
     val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager

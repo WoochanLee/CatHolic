@@ -34,7 +34,7 @@ class FollowAdapter(
     override fun onBindViewHolder(holder: BaseViewHolder<UserItem, FollowViewModel>, position: Int) {
         getItem(position)?.let { item ->
             holder.bind(position, item)
-            (holder.binding as ItemFollowListBinding).onClickProfile = FollowViewModel::onClickProfile
+            (holder.binding as ItemFollowListBinding).onClickProfile = followViewModel::onClickProfile
         }
     }
 }

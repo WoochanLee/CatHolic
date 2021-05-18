@@ -13,6 +13,7 @@ import com.google.firebase.auth.GoogleAuthProvider
 import com.woody.cat.holic.domain.User
 import com.woody.cat.holic.framework.base.*
 import com.woody.cat.holic.framework.net.common.DataNotExistException
+import com.woody.cat.holic.usecase.notification.RemoveNotifications
 import com.woody.cat.holic.usecase.setting.GetPushToken
 import com.woody.cat.holic.usecase.user.*
 import kotlinx.coroutines.Dispatchers
@@ -29,7 +30,8 @@ class SignViewModel @Inject constructor(
     private val addUserProfile: AddUserProfile,
     private val getPushToken: GetPushToken,
     private val addPushToken: AddPushToken,
-    private val removePushToken: RemovePushToken
+    private val removePushToken: RemovePushToken,
+    private val removeNotifications: RemoveNotifications
 ) : BaseViewModel() {
 
     lateinit var gso: GoogleSignInOptions
@@ -210,6 +212,14 @@ class SignViewModel @Inject constructor(
             refreshSignInStatus()
             onSignOutSuccess()
         })
+    }
+
+    fun removeUserNotifications() {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                removeNotifications()
+            }
+        }
     }
 
     private fun initEventBusSubscribe() {

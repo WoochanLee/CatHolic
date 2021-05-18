@@ -5,6 +5,7 @@ buildscript {
     ext.paging_version = "3.0.0-beta01"
     ext.camerax_version = "1.0.0-beta07"
     ext.dagger_version = "2.35.1"
+    ext.room_version = "2.3.0"
     repositories {
         google()
         jcenter()

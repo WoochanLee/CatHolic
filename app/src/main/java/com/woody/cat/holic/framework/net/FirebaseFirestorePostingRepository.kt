@@ -142,7 +142,7 @@ class FirebaseFirestorePostingRepository(private val db: FirebaseFirestore) : Po
             }
 
             Resource.Success(postingList)
-        }catch (e: Exception) {
+        } catch (e: Exception) {
             Resource.Error(e)
         }
     }

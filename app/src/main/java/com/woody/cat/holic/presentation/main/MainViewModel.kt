@@ -54,6 +54,9 @@ class MainViewModel @Inject constructor(
     private val _eventShowLikeListDialog = MutableLiveData<Event<PostingItem>>()
     val eventShowLikeListDialog: LiveData<Event<PostingItem>> get() = _eventShowLikeListDialog
 
+    private val _eventShowNotificationListDialog = MutableLiveData<Event<Unit>>()
+    val eventShowNotificationDialog: LiveData<Event<Unit>> get() = _eventShowNotificationListDialog
+
     private val _eventMoveToFollowTab = MutableLiveData<Event<Unit>>()
     val eventMoveToFollowTab: LiveData<Event<Unit>> get() = _eventMoveToFollowTab
 
@@ -77,6 +80,9 @@ class MainViewModel @Inject constructor(
 
     private val _isVisibleOrderSwitch = MutableLiveData(true)
     val isVisibleOrderSwitch: LiveData<Boolean> get() = _isVisibleOrderSwitch
+
+    private val _isVisibleNotification = MutableLiveData(true)
+    val isVisibleNotification: LiveData<Boolean> get() = _isVisibleNotification
 
     private val _isVisibleEditProfile = MutableLiveData(false)
     val isVisibleEditProfile: LiveData<Boolean> get() = _isVisibleEditProfile
@@ -166,6 +172,10 @@ class MainViewModel @Inject constructor(
         }
     }
 
+    fun onClickNotificationList() {
+        _eventShowNotificationListDialog.emit()
+    }
+
     fun onClickProfile(userId: String) {
         _eventStartProfileActivity.emit(userId)
     }
@@ -191,6 +201,10 @@ class MainViewModel @Inject constructor(
 
     fun setVisibleOrderSwitch(isVisible: Boolean) {
         _isVisibleOrderSwitch.postValue(isVisible)
+    }
+
+    fun setVisibleNotification(isVisible: Boolean) {
+        _isVisibleNotification.postValue(isVisible)
     }
 
     fun setVisibleEditProfile(isVisible: Boolean) {

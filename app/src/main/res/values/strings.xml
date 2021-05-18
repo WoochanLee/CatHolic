@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">CatHolic</string>
+    <string name="app_name">Cat Holic</string>
     <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
 
     <string name="success_to_posting">Upload Success!</string>
@@ -8,7 +8,7 @@
     <string name="order_by">Order By</string>
     <string name="privacy_policy">Privacy Policy</string>
     <string name="sign_out">Sign Out</string>
-    <string name="notification">Notification</string>
+    <string name="notification_setting">Notification Setting</string>
     <string name="guide">Guide</string>
     <string name="my_cat_photo">My Cat Photo</string>
     <string name="welcome_to_cat_holic">Welcome to Cat Holic !</string>
@@ -96,4 +96,11 @@
     <string name="cat_photo_sharing_sns">Cat Photo Sharing SNS</string>
     <string name="cat_photo_sharing_sns_s">Cat Photo Sharing SNS\n%s</string>
     <string name="share">SHARE</string>
+    <string name="fail_to_sign_in">fail to sign in</string>
+    <string name="s_just_posted_a_new_cat_photo">%s just posted a new cat photo !</string>
+    <string name="s_just_liked_your_photo">%s just liked your photo !</string>
+    <string name="s_just_commented_on_your_photo">%s just commented on your photo !</string>
+    <string name="s_just_follow_you">%s just follow you !</string>
+    <string name="to_check_it_right_away_touch_this_notification">To check it right away, touch this notification.</string>
+    <string name="notification_history">Notification History</string>
 </resources>

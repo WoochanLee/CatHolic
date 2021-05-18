@@ -65,7 +65,7 @@
                         app:cardCornerRadius="15dp"
                         app:cardElevation="0dp"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintEnd_toStartOf="@id/ib_notification"
                         app:layout_constraintTop_toTopOf="parent">
 
                         <LinearLayout
@@ -107,6 +107,23 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         tools:visibility="gone" />
+
+                    <ImageButton
+                        android:id="@+id/ib_notification"
+                        android:layout_width="35dp"
+                        android:layout_height="45dp"
+                        android:background="@null"
+                        android:paddingVertical="10dp"
+                        android:paddingStart="0dp"
+                        android:onClick="@{() -> mainViewModel.onClickNotificationList()}"
+                        android:paddingEnd="10dp"
+                        android:scaleType="centerInside"
+                        android:src="@drawable/ic_notification"
+                        android:tint="@color/background_color_sub"
+                        android:visibility="@{mainViewModel.isVisibleNotification() ? View.VISIBLE : View.GONE}"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.appcompat.widget.Toolbar>
 

@@ -4,7 +4,7 @@ import com.woody.cat.holic.data.common.Resource
 
 inline fun <T> handleResourceResult(
     resource: Resource<T>,
-    onSuccess: (T) -> Unit,
+    onSuccess: (T) -> Unit = {},
     onError: (Exception) -> Unit = {},
     onComplete: () -> Unit = {}
 ) {

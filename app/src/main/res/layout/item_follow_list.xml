@@ -6,7 +6,7 @@
 
         <variable
             name="onClickProfile"
-            type="Function2&lt;FollowViewModel, String, Unit>" />
+            type="Function1&lt;String, Unit>" />
 
         <variable
             name="position"
@@ -14,17 +14,15 @@
 
         <variable
             name="viewModel"
-            type="FollowViewModel" />
+            type="com.woody.cat.holic.presentation.main.follow.FollowViewModel" />
 
         <variable
             name="model"
             type="com.woody.cat.holic.framework.paging.item.UserItem" />
 
-        <import type="com.woody.cat.holic.presentation.main.follow.FollowViewModel" />
-
         <import type="android.view.View" />
 
-        <import type="kotlin.jvm.functions.Function2" />
+        <import type="kotlin.jvm.functions.Function1" />
 
         <import type="kotlin.Unit" />
     </data>
@@ -35,7 +33,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:foreground="?android:selectableItemBackground"
-        android:onClick="@{() -> onClickProfile.invoke(viewModel, model.userId)}">
+        android:onClick="@{() -> onClickProfile.invoke(model.userId)}">
 
         <LinearLayout
             android:layout_width="match_parent"

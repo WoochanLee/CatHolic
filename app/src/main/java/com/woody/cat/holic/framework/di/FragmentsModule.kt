@@ -3,6 +3,7 @@ package com.woody.cat.holic.framework.di
 import com.woody.cat.holic.presentation.main.follow.FollowFragment
 import com.woody.cat.holic.presentation.main.gallery.GalleryFragment
 import com.woody.cat.holic.presentation.main.like.LikeFragment
+import com.woody.cat.holic.presentation.main.notification.NotificationListDialog
 import com.woody.cat.holic.presentation.main.posting.comment.CommentDialog
 import com.woody.cat.holic.presentation.main.posting.detail.PostingDetailDialog
 import com.woody.cat.holic.presentation.main.posting.likelist.LikeListDialog
@@ -45,4 +46,7 @@ abstract class FragmentsModule {
 
     @ContributesAndroidInjector
     abstract fun contributePhotoZoomDialog(): PhotoZoomDialog
+
+    @ContributesAndroidInjector
+    abstract fun contributeNotificationListDialog(): NotificationListDialog
 }
