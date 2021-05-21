@@ -3,7 +3,7 @@ package com.woody.cat.holic.domain
 data class Posting(
     val postingId: String? = null,
     val userId: String,
-    val downloadUrl: String,
+    val imageUrls: List<String> = listOf(),
     val likeCount: Int = 0,
     val likedUserIds: List<String> = listOf(),
     val reportCount: Int = 0,

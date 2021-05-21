@@ -19,11 +19,11 @@ class PhotoDownloadService @Inject constructor() : LifecycleService() {
     companion object {
         private const val NOTIFICATION_CHANNEL_ID_PHOTO_DOWNLOAD = "NOTIFICATION_CHANNEL_ID_PHOTO_DOWNLOAD"
         private const val NOTIFICATION_ID = 1234
-        private const val KEY_IMAGE_DOWNLOAD_URL = "KEY_IMAGE_DOWNLOAD_URL"
+        private const val KEY_IMAGE_DOWNLOAD_URLS = "KEY_IMAGE_DOWNLOAD_URL"
 
-        fun getIntent(context: Context, imageDownloadUrl: String): Intent {
+        fun getIntent(context: Context, imageDownloadUrls: ArrayList<String>): Intent {
             return Intent(context, PhotoDownloadService::class.java).apply {
-                putExtra(KEY_IMAGE_DOWNLOAD_URL, imageDownloadUrl)
+                putExtra(KEY_IMAGE_DOWNLOAD_URLS, imageDownloadUrls)
             }
         }
     }
@@ -72,12 +72,14 @@ class PhotoDownloadService @Inject constructor() : LifecycleService() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
 
-        val imageDownloadUrl = intent?.getStringExtra(KEY_IMAGE_DOWNLOAD_URL) ?: run {
+        val imageDownloadUrls = intent?.getStringArrayListExtra(KEY_IMAGE_DOWNLOAD_URLS) ?: run {
             stopSelf()
             return START_NOT_STICKY
         }
 
-        viewModel.startDownloadPhoto(imageDownloadUrl)
+        imageDownloadUrls.forEach { downloadUrl ->
+            viewModel.startDownloadPhoto(downloadUrl)
+        }
 
         return START_NOT_STICKY
     }

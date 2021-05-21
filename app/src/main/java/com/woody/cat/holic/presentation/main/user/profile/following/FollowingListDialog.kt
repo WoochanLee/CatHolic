@@ -22,10 +22,12 @@ class FollowingListDialog : DaggerDialogFragment() {
 
     companion object {
         fun newInstance(fragmentManager: FragmentManager, followingList: List<String>) {
-            Builder()
-                .setFollowingUserList(followingList)
-                .create()
-                .show(fragmentManager, FollowingListDialog::class.java.name)
+            if (fragmentManager.findFragmentByTag(FollowingListDialog::class.java.name) == null) {
+                Builder()
+                    .setFollowingUserList(followingList)
+                    .create()
+                    .show(fragmentManager, FollowingListDialog::class.java.name)
+            }
         }
     }
 

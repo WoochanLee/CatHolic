@@ -39,8 +39,12 @@ class UploadActivity : BaseActivity() {
     private var cropResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
             CropImage.getActivityResult(result.data)?.getUriFilePath(this, true)?.let { imageUri ->
-                viewModel.addPreviewData(listOf(imageUri))
+                viewModel.addPreviewData(imageUri)
                 refreshAdapterStatus()
+                viewModel.previewData.value?.size?.takeIf { it > 0 }?.let { lastPosition ->
+                    scrollToTargetSmallPreviewItem(lastPosition)
+                    moveToTargetPreviewPage(lastPosition)
+                }
             }
         }
     }
@@ -121,6 +125,10 @@ class UploadActivity : BaseActivity() {
 
     private fun moveToTargetPreviewPage(targetPage: Int) {
         binding.vpUploadBig.setCurrentItem(targetPage, true)
+    }
+
+    private fun scrollToTargetSmallPreviewItem(position: Int) {
+        binding.rvUploadSmall.smoothScrollToPosition(position)
     }
 
     private fun removeTargetPreviewPage(targetPage: Int) {

@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
@@ -14,6 +15,7 @@ import com.woody.cat.holic.framework.base.observeEvent
 import com.woody.cat.holic.framework.base.shareDynamicLink
 import com.woody.cat.holic.framework.paging.item.PostingItem
 import com.woody.cat.holic.presentation.main.MainViewModel
+import com.woody.cat.holic.presentation.main.posting.PostingItemAdapter
 import com.woody.cat.holic.presentation.main.posting.comment.CommentDialog
 import dagger.android.support.DaggerDialogFragment
 import javax.inject.Inject
@@ -22,10 +24,12 @@ class PostingDetailDialog @Inject constructor() : DaggerDialogFragment() {
 
     companion object {
         fun newInstance(fragmentManager: FragmentManager, postingItem: PostingItem) {
-            Builder()
-                .setPostingItem(postingItem)
-                .create()
-                .show(fragmentManager, PostingDetailDialog::class.java.name)
+            if (fragmentManager.findFragmentByTag(PostingDetailDialog::class.java.name) == null) {
+                Builder()
+                    .setPostingItem(postingItem)
+                    .create()
+                    .show(fragmentManager, PostingDetailDialog::class.java.name)
+            }
         }
     }
 
@@ -38,6 +42,8 @@ class PostingDetailDialog @Inject constructor() : DaggerDialogFragment() {
     private lateinit var postingDetailViewModel: PostingDetailViewModel
 
     private var postingItem: PostingItem? = null
+
+    private lateinit var postingItemAdapter: PostingItemAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -80,6 +86,21 @@ class PostingDetailDialog @Inject constructor() : DaggerDialogFragment() {
             eventSharePosting.observeEvent(viewLifecycleOwner, { dynamicLink ->
                 context?.shareDynamicLink(R.string.I_really_want_to_show_you_this_cat, dynamicLink)
             })
+
+            isEnabledSwipe.observe(viewLifecycleOwner, { isEnabledSwipe ->
+                binding.vpPostingDetail.isUserInputEnabled = isEnabledSwipe
+            })
+        }
+
+        postingItemAdapter = PostingItemAdapter(
+            lifecycleOwner = this,
+            pageIndicatorView = binding.pivPostingDetail,
+            scaleType = ImageView.ScaleType.FIT_CENTER,
+            onClickPosting = { postingDetailViewModel.onClickPostingDetailImage() }
+        ).also { postingItemViewPagerAdapter ->
+            binding.vpPostingDetail.adapter = postingItemViewPagerAdapter
+            binding.vpPostingDetail.registerOnPageChangeCallback(postingItemViewPagerAdapter.pageChangeListener)
+            postingItemViewPagerAdapter.refreshItem(postingItem)
         }
     }
 

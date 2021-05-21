@@ -83,13 +83,10 @@ class UploadViewModel @Inject constructor(
         emit(true)
     }
 
-    fun addPreviewData(data: List<String>) {
-        _previewData.value = data.map { UploadItem(imageUri = it) }
-            .toMutableList()
-            .apply { addAll(_previewData.value ?: emptyList()) }
+    fun addPreviewData(imageUri: String) {
+        _previewData.value = (_previewData.value ?: mutableListOf()).apply { add(UploadItem(imageUri = imageUri)) }
 
         handleSelectedPhotos()
-
         refreshUpdatePostingButtonEnableStatus()
     }
 
@@ -141,12 +138,14 @@ class UploadViewModel @Inject constructor(
         _isLoading.postValue(true)
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                val uploadPostingItemList = previewData.value
+                val imageUrls = previewData.value
                     ?.filter { it.imageDownloadUrl.isNotEmpty() }
-                    ?.map { Posting(userId = userId, downloadUrl = it.imageDownloadUrl) }
+                    ?.map { it.imageDownloadUrl }
                     ?: listOf()
 
-                handleResourceResult(addPosting(userId, uploadPostingItemList), onSuccess = {
+                val posting = Posting(userId = userId, imageUrls = imageUrls)
+
+                handleResourceResult(addPosting(userId, posting), onSuccess = {
                     _eventShowToast.emit(R.string.success_to_posting)
                     _eventFinish.emit()
                     refreshEventBus.emitEvent(GlobalRefreshEvent.UploadPostingEvent)

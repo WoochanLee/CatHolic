@@ -45,7 +45,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:scaleType="centerCrop"
-                    app:imageUrl="@{model.downloadUrl}"
+                    app:imageUrl="@{model.imageUrls[0]}"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:src="@drawable/ic_toyger_cat"
                     tools:tint="@color/background_color_sub" />

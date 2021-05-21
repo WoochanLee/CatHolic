@@ -20,11 +20,13 @@ class PhotoZoomDialog : DaggerDialogFragment() {
         private const val KEY_IMAGE_URL = "KEY_IMAGE_URL"
 
         fun newInstance(fragmentManager: FragmentManager, imageUrl: String) {
-            PhotoZoomDialog().apply {
-                arguments = Bundle().apply {
-                    putString(KEY_IMAGE_URL, imageUrl)
+            if (fragmentManager.findFragmentByTag(PhotoZoomDialog::class.java.name) == null) {
+                PhotoZoomDialog().apply {
+                    arguments = Bundle().apply {
+                        putString(KEY_IMAGE_URL, imageUrl)
+                    }
+                    show(fragmentManager, PhotoZoomDialog::class.java.name)
                 }
-                show(fragmentManager, PhotoZoomDialog::class.java.name)
             }
         }
     }

@@ -16,7 +16,7 @@ interface PostingRepository {
 
     fun changeToNextPostingOrder(postingType: PostingType)
 
-    suspend fun addPosting(userId: String, postings: List<Posting>): Resource<Unit>
+    suspend fun addPosting(userId: String, posting: Posting): Resource<Unit>
 
     suspend fun removePosting(userId: String, postingId: String): Resource<Unit>
 

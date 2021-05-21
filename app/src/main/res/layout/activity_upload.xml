@@ -53,8 +53,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="80dp"
                 android:background="@color/background_color_main"
+                android:fadeScrollbars="false"
                 android:orientation="horizontal"
                 android:overScrollMode="never"
+                android:scrollbars="horizontal"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 tools:listitem="@layout/item_upload_uploaded_image_small" />
 

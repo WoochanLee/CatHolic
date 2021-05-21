@@ -44,17 +44,15 @@ class FirebaseFirestorePostingRepository(private val db: FirebaseFirestore) : Po
         }
     }
 
-    override suspend fun addPosting(userId: String, postings: List<Posting>): Resource<Unit> {
+    override suspend fun addPosting(userId: String, posting: Posting): Resource<Unit> {
         return try {
             db.runTransaction { transaction ->
                 transaction.update(
                     db.collection(COLLECTION_PROFILE_PATH).document(userId),
                     UserDto::postingCount.name,
-                    FieldValue.increment(postings.size.toLong())
+                    FieldValue.increment(1)
                 )
-                postings.forEach { posting ->
-                    transaction.set(db.collection(COLLECTION_POSTING_PATH).document(), posting.mapToPostingDto())
-                }
+                transaction.set(db.collection(COLLECTION_POSTING_PATH).document(), posting.mapToPostingDto())
             }.await()
             Resource.Success(Unit)
         } catch (e: Exception) {

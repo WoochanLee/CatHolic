@@ -15,6 +15,8 @@
         <variable
             name="model"
             type="com.woody.cat.holic.framework.paging.item.PostingItem" />
+
+        <import type="android.view.View" />
     </data>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -26,7 +28,6 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:foreground="?android:selectableItemBackground"
-            android:onClick="@{() -> viewModel.onClickPostingImage(model)}"
             app:cardBackgroundColor="@color/gray"
             app:cardCornerRadius="20dp"
             app:cardElevation="5dp">
@@ -35,15 +36,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <ImageView
-                    android:id="@+id/iv_image"
+                <androidx.viewpager2.widget.ViewPager2
+                    android:id="@+id/vp_image"
                     android:layout_width="match_parent"
                     android:layout_height="400dp"
-                    android:scaleType="centerCrop"
-                    app:imageUrl="@{model.downloadUrl}"
+                    android:onClick="@{() -> viewModel.onClickPostingImage(model)}"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    tools:src="@drawable/ic_toyger_cat"
-                    tools:tint="@color/background_color_sub" />
+                    tools:background="@drawable/ic_toyger_cat" />
 
                 <View
                     android:layout_width="match_parent"
@@ -52,7 +52,7 @@
                     android:background="@color/background_color_main"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <LinearLayout
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:gravity="center_vertical"
@@ -65,7 +65,10 @@
                         android:layout_marginStart="10dp"
                         android:gravity="center"
                         android:onClick="@{() -> viewModel.onClickProfile(model.user.userId)}"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
 
                         <androidx.cardview.widget.CardView
                             android:layout_width="30dp"
@@ -91,7 +94,30 @@
                             android:textSize="15dp"
                             tools:text="Woody" />
                     </LinearLayout>
-                </LinearLayout>
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="5dp"
+                        android:visibility="@{model.imageUrls.size() > 1 ? View.VISIBLE : View.GONE}"
+                        app:cardBackgroundColor="@color/red"
+                        app:cardCornerRadius="20dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="10dp"
+                            android:layout_marginVertical="5dp"
+                            android:text="@{model.imagePositionText}"
+                            android:textColor="@color/text_color"
+                            android:textSize="15dp"
+                            tools:text="1 / 5" />
+
+                    </androidx.cardview.widget.CardView>
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <View
                     android:layout_width="match_parent"
@@ -100,7 +126,25 @@
                     android:background="@color/background_color_main"
                     app:layout_constraintBottom_toBottomOf="parent" />
 
+                <com.rd.PageIndicatorView2
+                    android:id="@+id/piv_gallery_posting"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_marginBottom="5dp"
+                    app:layout_constraintBottom_toTopOf="@id/lyt_gallery_posting_bottom_menu"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:piv_animationType="drop"
+                    app:piv_dynamicCount="true"
+                    app:piv_interactiveAnimation="true"
+                    app:piv_radius="3dp"
+                    app:piv_selectedColor="@color/red"
+                    app:piv_unselectedColor="@color/background_color_main"
+                    app:piv_viewPager="@id/vp_image" />
+
                 <LinearLayout
+                    android:id="@+id/lyt_gallery_posting_bottom_menu"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
@@ -267,7 +311,7 @@
                             android:layout_height="match_parent"
                             android:layout_weight="1"
                             android:foreground="?android:selectableItemBackground"
-                            android:onClick="@{() -> viewModel.onClickShare(model.postingId, model.user.displayName, model.downloadUrl)}">
+                            android:onClick="@{() -> viewModel.onClickShare(model.postingId, model.user.displayName, model.imageUrls[0])}">
 
                             <LinearLayout
                                 android:layout_width="match_parent"

@@ -42,8 +42,8 @@ class MyPhotoActivity : BaseActivity() {
         ActivityResultContracts.RequestPermission()
     ) { isGranted: Boolean ->
         if (isGranted) {
-            myPhotoViewModel.imageUrlWaitingForPermission?.let { imageUrl ->
-                startService(PhotoDownloadService.getIntent(this@MyPhotoActivity, imageDownloadUrl = imageUrl))
+            myPhotoViewModel.imageUrlWaitingForPermission?.let { imageUrls ->
+                startService(PhotoDownloadService.getIntent(this@MyPhotoActivity, imageDownloadUrls = ArrayList(imageUrls)))
             }
         } else {
             Toast.makeText(this, R.string.need_permission_to_download_photos, Toast.LENGTH_LONG).show()
@@ -93,8 +93,8 @@ class MyPhotoActivity : BaseActivity() {
                 startActivity(Intent(this@MyPhotoActivity, UploadActivity::class.java))
             })
 
-            eventStartPhotoDownload.observeEvent(this@MyPhotoActivity, { imageUrl ->
-                checkPermissionAndStartPhotoDownloadService(imageUrl)
+            eventStartPhotoDownload.observeEvent(this@MyPhotoActivity, { imageUrls ->
+                checkPermissionAndStartPhotoDownloadService(imageUrls)
             })
 
             eventShowDeleteWarningDialog.observeEvent(this@MyPhotoActivity, { (userId, postingId) ->
@@ -119,16 +119,16 @@ class MyPhotoActivity : BaseActivity() {
         initToolbar()
     }
 
-    private fun checkPermissionAndStartPhotoDownloadService(imageUrl: String) {
+    private fun checkPermissionAndStartPhotoDownloadService(imageUrls: List<String>) {
         val isPermissionGranted = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) { //TODO: check is it right >= Q (or P?)
             true
         } else {
             ContextCompat.checkSelfPermission(this, WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
         }
         if (isPermissionGranted) {
-            startService(PhotoDownloadService.getIntent(this@MyPhotoActivity, imageDownloadUrl = imageUrl))
+            startService(PhotoDownloadService.getIntent(this@MyPhotoActivity, imageDownloadUrls = ArrayList(imageUrls)))
         } else {
-            myPhotoViewModel.imageUrlWaitingForPermission = imageUrl
+            myPhotoViewModel.imageUrlWaitingForPermission = imageUrls
             requestPermissionLauncher.launch(WRITE_EXTERNAL_STORAGE)
         }
     }

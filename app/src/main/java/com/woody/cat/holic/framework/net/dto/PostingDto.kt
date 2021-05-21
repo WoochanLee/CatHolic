@@ -7,7 +7,7 @@ import java.util.*
 
 data class PostingDto(
     val userId: String = "",
-    val downloadUrl: String? = null,
+    val imageUrls: List<String> = listOf(),
     val likeCount: Int = 0,
     val likedUserIds: List<String> = listOf(),
     val reportCount: Int = 0,
@@ -27,7 +27,7 @@ data class PostingDto(
 fun Posting.mapToPostingDto(): PostingDto {
     return PostingDto(
         userId = userId,
-        downloadUrl = downloadUrl,
+        imageUrls = imageUrls,
         likeCount = likeCount,
         likedUserIds = likedUserIds,
         reportCount = reportCount,
@@ -43,7 +43,7 @@ fun Posting.mapToPostingDto(): PostingDto {
 fun PostingDto.mapToPosting(postingId: String): Posting {
     return Posting(
         userId = userId,
-        downloadUrl = downloadUrl ?: "",
+        imageUrls = imageUrls,
         likeCount = likeCount,
         likedUserIds = likedUserIds,
         reportCount = reportCount,

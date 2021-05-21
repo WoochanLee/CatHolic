@@ -38,10 +38,12 @@ class CommentDialog : DaggerDialogFragment() {
 
     companion object {
         fun newInstance(fragmentManager: FragmentManager, postingItem: PostingItem) {
-            Builder()
-                .setPostingItem(postingItem)
-                .create()
-                .show(fragmentManager, CommentDialog::class.java.name)
+            if (fragmentManager.findFragmentByTag(CommentDialog::class.java.name) == null) {
+                Builder()
+                    .setPostingItem(postingItem)
+                    .create()
+                    .show(fragmentManager, CommentDialog::class.java.name)
+            }
         }
     }
 

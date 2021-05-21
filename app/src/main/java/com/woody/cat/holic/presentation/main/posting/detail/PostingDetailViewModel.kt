@@ -33,8 +33,12 @@ class PostingDetailViewModel @Inject constructor(
     private val _isMenuVisible = MutableLiveData(true)
     val isMenuVisible: LiveData<Boolean> get() = _isMenuVisible
 
+    private val _isEnabledSwipe = MutableLiveData(true)
+    val isEnabledSwipe: LiveData<Boolean> get() = _isEnabledSwipe
+
     fun onClickPostingDetailImage() {
         _isMenuVisible.postValue(isMenuVisible.value != true)
+        _isEnabledSwipe.postValue(isEnabledSwipe.value != true)
     }
 
     fun onClickComment() {

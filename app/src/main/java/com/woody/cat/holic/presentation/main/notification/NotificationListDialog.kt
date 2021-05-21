@@ -23,7 +23,9 @@ class NotificationListDialog : DaggerDialogFragment() {
 
     companion object {
         fun newInstance(fragmentManager: FragmentManager) {
-            NotificationListDialog().show(fragmentManager, NotificationListDialog::class.java.name)
+            if (fragmentManager.findFragmentByTag(NotificationListDialog::class.java.name) == null) {
+                NotificationListDialog().show(fragmentManager, NotificationListDialog::class.java.name)
+            }
         }
     }
 

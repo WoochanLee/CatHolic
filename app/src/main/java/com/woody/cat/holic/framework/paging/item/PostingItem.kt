@@ -7,7 +7,7 @@ abstract class RecyclerViewItem(open val postingId: String)
 
 data class PostingItem(
     val user: UserItem,
-    val downloadUrl: String,
+    val imageUrls: List<String>,
     val likedUserIds: List<String>,
     val likeCount: MutableLiveData<Int>,
     val currentUserLiked: MutableLiveData<Boolean>,
@@ -17,7 +17,8 @@ data class PostingItem(
     val reportCount: Int,
     override val postingId: String,
     val created: String,
-    val updated: String
+    val updated: String,
+    val imagePositionText: MutableLiveData<String>
 ): RecyclerViewItem(postingId)
 
 class AdItem(postingId: String): RecyclerViewItem(postingId)
@@ -25,7 +26,7 @@ class AdItem(postingId: String): RecyclerViewItem(postingId)
 fun Posting.mapToPostingItem(currentUserId: String?): PostingItem {
     return PostingItem(
         user = UserItem(userId = userId),
-        downloadUrl = downloadUrl,
+        imageUrls = imageUrls,
         likedUserIds = likedUserIds,
         likeCount = MutableLiveData(likeCount),
         currentUserLiked = if (currentUserId != null) MutableLiveData(likedUserIds.contains(currentUserId)) else MutableLiveData(false),
@@ -35,6 +36,7 @@ fun Posting.mapToPostingItem(currentUserId: String?): PostingItem {
         reportCount = reportCount,
         postingId = postingId ?: "",
         created = created ?: "",
-        updated = updated ?: ""
+        updated = updated ?: "",
+        imagePositionText = MutableLiveData("1 / ${imageUrls.size}")
     )
 }

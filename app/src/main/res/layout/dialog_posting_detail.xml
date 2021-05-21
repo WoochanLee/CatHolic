@@ -23,15 +23,13 @@
         android:background="@color/black"
         android:orientation="vertical">
 
-        <com.github.chrisbanes.photoview.PhotoView
-            android:id="@+id/pv_posting_detail_image"
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/vp_posting_detail"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:onClick="@{() -> postingDetailViewModel.onClickPostingDetailImage()}"
-            app:imageUrl="@{postingDetailViewModel.postingItem.downloadUrl}"
-            tools:src="@drawable/ic_toyger_cat" />
+            android:layout_height="match_parent" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/lyt_posting_detail_top_menu"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:orientation="horizontal"
@@ -88,7 +86,48 @@
             </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+        <androidx.cardview.widget.CardView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            app:cardBackgroundColor="@color/red"
+            android:layout_marginTop="10dp"
+            android:visibility="@{postingDetailViewModel.postingItem.imageUrls.size() > 1 ? View.VISIBLE : View.GONE}"
+            app:cardCornerRadius="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/lyt_posting_detail_top_menu">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginVertical="5dp"
+                android:text="@{postingDetailViewModel.postingItem.imagePositionText}"
+                android:textColor="@color/white"
+                android:textSize="15dp"
+                tools:text="1 / 5" />
+
+        </androidx.cardview.widget.CardView>
+
+        <com.rd.PageIndicatorView2
+            android:id="@+id/piv_posting_detail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginBottom="5dp"
+            app:layout_constraintBottom_toTopOf="@id/lyt_posting_detail_bottom_menu"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:piv_animationType="drop"
+            app:piv_dynamicCount="true"
+            app:piv_interactiveAnimation="true"
+            app:piv_radius="3dp"
+            app:piv_selectedColor="@color/red"
+            app:piv_unselectedColor="@color/white"
+            app:piv_viewPager="@id/vp_posting_detail" />
+
         <LinearLayout
+            android:id="@+id/lyt_posting_detail_bottom_menu"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -256,7 +295,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:foreground="?android:selectableItemBackground"
-                    android:onClick="@{() -> postingDetailViewModel.onClickShare(postingDetailViewModel.postingItem.postingId, postingDetailViewModel.postingItem.user.displayName, postingDetailViewModel.postingItem.downloadUrl)}">
+                    android:onClick="@{() -> postingDetailViewModel.onClickShare(postingDetailViewModel.postingItem.postingId, postingDetailViewModel.postingItem.user.displayName, postingDetailViewModel.postingItem.imageUrls[0])}">
 
                     <LinearLayout
                         android:layout_width="match_parent"

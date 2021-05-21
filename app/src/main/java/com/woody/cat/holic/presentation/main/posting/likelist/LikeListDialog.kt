@@ -23,10 +23,12 @@ class LikeListDialog : DaggerDialogFragment() {
 
     companion object {
         fun newInstance(fragmentManager: FragmentManager, postingItem: PostingItem) {
-            Builder()
-                .setLikeUserList(postingItem.likedUserIds)
-                .create()
-                .show(fragmentManager, LikeListDialog::class.java.name)
+            if (fragmentManager.findFragmentByTag(LikeListDialog::class.java.name) == null) {
+                Builder()
+                    .setLikeUserList(postingItem.likedUserIds)
+                    .create()
+                    .show(fragmentManager, LikeListDialog::class.java.name)
+            }
         }
     }
 
