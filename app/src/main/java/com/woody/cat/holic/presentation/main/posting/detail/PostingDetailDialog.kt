@@ -86,10 +86,6 @@ class PostingDetailDialog @Inject constructor() : DaggerDialogFragment() {
             eventSharePosting.observeEvent(viewLifecycleOwner, { dynamicLink ->
                 context?.shareDynamicLink(R.string.I_really_want_to_show_you_this_cat, dynamicLink)
             })
-
-            isEnabledSwipe.observe(viewLifecycleOwner, { isEnabledSwipe ->
-                binding.vpPostingDetail.isUserInputEnabled = isEnabledSwipe
-            })
         }
 
         postingItemAdapter = PostingItemAdapter(

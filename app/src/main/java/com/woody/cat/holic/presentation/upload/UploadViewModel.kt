@@ -1,5 +1,6 @@
 package com.woody.cat.holic.presentation.upload
 
+import android.net.Uri
 import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -69,6 +70,8 @@ class UploadViewModel @Inject constructor(
 
     private val _isLoading = MutableLiveData(false)
     val isLoading: LiveData<Boolean> get() = _isLoading
+
+    val waitingForCropImageUriList = mutableListOf<Uri>()
 
     private val updatePostingButtonEnableStatus = flow {
         if (previewData.value?.size == 0) {

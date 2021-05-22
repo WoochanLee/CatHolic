@@ -103,4 +103,7 @@
     <string name="s_just_follow_you">%s just follow you !</string>
     <string name="to_check_it_right_away_touch_this_notification">To check it right away, touch this notification.</string>
     <string name="notification_history">Notification History</string>
+    <string name="all">All</string>
+    <string name="selection_full">Selection full. Deselect an image to choose another.</string>
+    <string name="please_select_photos">Please select photos!</string>
 </resources>

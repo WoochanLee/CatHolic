@@ -19,7 +19,8 @@
         android:largeHeap="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.CatHolic">
+        android:theme="@style/Theme.CatHolic"
+        tools:replace="android:theme">
 
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
@@ -87,6 +88,6 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/Base.Theme.AppCompat" />
-    </application>
 
+    </application>
 </manifest>

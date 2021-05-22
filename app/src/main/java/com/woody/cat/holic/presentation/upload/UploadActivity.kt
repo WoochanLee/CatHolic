@@ -1,14 +1,21 @@
 package com.woody.cat.holic.presentation.upload
 
 import android.app.Activity
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
 import com.canhub.cropper.CropImage
 import com.canhub.cropper.CropImageView
+import com.sangcomz.fishbun.FishBun
+import com.sangcomz.fishbun.FishBun.Companion.INTENT_PATH
+import com.sangcomz.fishbun.MimeType
+import com.sangcomz.fishbun.adapter.image.impl.GlideAdapter
 import com.woody.cat.holic.R
 import com.woody.cat.holic.databinding.ActivityUploadBinding
 import com.woody.cat.holic.framework.base.BaseActivity
@@ -45,7 +52,11 @@ class UploadActivity : BaseActivity() {
                     scrollToTargetSmallPreviewItem(lastPosition)
                     moveToTargetPreviewPage(lastPosition)
                 }
-            }
+
+                checkAndStartCropImage()
+            } ?: viewModel.waitingForCropImageUriList.clear()
+        } else {
+            viewModel.waitingForCropImageUriList.clear()
         }
     }
 
@@ -137,14 +148,42 @@ class UploadActivity : BaseActivity() {
     }
 
     private fun getAlbumPhotos(currentSelectedImageCount: Int) {
-        if(currentSelectedImageCount >= ALBUM_MAX_SELECT_COUNT) {
+        if (currentSelectedImageCount >= ALBUM_MAX_SELECT_COUNT) {
             return
         }
 
-        val intent = CropImage.activity()
+        FishBun.with(this@UploadActivity)
+            .setImageAdapter(GlideAdapter())
+            .setMaxCount(ALBUM_MAX_SELECT_COUNT - currentSelectedImageCount)
+            .setMinCount(1)
+            .setActionBarColor(
+                ContextCompat.getColor(this@UploadActivity, R.color.black),
+                ContextCompat.getColor(this@UploadActivity, R.color.black),
+                false
+            )
+            .setActionBarTitleColor(ContextCompat.getColor(this@UploadActivity, R.color.white))
+            .setPickerSpanCount(3)
+            .setAlbumSpanCount(1, 1)
+            .setButtonInAlbumActivity(false)
+            .setAllViewTitle(getString(R.string.all))
+            .textOnImagesSelectionLimitReached(getString(R.string.selection_full))
+            .setActionBarTitle(getString(R.string.select_photo))
+            .textOnNothingSelected(getString(R.string.please_select_photos))
+            .exceptMimeType(listOf(MimeType.GIF))
+            .startAlbum()
+    }
+
+    private fun checkAndStartCropImage() {
+        if (viewModel.waitingForCropImageUriList.size == 0) {
+            return
+        }
+
+        val intent = CropImage.activity(viewModel.waitingForCropImageUriList[0])
             .setOutputCompressQuality(100)
             .setGuidelines(CropImageView.Guidelines.ON)
             .getIntent(this)
+
+        viewModel.waitingForCropImageUriList.removeAt(0)
 
         cropResultLauncher.launch(intent)
     }
@@ -163,5 +202,17 @@ class UploadActivity : BaseActivity() {
         }
 
         super.onBackPressed()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        when (requestCode) {
+            FishBun.FISHBUN_REQUEST_CODE -> if (resultCode == RESULT_OK) {
+                val path = data?.getParcelableArrayListExtra<Uri>(INTENT_PATH) ?: emptyList()
+
+                viewModel.waitingForCropImageUriList.addAll(path.toList())
+                checkAndStartCropImage()
+            }
+        }
     }
 }
