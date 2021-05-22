@@ -71,8 +71,8 @@ class LikeViewModel @Inject constructor(
     private fun initEventBusSubscribe() {
         viewModelScope.launch {
             refreshEventBus.subscribeEvent(
-                GlobalRefreshEvent.PostingLikedChangeEvent,
-                GlobalRefreshEvent.DeletePostingEvent
+                GlobalRefreshEvent.POSTING_LIKED_CHANGE_EVENT,
+                GlobalRefreshEvent.DELETE_POSTING_EVENT
             ) {
                 initData()
             }

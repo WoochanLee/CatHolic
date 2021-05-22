@@ -64,8 +64,8 @@ class GalleryViewModel @Inject constructor(
     private fun initEventBusSubscribe() {
         viewModelScope.launch {
             refreshEventBus.subscribeEvent(
-                GlobalRefreshEvent.UploadPostingEvent,
-                GlobalRefreshEvent.DeletePostingEvent
+                GlobalRefreshEvent.UPLOAD_POSTING_EVENT,
+                GlobalRefreshEvent.DELETE_POSTING_EVENT
             ) {
                 initData()
             }

@@ -98,6 +98,11 @@ class MainActivity : BaseActivity() {
 
         signViewModel = ViewModelProvider(this, viewModelFactory).get(SignViewModel::class.java).apply {
             binding.signViewModel = this
+
+            eventBlockedUserAndFinish.observeEvent(this@MainActivity, {
+                Toast.makeText(this@MainActivity, R.string.your_account_has_been_blocked, Toast.LENGTH_LONG).show()
+                finish()
+            })
         }
 
         userViewModel = ViewModelProvider(this, viewModelFactory).get(UserViewModel::class.java).apply {
@@ -116,7 +121,7 @@ class MainActivity : BaseActivity() {
             })
 
             eventShowPostingDetail.observeEvent(this@MainActivity, { postingItem ->
-                PostingDetailDialog.newInstance(supportFragmentManager, postingItem)
+                PostingDetailDialog.newInstance(this@MainActivity, supportFragmentManager, postingItem)
             })
 
             eventShowCommentDialog.observeEvent(this@MainActivity, { postingItem ->

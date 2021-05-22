@@ -53,6 +53,7 @@ fun PostingDto.mapToPosting(postingId: String): Posting {
         commentUserIds = commentUserIds,
         postingId = postingId,
         created = created.makePostingDateString(),
-        updated = updated.makePostingDateString()
+        updated = updated.makePostingDateString(),
+        deleted = deleted
     )
 }

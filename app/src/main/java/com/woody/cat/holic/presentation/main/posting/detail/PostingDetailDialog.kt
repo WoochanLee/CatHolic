@@ -1,10 +1,12 @@
 package com.woody.cat.holic.presentation.main.posting.detail
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
@@ -23,7 +25,13 @@ import javax.inject.Inject
 class PostingDetailDialog @Inject constructor() : DaggerDialogFragment() {
 
     companion object {
-        fun newInstance(fragmentManager: FragmentManager, postingItem: PostingItem) {
+        fun newInstance(context: Context?, fragmentManager: FragmentManager, postingItem: PostingItem) {
+
+            if (postingItem.deleted) {
+                Toast.makeText(context, R.string.the_post_has_been_deleted, Toast.LENGTH_LONG).show()
+                return
+            }
+
             if (fragmentManager.findFragmentByTag(PostingDetailDialog::class.java.name) == null) {
                 Builder()
                     .setPostingItem(postingItem)
@@ -79,12 +87,20 @@ class PostingDetailDialog @Inject constructor() : DaggerDialogFragment() {
             binding.postingDetailViewModel = this
             this.postingItem = postingItem
 
+            addSourceToIsUserFollowed()
+
             eventShowCommentDialog.observeEvent(viewLifecycleOwner, {
                 CommentDialog.newInstance(parentFragmentManager, postingItem)
             })
 
             eventSharePosting.observeEvent(viewLifecycleOwner, { dynamicLink ->
                 context?.shareDynamicLink(R.string.I_really_want_to_show_you_this_cat, dynamicLink)
+            })
+
+            eventShowToast.observeEvent(viewLifecycleOwner, { stringRes ->
+                context?.let { context ->
+                    Toast.makeText(context, stringRes, Toast.LENGTH_SHORT).show()
+                }
             })
         }
 

@@ -106,4 +106,7 @@
     <string name="all">All</string>
     <string name="selection_full">Selection full. Deselect an image to choose another.</string>
     <string name="please_select_photos">Please select photos!</string>
+    <string name="the_post_has_been_deleted">The post has been deleted</string>
+    <string name="this_post_is_blocked_by_many_reports">This post is blocked by many reports.</string>
+    <string name="your_account_has_been_blocked">Your account has been blocked.</string>
 </resources>

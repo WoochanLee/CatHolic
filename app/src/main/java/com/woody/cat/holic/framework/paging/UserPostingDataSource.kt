@@ -4,10 +4,7 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.woody.cat.holic.data.common.Resource
 import com.woody.cat.holic.framework.base.handleResourceResult
-import com.woody.cat.holic.framework.paging.item.AdItem
-import com.woody.cat.holic.framework.paging.item.RecyclerViewItem
-import com.woody.cat.holic.framework.paging.item.UserItem
-import com.woody.cat.holic.framework.paging.item.mapToPostingItem
+import com.woody.cat.holic.framework.paging.item.*
 import com.woody.cat.holic.usecase.posting.GetUserPostings
 import com.woody.cat.holic.usecase.user.GetCurrentUserId
 import com.woody.cat.holic.usecase.user.GetUserProfile
@@ -56,12 +53,8 @@ class UserPostingDataSource(
     private fun getPostingUserProfile(userItem: UserItem) {
         GlobalScope.launch {
             withContext(Dispatchers.IO) {
-                handleResourceResult(getUserProfile(userItem.userId), onSuccess = {
-                    userItem.displayName.postValue(it.displayName)
-                    userItem.userProfilePhotoUrl.postValue(it.userProfilePhotoUrl)
-                    userItem.postingCount.postValue(it.postingCount.toString())
-                    userItem.followerCount.postValue(it.followerCount.toString())
-                    userItem.followingCount.postValue(it.followingCount.toString())
+                handleResourceResult(getUserProfile(userItem.userId), onSuccess = { user ->
+                    user.updateUserItem(userItem)
                 })
             }
         }

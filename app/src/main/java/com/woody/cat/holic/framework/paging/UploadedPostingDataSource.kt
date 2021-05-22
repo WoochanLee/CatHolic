@@ -8,6 +8,7 @@ import com.woody.cat.holic.framework.net.common.NotSignedInException
 import com.woody.cat.holic.framework.paging.item.PostingItem
 import com.woody.cat.holic.framework.paging.item.UserItem
 import com.woody.cat.holic.framework.paging.item.mapToPostingItem
+import com.woody.cat.holic.framework.paging.item.updateUserItem
 import com.woody.cat.holic.usecase.posting.GetUserUploadedPostings
 import com.woody.cat.holic.usecase.user.GetCurrentUserId
 import com.woody.cat.holic.usecase.user.GetUserProfile
@@ -50,12 +51,8 @@ class UploadedPostingDataSource(
     private fun getPostingUserProfile(userItem: UserItem) {
         GlobalScope.launch {
             withContext(Dispatchers.IO) {
-                handleResourceResult(getUserProfile(userItem.userId), onSuccess = {
-                    userItem.displayName.postValue(it.displayName)
-                    userItem.userProfilePhotoUrl.postValue(it.userProfilePhotoUrl)
-                    userItem.postingCount.postValue(it.postingCount.toString())
-                    userItem.followerCount.postValue(it.followerCount.toString())
-                    userItem.followingCount.postValue(it.followingCount.toString())
+                handleResourceResult(getUserProfile(userItem.userId), onSuccess = { user ->
+                    user.updateUserItem(userItem)
                 })
             }
         }

@@ -187,7 +187,7 @@ class ProfileViewModel @Inject constructor(
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 handleResourceResult(updateFollowUser.followUser(myUserId, targetUserId), onSuccess = {
-                    refreshEventBus.emitEvent(GlobalRefreshEvent.FollowUserEvent)
+                    refreshEventBus.emitEvent(GlobalRefreshEvent.FOLLOW_USER_EVENT)
                     getProfile(targetUserId)
                 }, onError = {
                     _eventShowToast.emit(R.string.something_went_wrong)
@@ -205,7 +205,7 @@ class ProfileViewModel @Inject constructor(
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 handleResourceResult(updateFollowUser.unfollowUser(myUserId, targetUserId), onSuccess = {
-                    refreshEventBus.emitEvent(GlobalRefreshEvent.FollowUserEvent)
+                    refreshEventBus.emitEvent(GlobalRefreshEvent.FOLLOW_USER_EVENT)
                     getProfile(targetUserId)
                 }, onError = {
                     _eventShowToast.emit(R.string.something_went_wrong)
@@ -242,7 +242,7 @@ class ProfileViewModel @Inject constructor(
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 handleResourceResult(updateUserProfile.updateUserProfilePhotoUrl(userId, imageUrl), onSuccess = {
-                    refreshEventBus.emitEvent(GlobalRefreshEvent.UpdateUserProfileEvent)
+                    refreshEventBus.emitEvent(GlobalRefreshEvent.UPDATE_USER_PROFILE_EVENT)
                     getProfile(userId)
                 }, onError = {
                     _eventShowToast.emit(R.string.network_fail)
@@ -260,7 +260,7 @@ class ProfileViewModel @Inject constructor(
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 handleResourceResult(updateUserProfile.updateDisplayName(userId, displayName), onSuccess = {
-                    refreshEventBus.emitEvent(GlobalRefreshEvent.UpdateUserProfileEvent)
+                    refreshEventBus.emitEvent(GlobalRefreshEvent.UPDATE_USER_PROFILE_EVENT)
                     getProfile(userId)
                 }, onError = {
                     _eventShowToast.emit(R.string.network_fail)

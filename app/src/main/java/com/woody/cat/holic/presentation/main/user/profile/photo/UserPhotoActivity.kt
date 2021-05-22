@@ -65,7 +65,7 @@ class UserPhotoActivity : BaseActivity() {
             postingAdapter = PostingAdapter(this@UserPhotoActivity, this)
 
             eventShowPostingDetail.observeEvent(this@UserPhotoActivity, { postingItem ->
-                PostingDetailDialog.newInstance(supportFragmentManager, postingItem)
+                PostingDetailDialog.newInstance(this@UserPhotoActivity, supportFragmentManager, postingItem)
             })
 
             eventShowCommentDialog.observeEvent(this@UserPhotoActivity, { postingItem ->

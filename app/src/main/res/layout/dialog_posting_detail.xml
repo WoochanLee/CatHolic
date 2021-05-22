@@ -79,20 +79,47 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
                     android:text="@{postingDetailViewModel.postingItem.user.displayName}"
                     android:textColor="@color/white"
                     android:textSize="15dp"
                     tools:text="Woody" />
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:clickable="@{!postingDetailViewModel.isUserFollowed()}"
+                    android:onClick="@{() -> postingDetailViewModel.onClickFollowButton()}"
+                    android:visibility="@{postingDetailViewModel.isVisibleFollowButton() ? View.VISIBLE : View.GONE}"
+                    app:cardBackgroundColor="@color/red"
+                    app:cardCornerRadius="10dp"
+                    app:cardElevation="10dp"
+                    tools:cardBackgroundColor="@color/red">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginHorizontal="10dp"
+                        android:gravity="center"
+                        android:text="@{postingDetailViewModel.isUserFollowed() ? @string/followed :@string/follow}"
+                        android:textAllCaps="true"
+                        android:textColor="@{postingDetailViewModel.isUserFollowed() ? @color/text_color_reverse : @color/text_color}"
+                        android:textSize="10dp"
+                        android:textStyle="bold"
+                        tools:text="@string/followed"
+                        tools:textColor="@color/text_color_reverse" />
+
+                </androidx.cardview.widget.CardView>
             </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.cardview.widget.CardView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
-            app:cardBackgroundColor="@color/red"
             android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
             android:visibility="@{postingDetailViewModel.postingItem.imageUrls.size() > 1 ? View.VISIBLE : View.GONE}"
+            app:cardBackgroundColor="@color/red"
             app:cardCornerRadius="20dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/lyt_posting_detail_top_menu">
@@ -324,6 +351,23 @@
                 </FrameLayout>
 
             </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:visibility="@{postingDetailViewModel.isLoading() ? View.VISIBLE : View.GONE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="gone">
+
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -51,6 +51,9 @@ class SignViewModel @Inject constructor(
     private val _eventSignInFail = MutableLiveData<Event<Unit>>()
     val eventSignInFail: LiveData<Event<Unit>> get() = _eventSignInFail
 
+    private val _eventBlockedUserAndFinish = MutableLiveData<Event<Unit>>()
+    val eventBlockedUserAndFinish: LiveData<Event<Unit>> get() = _eventBlockedUserAndFinish
+
     private val _isSignedIn = MutableLiveData<Boolean>()
     val isSignIn: LiveData<Boolean> get() = _isSignedIn
 
@@ -125,6 +128,7 @@ class SignViewModel @Inject constructor(
                 val result = getUserProfile(userId)
                 _isLoading.postValue(false)
                 handleResourceResult(result, onSuccess = { user ->
+                    checkBlockedAccount(user)
                     onResult(user)
                 }, onError = {
                     if (it is DataNotExistException) {
@@ -134,6 +138,12 @@ class SignViewModel @Inject constructor(
                     }
                 })
             }
+        }
+    }
+
+    private fun checkBlockedAccount(user: User) {
+        if (user.blocked) {
+            _eventBlockedUserAndFinish.emit()
         }
     }
 
@@ -225,10 +235,10 @@ class SignViewModel @Inject constructor(
     private fun initEventBusSubscribe() {
         viewModelScope.launch {
             refreshEventBus.subscribeEvent(
-                GlobalRefreshEvent.UploadPostingEvent,
-                GlobalRefreshEvent.DeletePostingEvent,
-                GlobalRefreshEvent.FollowUserEvent,
-                GlobalRefreshEvent.UpdateUserProfileEvent
+                GlobalRefreshEvent.UPLOAD_POSTING_EVENT,
+                GlobalRefreshEvent.DELETE_POSTING_EVENT,
+                GlobalRefreshEvent.FOLLOW_USER_EVENT,
+                GlobalRefreshEvent.UPDATE_USER_PROFILE_EVENT
             ) {
                 refreshSignInStatus()
             }

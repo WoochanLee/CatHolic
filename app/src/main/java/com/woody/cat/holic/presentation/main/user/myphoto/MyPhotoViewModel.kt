@@ -128,7 +128,7 @@ class MyPhotoViewModel @Inject constructor(
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 handleResourceResult(removeUserPosting(userId, postingId), onSuccess = {
-                    refreshEventBus.emitEvent(GlobalRefreshEvent.DeletePostingEvent)
+                    refreshEventBus.emitEvent(GlobalRefreshEvent.DELETE_POSTING_EVENT)
                 }, onError = {
                     it.printStackTraceIfDebug()
                     //TODO : handle network error
@@ -140,8 +140,8 @@ class MyPhotoViewModel @Inject constructor(
     private fun initEventBusSubscribe() {
         viewModelScope.launch {
             refreshEventBus.subscribeEvent(
-                GlobalRefreshEvent.UploadPostingEvent,
-                GlobalRefreshEvent.DeletePostingEvent
+                GlobalRefreshEvent.UPLOAD_POSTING_EVENT,
+                GlobalRefreshEvent.DELETE_POSTING_EVENT
             ) {
                 initData()
             }

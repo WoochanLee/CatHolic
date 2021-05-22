@@ -152,7 +152,7 @@
                         android:layout_marginBottom="80dp"
                         android:clickable="@{!viewModel.isUserFollowed()}"
                         android:onClick="@{() -> viewModel.onClickFollowButton()}"
-                        android:visibility="@{viewModel.userProfile != null &amp;&amp; viewModel.isMyProfile() ? View.INVISIBLE : View.VISIBLE}"
+                        android:visibility="@{viewModel.userProfile == null || viewModel.isMyProfile() ? View.INVISIBLE : View.VISIBLE}"
                         app:cardBackgroundColor="@color/red"
                         app:cardCornerRadius="10dp"
                         app:cardElevation="10dp"

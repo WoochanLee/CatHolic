@@ -151,7 +151,7 @@ class UploadViewModel @Inject constructor(
                 handleResourceResult(addPosting(userId, posting), onSuccess = {
                     _eventShowToast.emit(R.string.success_to_posting)
                     _eventFinish.emit()
-                    refreshEventBus.emitEvent(GlobalRefreshEvent.UploadPostingEvent)
+                    refreshEventBus.emitEvent(GlobalRefreshEvent.UPLOAD_POSTING_EVENT)
                 }, onError = {
                     when (it) {
                         is NotSignedInException -> handleNotSignedInUser()

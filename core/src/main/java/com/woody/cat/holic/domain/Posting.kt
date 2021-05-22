@@ -12,5 +12,6 @@ data class Posting(
     val commentIds: List<String> = listOf(),
     val commentUserIds: List<String> = listOf(),
     val created: String? = null,
-    val updated: String? = null
+    val updated: String? = null,
+    val deleted: Boolean = false
 )

@@ -18,6 +18,7 @@ data class PostingItem(
     override val postingId: String,
     val created: String,
     val updated: String,
+    val deleted: Boolean,
     val imagePositionText: MutableLiveData<String>
 ): RecyclerViewItem(postingId)
 
@@ -37,6 +38,7 @@ fun Posting.mapToPostingItem(currentUserId: String?): PostingItem {
         postingId = postingId ?: "",
         created = created ?: "",
         updated = updated ?: "",
+        deleted = deleted,
         imagePositionText = MutableLiveData("1 / ${imageUrls.size}")
     )
 }

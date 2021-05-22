@@ -10,6 +10,7 @@ import com.woody.cat.holic.framework.manager.FirebaseDynamicLinkManager
 import com.woody.cat.holic.framework.paging.item.PostingItem
 import com.woody.cat.holic.framework.paging.item.UserItem
 import com.woody.cat.holic.framework.paging.item.mapToPostingItem
+import com.woody.cat.holic.framework.paging.item.updateUserItem
 import com.woody.cat.holic.usecase.posting.GetSinglePosting
 import com.woody.cat.holic.usecase.posting.UpdateLikedPosting
 import com.woody.cat.holic.usecase.share.GetDynamicLink
@@ -102,7 +103,7 @@ class PostingViewModel @Inject constructor(
                 } else {
                     updateLikedPosting.likePosting(userId, postingItem.postingId)
                 }
-                refreshEventBus.emitEvent(GlobalRefreshEvent.PostingLikedChangeEvent)
+                refreshEventBus.emitEvent(GlobalRefreshEvent.POSTING_LIKED_CHANGE_EVENT)
             }
         }
     }
@@ -128,12 +129,8 @@ class PostingViewModel @Inject constructor(
     private fun getPostingUserProfile(userItem: UserItem) {
         GlobalScope.launch {
             withContext(Dispatchers.IO) {
-                handleResourceResult(getUserProfile(userItem.userId), onSuccess = {
-                    userItem.displayName.postValue(it.displayName)
-                    userItem.userProfilePhotoUrl.postValue(it.userProfilePhotoUrl)
-                    userItem.postingCount.postValue(it.postingCount.toString())
-                    userItem.followerCount.postValue(it.followerCount.toString())
-                    userItem.followingCount.postValue(it.followingCount.toString())
+                handleResourceResult(getUserProfile(userItem.userId), onSuccess = { user ->
+                    user.updateUserItem(userItem)
                 })
             }
         }

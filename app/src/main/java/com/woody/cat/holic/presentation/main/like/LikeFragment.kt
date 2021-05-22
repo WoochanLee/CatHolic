@@ -81,7 +81,7 @@ class LikeFragment : BaseFragment() {
             postingAdapter = LikePostingAdapter(viewLifecycleOwner, this)
 
             eventShowPostingDetail.observeEvent(viewLifecycleOwner, { postingItem ->
-                PostingDetailDialog.newInstance(parentFragmentManager, postingItem)
+                PostingDetailDialog.newInstance(context, parentFragmentManager, postingItem)
             })
 
             eventShowCommentDialog.observeEvent(viewLifecycleOwner, { postingItem ->

@@ -84,7 +84,7 @@ class FollowViewModel @Inject constructor(
     private fun initEventBusSubscribe() {
         viewModelScope.launch {
             getRefreshEventBus.subscribeEvent(
-                GlobalRefreshEvent.FollowUserEvent
+                GlobalRefreshEvent.FOLLOW_USER_EVENT
             ) {
                 initData()
             }

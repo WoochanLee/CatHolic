@@ -131,7 +131,7 @@ class MainViewModel @Inject constructor(
                 } else {
                     updateLikedPosting.likePosting(userId, postingItem.postingId)
                 }
-                refreshEventBus.emitEvent(GlobalRefreshEvent.PostingLikedChangeEvent)
+                refreshEventBus.emitEvent(GlobalRefreshEvent.POSTING_LIKED_CHANGE_EVENT)
             }
         }
     }

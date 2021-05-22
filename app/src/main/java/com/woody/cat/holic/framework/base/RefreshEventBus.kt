@@ -21,10 +21,10 @@ class RefreshEventBus {
 }
 
 enum class GlobalRefreshEvent {
-    PostingLikedChangeEvent,
-    UploadPostingEvent,
-    DeletePostingEvent,
-    FollowUserEvent,
-    UpdateUserProfileEvent,
+    POSTING_LIKED_CHANGE_EVENT,
+    UPLOAD_POSTING_EVENT,
+    DELETE_POSTING_EVENT,
+    FOLLOW_USER_EVENT,
+    UPDATE_USER_PROFILE_EVENT,
 
 }
