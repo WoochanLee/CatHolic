@@ -127,6 +127,10 @@ class MainActivity : BaseActivity() {
             eventShowCommentDialog.observeEvent(this@MainActivity, { postingItem ->
                 CommentDialog.newInstance(supportFragmentManager, postingItem)
             })
+
+            eventShowToast.observeEvent(this@MainActivity, { stringRes ->
+                Toast.makeText(this@MainActivity, stringRes, Toast.LENGTH_SHORT).show()
+            })
         }
 
         if (savedInstanceState == null) {

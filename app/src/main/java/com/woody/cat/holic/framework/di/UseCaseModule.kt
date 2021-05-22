@@ -1,6 +1,9 @@
 package com.woody.cat.holic.framework.di
 
 import com.woody.cat.holic.data.*
+import com.woody.cat.holic.usecase.config.GetForceUpdateVersion
+import com.woody.cat.holic.usecase.config.GetIsServiceAvailable
+import com.woody.cat.holic.usecase.config.RefreshRemoteConfig
 import com.woody.cat.holic.usecase.notification.AddNotification
 import com.woody.cat.holic.usecase.notification.GetNotifications
 import com.woody.cat.holic.usecase.notification.RemoveNotifications
@@ -175,5 +178,20 @@ class UseCaseModule {
     @Provides
     fun provideUpdateNotification(notificationRepository: NotificationRepository): UpdateNotification {
         return UpdateNotification(notificationRepository)
+    }
+
+    @Provides
+    fun provideGetRemoteConfig(remoteConfigRepository: RemoteConfigRepository): RefreshRemoteConfig {
+        return RefreshRemoteConfig(remoteConfigRepository)
+    }
+
+    @Provides
+    fun provideGetIsServiceAvailable(remoteConfigRepository: RemoteConfigRepository): GetIsServiceAvailable {
+        return GetIsServiceAvailable(remoteConfigRepository)
+    }
+
+    @Provides
+    fun provideGetForceUpdateVersion(remoteConfigRepository: RemoteConfigRepository): GetForceUpdateVersion {
+        return GetForceUpdateVersion(remoteConfigRepository)
     }
 }

@@ -101,9 +101,10 @@ class CommentDialog : DaggerDialogFragment() {
                         setLoading(refreshState is LoadState.Loading)
 
                         if (refreshState is LoadState.Error) {
-                            //TODO: handle network error
                             if (refreshState.error is NotSignedInException) {
                                 commentAdapter.submitData(PagingData.empty())
+                            } else {
+                                Toast.makeText(context, R.string.network_fail, Toast.LENGTH_LONG).show()
                             }
                         }
 
@@ -132,6 +133,10 @@ class CommentDialog : DaggerDialogFragment() {
                     clipboard.setPrimaryClip(ClipData.newPlainText(getString(R.string.emoji_comment), emojiComment))
                     Toast.makeText(context, R.string.emoji_comment_copied, Toast.LENGTH_SHORT).show()
                 }
+            })
+
+            eventShowToast.observeEvent(viewLifecycleOwner, { stringRes ->
+                Toast.makeText(context, stringRes, Toast.LENGTH_SHORT).show()
             })
         }
 

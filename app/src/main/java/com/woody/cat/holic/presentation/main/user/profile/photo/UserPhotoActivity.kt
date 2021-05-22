@@ -107,7 +107,7 @@ class UserPhotoActivity : BaseActivity() {
                         setLoading(refreshState is LoadState.Loading)
 
                         if (refreshState is LoadState.Error) {
-                            //TODO: handle network error
+                            Toast.makeText(this@UserPhotoActivity, R.string.network_fail, Toast.LENGTH_LONG).show()
                         }
 
                         if (refreshState is LoadState.NotLoading) {

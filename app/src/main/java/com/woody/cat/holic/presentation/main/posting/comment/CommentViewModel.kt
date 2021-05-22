@@ -1,13 +1,18 @@
 package com.woody.cat.holic.presentation.main.posting.comment
 
+import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
+import com.woody.cat.holic.R
 import com.woody.cat.holic.domain.Comment
-import com.woody.cat.holic.framework.base.*
+import com.woody.cat.holic.framework.base.BaseViewModel
+import com.woody.cat.holic.framework.base.Event
+import com.woody.cat.holic.framework.base.emit
+import com.woody.cat.holic.framework.base.handleResourceResult
 import com.woody.cat.holic.framework.paging.CommentDataSource
 import com.woody.cat.holic.framework.paging.item.PostingItem
 import com.woody.cat.holic.usecase.posting.comment.AddComment
@@ -45,6 +50,9 @@ class CommentViewModel @Inject constructor(
 
     private val _eventCopyEmojiComment = MutableLiveData<Event<String>>()
     val eventCopyEmojiComment: LiveData<Event<String>> get() = _eventCopyEmojiComment
+
+    private val _eventShowToast = MutableLiveData<Event<@StringRes Int>>()
+    val eventShowToast: LiveData<Event<Int>> get() = _eventShowToast
 
     private val _writingEmojiStr = MutableLiveData("")
     val writeEmojiStr: LiveData<String> get() = _writingEmojiStr
@@ -126,8 +134,7 @@ class CommentViewModel @Inject constructor(
                     postingItem.commentCount.apply { postValue((value ?: 0) + 1) }
                     //_eventShowToast.emit("success to add comment")
                 }, onError = {
-                    //TODO: handle network
-                    it.printStackTraceIfDebug()
+                    _eventShowToast.emit(R.string.network_fail)
                 })
             }
         }

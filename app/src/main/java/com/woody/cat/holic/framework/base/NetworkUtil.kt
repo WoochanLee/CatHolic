@@ -14,6 +14,7 @@ inline fun <T> handleResourceResult(
             onComplete()
         }
         is Resource.Error -> {
+            resource.exception.printStackTraceIfDebug()
             onError(resource.exception)
             onComplete()
         }

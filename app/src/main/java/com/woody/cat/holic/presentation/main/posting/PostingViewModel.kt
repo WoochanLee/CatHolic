@@ -1,5 +1,6 @@
 package com.woody.cat.holic.presentation.main.posting
 
+import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -49,6 +50,9 @@ class PostingViewModel @Inject constructor(
 
     private val _eventSharePosting = MutableLiveData<Event<String>>()
     val eventSharePosting: LiveData<Event<String>> get() = _eventSharePosting
+
+    private val _eventShowToast = MutableLiveData<Event<@StringRes Int>>()
+    val eventShowToast: LiveData<Event<Int>> get() = _eventShowToast
 
     fun onClickPostingImage(postingItem: PostingItem) {
         _eventShowPostingDetail.emit(postingItem)
@@ -120,7 +124,7 @@ class PostingViewModel @Inject constructor(
                         _eventShowCommentDialog.emit(postingItem)
                     }
                 }, onError = {
-                    //TODO: handle network error
+                    _eventShowToast.emit(R.string.network_fail)
                 })
             }
         }

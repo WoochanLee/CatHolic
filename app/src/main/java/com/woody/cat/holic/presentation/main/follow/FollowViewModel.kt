@@ -1,11 +1,13 @@
 package com.woody.cat.holic.presentation.main.follow
 
+import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
+import com.woody.cat.holic.R
 import com.woody.cat.holic.framework.base.*
 import com.woody.cat.holic.framework.paging.FollowingListDataSource
 import com.woody.cat.holic.usecase.user.GetCurrentUserId
@@ -36,6 +38,9 @@ class FollowViewModel @Inject constructor(
 
     private val _eventRefreshData = MutableLiveData<Event<Unit>>()
     val eventRefreshData: LiveData<Event<Unit>> get() = _eventRefreshData
+
+    private val _eventShowToast = MutableLiveData<Event<@StringRes Int>>()
+    val eventShowToast: LiveData<Event<Int>> get() = _eventShowToast
 
     private val _isListEmpty = MutableLiveData<Boolean>()
     val isListEmpty: LiveData<Boolean> get() = _isListEmpty
@@ -75,7 +80,7 @@ class FollowViewModel @Inject constructor(
                     setIsListEmpty(user.followingCount == 0)
                     _eventRefreshData.emit()
                 }, onError = {
-                    //TODO: network error handle
+                    _eventShowToast.emit(R.string.network_fail)
                 })
             }
         }

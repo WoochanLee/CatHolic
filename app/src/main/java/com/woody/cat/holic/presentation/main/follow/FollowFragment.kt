@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -48,12 +49,16 @@ class FollowFragment @Inject constructor() : BaseFragment() {
 
             followAdapter = FollowAdapter(viewLifecycleOwner, this)
 
-            eventUserPhotoActivity.observeEvent(this@FollowFragment, { userId ->
+            eventUserPhotoActivity.observeEvent(viewLifecycleOwner, { userId ->
                 startActivity(UserPhotoActivity.getIntent(requireContext(), userId))
             })
 
-            eventRefreshData.observeEvent(this@FollowFragment, {
+            eventRefreshData.observeEvent(viewLifecycleOwner, {
                 initPagingFlow()
+            })
+
+            eventShowToast.observeEvent(viewLifecycleOwner, { stringRes ->
+                Toast.makeText(context, stringRes, Toast.LENGTH_SHORT).show()
             })
 
             viewLifecycleOwner.lifecycleScope.launch {
@@ -64,9 +69,10 @@ class FollowFragment @Inject constructor() : BaseFragment() {
                         setLoading(refreshState is LoadState.Loading)
 
                         if (refreshState is LoadState.Error) {
-                            //TODO: handle network error
                             if (refreshState.error is NotSignedInException) {
                                 followAdapter.submitData(PagingData.empty())
+                            } else {
+                                Toast.makeText(context, R.string.network_fail, Toast.LENGTH_LONG).show()
                             }
                         }
 

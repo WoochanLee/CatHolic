@@ -42,7 +42,7 @@ fun ImageButton.setMyPhotoItemMenuListener(postingItem: PostingItem, myPhotoItem
                 }
 
                 R.id.menu_download -> {
-                    myPhotoItemMenuListener.onClickDownload(postingItem.imageUrls) //TODO
+                    myPhotoItemMenuListener.onClickDownload(postingItem.imageUrls)
                     return@setOnMenuItemClickListener true
                 }
             }

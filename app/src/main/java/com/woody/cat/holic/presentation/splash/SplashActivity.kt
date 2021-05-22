@@ -2,6 +2,8 @@ package com.woody.cat.holic.presentation.splash
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.woody.cat.holic.R
@@ -31,6 +33,25 @@ class SplashActivity : BaseActivity() {
                 eventStartMainActivity.observeEvent(this@SplashActivity, {
                     startActivity(Intent(this@SplashActivity, MainActivity::class.java))
                     finish()
+                })
+
+                eventShowToast.observeEvent(this@SplashActivity, { stringRes ->
+                    Toast.makeText(this@SplashActivity, stringRes, Toast.LENGTH_LONG).show()
+                })
+
+                eventFinishActivity.observeEvent(this@SplashActivity, {
+                    finish()
+                })
+
+                eventServiceNotAvailableDialog.observeEvent(this@SplashActivity, {
+                    AlertDialog.Builder(this@SplashActivity)
+                        .setTitle(getString(R.string.service_maintenance))
+                        .setMessage(getString(R.string.service_is_currently_in_maintenance))
+                        .setPositiveButton(getString(R.string.ok)) { _, _ ->
+                            finish()
+                        }
+                        .setCancelable(false)
+                        .show()
                 })
             }
     }

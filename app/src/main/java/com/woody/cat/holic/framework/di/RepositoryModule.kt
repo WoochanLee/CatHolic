@@ -5,6 +5,8 @@ import android.content.SharedPreferences
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.messaging.FirebaseMessaging
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.woody.cat.holic.data.*
@@ -50,6 +52,16 @@ class RepositoryModule {
         maxDownloadRetryTimeMillis = FirebaseStoragePhotoRepository.MAX_RETRY_TIME_MILLIS
         maxUploadRetryTimeMillis = FirebaseStoragePhotoRepository.MAX_RETRY_TIME_MILLIS
     }.reference
+
+    @Provides
+    @Singleton
+    fun provideFirebaseRemoteConfig() = FirebaseRemoteConfig.getInstance().apply {
+        val configSettings = FirebaseRemoteConfigSettings.Builder()
+            .setMinimumFetchIntervalInSeconds(60)
+            .build()
+
+        setConfigSettingsAsync(configSettings)
+    }
 
     @Provides
     @Singleton
@@ -106,4 +118,8 @@ class RepositoryModule {
     @Provides
     @Singleton
     fun provideAndroidStringResourceManager(context: Context): AndroidStringResourceManager = AndroidStringResourceManager(context)
+
+    @Provides
+    @Singleton
+    fun provideRemoteConfigRepository(firebaseRemoteConfig: FirebaseRemoteConfig): RemoteConfigRepository = FirebaseRemoteConfigRepository(firebaseRemoteConfig)
 }

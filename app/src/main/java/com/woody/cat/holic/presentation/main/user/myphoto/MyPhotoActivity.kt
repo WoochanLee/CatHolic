@@ -71,7 +71,7 @@ class MyPhotoActivity : BaseActivity() {
                         setLoading(refreshState is LoadState.Loading)
 
                         if (refreshState is LoadState.Error) {
-                            //TODO: handle network error
+                            Toast.makeText(this@MyPhotoActivity, R.string.network_fail, Toast.LENGTH_LONG).show()
                         }
 
                         if (refreshState is LoadState.NotLoading) {
@@ -111,6 +111,10 @@ class MyPhotoActivity : BaseActivity() {
                 myPhotoViewModel.changeToNextPostingOrder()
                 myPhotoViewModel.refreshVisiblePostingOrder()
                 postingAdapter.refresh()
+            })
+
+            eventShowToast.observeEvent(this@MyPhotoActivity, { stringRes ->
+                Toast.makeText(this@MyPhotoActivity, stringRes, Toast.LENGTH_SHORT).show()
             })
         }
 
