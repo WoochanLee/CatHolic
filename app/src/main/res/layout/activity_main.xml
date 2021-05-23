@@ -98,7 +98,7 @@
                         android:layout_width="45dp"
                         android:layout_height="45dp"
                         android:background="@null"
-                        android:onClick="@{() -> mainViewModel.onClickProfile(signViewModel.userData.userId)}"
+                        android:onClick="@{() -> mainViewModel.onClickProfileEdit(signViewModel.userData.userId)}"
                         android:padding="10dp"
                         android:scaleType="centerInside"
                         android:src="@drawable/ic_edit"

@@ -78,6 +78,10 @@ class MainActivity : BaseActivity() {
                 moveToLikeTab()
             })
 
+            eventStartProfileActivity.observeEvent(this@MainActivity, { userId ->
+                startActivity(ProfileActivity.getIntent(this@MainActivity, userId))
+            })
+
             eventShowToast.observeEvent(this@MainActivity, { stringRes ->
                 Toast.makeText(this@MainActivity, stringRes, Toast.LENGTH_SHORT).show()
             })

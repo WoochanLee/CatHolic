@@ -29,7 +29,7 @@ class GoogleMLPhotoAnalyzer(private val context: Context) : PhotoAnalyzer {
 
             for (label in labels) {
                 CatHolicLogger.log("detect : ${label.text} , confidence : ${(label.confidence * 100).toInt()}%")
-                if (label.text == DETECT_CAT_TEXT && label.confidence > DETECT_CAT_CONFIDENCE) {
+                if (label.text == DETECT_CAT_TEXT/* && label.confidence > DETECT_CAT_CONFIDENCE*/) {
                     return Resource.Success(true)
                 }
             }

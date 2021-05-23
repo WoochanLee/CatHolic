@@ -137,7 +137,7 @@ class MainViewModel @Inject constructor(
         _eventShowNotificationListDialog.emit()
     }
 
-    fun onClickProfile(userId: String) {
+    fun onClickProfileEdit(userId: String) {
         _eventStartProfileActivity.emit(userId)
     }
 

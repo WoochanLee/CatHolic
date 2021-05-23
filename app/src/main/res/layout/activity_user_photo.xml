@@ -44,19 +44,18 @@
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="2dp"
                         android:text="@{viewModel.userDisplayName}"
-                        android:textAllCaps="true"
                         android:textColor="@color/red"
-                        android:textSize="20dp"
+                        android:textSize="15dp"
                         android:textStyle="bold"
                         tools:text="Woody" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/cat_photo"
+                        android:text="@string/s_posting"
                         android:textAllCaps="true"
                         android:textColor="@color/text_color"
-                        android:textSize="17dp"
+                        android:textSize="13dp"
                         android:textStyle="bold" />
                 </LinearLayout>
 
@@ -117,6 +116,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@color/background_color_main"
+                    android:nestedScrollingEnabled="true"
                     android:scrollbars="none"
                     android:visibility="@{viewModel.isListEmpty() ? View.GONE : View.VISIBLE}"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"

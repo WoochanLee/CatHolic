@@ -171,17 +171,13 @@ class ProfileActivity : BaseActivity() {
             }
 
             addTextChangedListener {
-                val trimText = it?.toString()
-                    ?.run {
-                        if (type == EditTextDialogType.DISPLAY_NAME) trim()
-                        else this
-                    }
+                val text = it?.toString()
                     ?.run {
                         substring(0, min(length, type.maxLength))
                     } ?: ""
-                if (it.toString() != trimText) {
-                    setText(trimText)
-                    setSelection(trimText.length)
+                if (it.toString() != text) {
+                    setText(text)
+                    setSelection(text.length)
                 }
             }
             setOnKeyListener { v, keyCode, _ ->
@@ -198,10 +194,14 @@ class ProfileActivity : BaseActivity() {
             .setView(container)
             .setCancelable(false)
             .setPositiveButton(R.string.ok) { _, _ ->
-                if (type == EditTextDialogType.DISPLAY_NAME && editText.text.toString().isEmpty()) {
+                val text = editText.text.toString().run {
+                    if (type == EditTextDialogType.DISPLAY_NAME) trim()
+                    else this
+                }
+                if (type == EditTextDialogType.DISPLAY_NAME && text.isEmpty()) {
                     Toast.makeText(this, R.string.enter_your_nickname, Toast.LENGTH_SHORT).show()
                 } else {
-                    onConfirm(editText.text.toString())
+                    onConfirm(text)
                 }
             }.setNegativeButton(R.string.cancel, null)
             .show()

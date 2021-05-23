@@ -85,10 +85,6 @@ class PostingDetailDialog @Inject constructor() : DaggerDialogFragment() {
 
         mainViewModel = ViewModelProvider(activity, viewModelFactory).get(MainViewModel::class.java).apply {
             binding.mainViewModel = this
-
-            eventStartProfileActivity.observeEvent(viewLifecycleOwner, { userId ->
-                startActivity(ProfileActivity.getIntent(requireContext(), userId))
-            })
         }
 
         postingDetailViewModel = ViewModelProvider(viewModelStore, viewModelFactory).get(PostingDetailViewModel::class.java).apply {

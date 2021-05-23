@@ -20,21 +20,10 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
--dontwarn com.yanzhenjie.curban.**
--keep class com.yanzhenjie.curban.**{*;}
+-keep class com.woody.cat.holic.domain.** { *; }
+-keepclassmembers class com.woody.cat.holic.domain.** { *; }
 
--dontwarn com.yanzhenjie.loading.**
--keep class com.yanzhenjie.loading.**{*;}
-
--keep class androidx.appcompat.widget.** { *; }
-
--keep class com.woody.cat.holic.framework.db.dao.** { *; }
--keepclassmembers class com.woody.cat.holic.framework.db.dao.** { *; }
-
--keep class com.woody.cat.holic.framework.db.model.** { *; }
--keepclassmembers class com.woody.cat.holic.framework.db.model.** { *; }
-
--keep class com.woody.cat.holic.framework.net.dto.** { *; }
--keepclassmembers class com.woody.cat.holic.framework.net.dto.** { *; }
+-keep class com.woody.cat.holic.data.common.** { *; }
+-keepclassmembers class com.woody.cat.holic.data.common.** { *; }
 
 -keepclassmembers enum * { *; }

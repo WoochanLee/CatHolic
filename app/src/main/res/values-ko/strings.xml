@@ -53,7 +53,7 @@
     <string name="something_went_wrong">알수없는 오류가 발생했어요 !\n잠시후 다시 시도해 주세요</string>
     <string name="photos">사진</string>
     <string name="select_photo">사진 선택</string>
-    <string name="cat_photo">의 고양이 사진</string>
+    <string name="s_posting">의 포스팅</string>
     <string name="new_follower">새로운 팔로워</string>
     <string name="new_posting_from_you_follow">새로운 포스팅</string>
     <string name="new_comment">새로운 댓글</string>

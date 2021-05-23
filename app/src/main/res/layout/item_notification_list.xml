@@ -59,7 +59,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dp"
-                    android:text="@{model.body}"
+                    android:text="@string/to_check_it_right_away_touch_this_notification"
                     android:textColor="@color/text_color"
                     android:textSize="15dp"
                     tools:text="Notification body Notification body Notification body Notification body Notification body" />

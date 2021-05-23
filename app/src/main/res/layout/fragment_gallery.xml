@@ -2,6 +2,7 @@
 <layout>
 
     <data>
+
         <variable
             name="galleryViewModel"
             type="com.woody.cat.holic.presentation.main.gallery.GalleryViewModel" />
@@ -25,6 +26,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/background_color_main"
+                android:nestedScrollingEnabled="true"
                 android:scrollbars="none"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 tools:listitem="@layout/item_gallery_posting" />
