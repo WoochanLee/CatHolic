@@ -434,7 +434,7 @@
                 app:tint="@color/background_color_main" />
 
             <androidx.cardview.widget.CardView
-                android:layout_width="160dp"
+                android:layout_width="165dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="110dp"
                 android:layout_marginTop="300dp"
@@ -465,7 +465,7 @@
                 app:tint="@color/background_color_main" />
 
             <androidx.cardview.widget.CardView
-                android:layout_width="170dp"
+                android:layout_width="220dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="110dp"
                 android:layout_marginTop="400dp"
@@ -496,7 +496,7 @@
                 app:tint="@color/background_color_main" />
 
             <androidx.cardview.widget.CardView
-                android:layout_width="170dp"
+                android:layout_width="220dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="110dp"
                 android:layout_marginTop="500dp"
@@ -524,6 +524,7 @@
                 android:onClick="@{() -> onClickCloseGuide.invoke()}"
                 app:cardCornerRadius="15dp"
                 app:cardElevation="20dp"
+                app:cardBackgroundColor="@color/red"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

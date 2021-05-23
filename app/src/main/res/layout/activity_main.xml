@@ -54,7 +54,7 @@
                         tools:text="GALLERY" />
 
                     <androidx.cardview.widget.CardView
-                        android:layout_width="100dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="34dp"
                         android:layout_marginEnd="10dp"
                         android:foreground="?android:selectableItemBackground"
@@ -71,6 +71,7 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
+                            android:layout_marginHorizontal="12dp"
                             android:gravity="center"
                             android:orientation="horizontal">
 
@@ -102,7 +103,7 @@
                         android:scaleType="centerInside"
                         android:src="@drawable/ic_edit"
                         android:tint="@color/background_color_sub"
-                        android:visibility="@{mainViewModel.isVisibleEditProfile() ? View.VISIBLE : View.GONE}"
+                        android:visibility="@{signViewModel.isSignIn() &amp;&amp; mainViewModel.isVisibleEditProfile() ? View.VISIBLE : View.GONE}"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"

@@ -14,6 +14,9 @@ import com.woody.cat.holic.usecase.photo.UploadPhoto
 import com.woody.cat.holic.usecase.posting.*
 import com.woody.cat.holic.usecase.posting.comment.AddComment
 import com.woody.cat.holic.usecase.posting.comment.GetComments
+import com.woody.cat.holic.usecase.review.AddLikedCountForInAppReview
+import com.woody.cat.holic.usecase.review.GetHaveToShowInAppReview
+import com.woody.cat.holic.usecase.review.SetHaveToShowInAppReview
 import com.woody.cat.holic.usecase.setting.GetAppSetting
 import com.woody.cat.holic.usecase.setting.GetPushToken
 import com.woody.cat.holic.usecase.setting.UpdateAppSetting
@@ -193,5 +196,20 @@ class UseCaseModule {
     @Provides
     fun provideGetForceUpdateVersion(remoteConfigRepository: RemoteConfigRepository): GetForceUpdateVersion {
         return GetForceUpdateVersion(remoteConfigRepository)
+    }
+
+    @Provides
+    fun provideAddLikedCountForInAppReview(settingRepository: SettingRepository): AddLikedCountForInAppReview {
+        return AddLikedCountForInAppReview(settingRepository)
+    }
+
+    @Provides
+    fun provideGetHaveToShowInAppReview(settingRepository: SettingRepository): GetHaveToShowInAppReview {
+        return GetHaveToShowInAppReview(settingRepository)
+    }
+
+    @Provides
+    fun provideSetHaveToShowInAppReview(settingRepository: SettingRepository): SetHaveToShowInAppReview {
+        return SetHaveToShowInAppReview(settingRepository)
     }
 }

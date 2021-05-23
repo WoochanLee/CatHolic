@@ -8,10 +8,7 @@ import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
 import com.woody.cat.holic.data.common.PostingOrder
 import com.woody.cat.holic.data.common.PostingType
-import com.woody.cat.holic.framework.base.BaseViewModel
-import com.woody.cat.holic.framework.base.Event
-import com.woody.cat.holic.framework.base.emit
-import com.woody.cat.holic.framework.base.handleResourceResult
+import com.woody.cat.holic.framework.base.*
 import com.woody.cat.holic.framework.paging.UserPostingDataSource
 import com.woody.cat.holic.usecase.posting.ChangeToNextPostingOrder
 import com.woody.cat.holic.usecase.posting.GetPostingOrder
@@ -28,7 +25,8 @@ class UserPhotoViewModel @Inject constructor(
     private val getUserPostings: GetUserPostings,
     private val getUserProfile: GetUserProfile,
     private val getPostingOrder: GetPostingOrder,
-    private val changeToNextPostingOrder: ChangeToNextPostingOrder
+    private val changeToNextPostingOrder: ChangeToNextPostingOrder,
+    private val refreshEventBus: RefreshEventBus
 ) : BaseViewModel() {
 
     lateinit var userId: String
@@ -100,5 +98,4 @@ class UserPhotoViewModel @Inject constructor(
     fun setIsListEmpty(isListEmpty: Boolean) {
         _isListEmpty.postValue(isListEmpty)
     }
-
 }

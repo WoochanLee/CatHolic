@@ -6,6 +6,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
@@ -201,7 +202,17 @@ class UploadActivity : BaseActivity() {
             return
         }
 
-        super.onBackPressed()
+        showStopWarningDialog()
+    }
+
+    private fun showStopWarningDialog() {
+        AlertDialog.Builder(this@UploadActivity)
+            .setTitle(getString(R.string.stop_uploading))
+            .setMessage(getString(R.string.do_you_really_want_to_stop_uploading))
+            .setPositiveButton(getString(R.string.ok)) { _, _ ->
+                finish()
+            }.setNegativeButton(R.string.cancel, null)
+            .show()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

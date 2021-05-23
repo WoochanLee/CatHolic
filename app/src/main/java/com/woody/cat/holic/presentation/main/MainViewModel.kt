@@ -3,31 +3,23 @@ package com.woody.cat.holic.presentation.main
 import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
 import com.woody.cat.holic.R
 import com.woody.cat.holic.data.common.PostingOrder
-import com.woody.cat.holic.framework.base.*
-import com.woody.cat.holic.framework.paging.item.PostingItem
+import com.woody.cat.holic.framework.base.BaseViewModel
+import com.woody.cat.holic.framework.base.Event
+import com.woody.cat.holic.framework.base.emit
 import com.woody.cat.holic.usecase.posting.GetPostingOrder
-import com.woody.cat.holic.usecase.posting.UpdateLikedPosting
 import com.woody.cat.holic.usecase.setting.GetAppSetting
 import com.woody.cat.holic.usecase.setting.UpdateAppSetting
-import com.woody.cat.holic.usecase.user.GetCurrentUserId
 import com.woody.cat.holic.usecase.user.GetIsSignedIn
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.util.*
 import javax.inject.Inject
 
 class MainViewModel @Inject constructor(
-    private val refreshEventBus: RefreshEventBus,
     private val getPostingOrder: GetPostingOrder,
     private val getIsSignedIn: GetIsSignedIn,
-    private val getCurrentUserId: GetCurrentUserId,
-    private val updateLikedPosting: UpdateLikedPosting,
     private val getAppSetting: GetAppSetting,
-    private val updateAppSetting: UpdateAppSetting
+    private val updateAppSetting: UpdateAppSetting,
 ) : BaseViewModel() {
 
     companion object {
@@ -50,9 +42,6 @@ class MainViewModel @Inject constructor(
 
     private val _eventStartProfileActivity = MutableLiveData<Event<String>>()
     val eventStartProfileActivity: LiveData<Event<String>> get() = _eventStartProfileActivity
-
-    private val _eventShowLikeListDialog = MutableLiveData<Event<PostingItem>>()
-    val eventShowLikeListDialog: LiveData<Event<PostingItem>> get() = _eventShowLikeListDialog
 
     private val _eventShowNotificationListDialog = MutableLiveData<Event<Unit>>()
     val eventShowNotificationDialog: LiveData<Event<Unit>> get() = _eventShowNotificationListDialog
@@ -110,34 +99,6 @@ class MainViewModel @Inject constructor(
             PostingOrder.CREATED -> R.drawable.ic_clock_fill
             PostingOrder.RANDOM -> R.drawable.ic_shuffle
         }
-    }
-
-    fun onClickLike(postingItem: PostingItem) {
-        val userId = getCurrentUserId()
-        if (userId == null) {
-            _eventMoveToSignInTabWithToast.emit()
-            return
-        }
-
-        val currentUserLiked = postingItem.currentUserLiked.value == true
-
-        postingItem.currentUserLiked.postValue(!currentUserLiked)
-        postingItem.likeCount.postValue((postingItem.likeCount.value ?: 0) + if (currentUserLiked) -1 else 1)
-
-        viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                if (currentUserLiked) {
-                    updateLikedPosting.unlikePosting(userId, postingItem.postingId)
-                } else {
-                    updateLikedPosting.likePosting(userId, postingItem.postingId)
-                }
-                refreshEventBus.emitEvent(GlobalRefreshEvent.POSTING_LIKED_CHANGE_EVENT)
-            }
-        }
-    }
-
-    fun onClickLikeList(postingItem: PostingItem) {
-        _eventShowLikeListDialog.emit(postingItem)
     }
 
     fun onClickUploadFab() {

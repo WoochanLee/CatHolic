@@ -1,5 +1,6 @@
 package com.woody.cat.holic.presentation.main.posting
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
@@ -25,7 +26,9 @@ class PostingAdapter(
 ) : PagingDataAdapter<RecyclerViewItem, PostingAdapter.PostingImageViewPagerViewHolder>(object :
     DiffUtil.ItemCallback<RecyclerViewItem>() {
     override fun areItemsTheSame(oldItem: RecyclerViewItem, newItem: RecyclerViewItem) = oldItem.postingId == newItem.postingId
-    override fun areContentsTheSame(oldItem: RecyclerViewItem, newItem: RecyclerViewItem) = oldItem.postingId == newItem.postingId
+
+    @SuppressLint("DiffUtilEquals")
+    override fun areContentsTheSame(oldItem: RecyclerViewItem, newItem: RecyclerViewItem) = oldItem == newItem
 }) {
 
     private var viewPagerPositionMap = mutableMapOf<String, Int>()

@@ -68,14 +68,6 @@ class LikeFragment : BaseFragment() {
 
         signViewModel = ViewModelProvider(activity, viewModelFactory).get(SignViewModel::class.java).apply {
             binding.userViewModel = this
-
-            eventSignInSuccess.observeEvent(viewLifecycleOwner, {
-                likeViewModel.initPagingFlow()
-            })
-
-            eventSignOutSuccess.observeEvent(viewLifecycleOwner, {
-                likeViewModel.initPagingFlow()
-            })
         }
 
         postingViewModel = ViewModelProvider(this, viewModelFactory).get(PostingViewModel::class.java).apply {

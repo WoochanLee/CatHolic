@@ -54,7 +54,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="10dp"
                 android:gravity="center"
-                android:onClick="@{() -> mainViewModel.onClickProfile(postingDetailViewModel.postingItem.user.userId)}"
+                android:onClick="@{() -> postingDetailViewModel.onClickProfile(postingDetailViewModel.postingItem.user.userId)}"
                 android:orientation="horizontal"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -103,11 +103,11 @@
                         android:gravity="center"
                         android:text="@{postingDetailViewModel.isUserFollowed() ? @string/followed :@string/follow}"
                         android:textAllCaps="true"
-                        android:textColor="@{postingDetailViewModel.isUserFollowed() ? @color/text_color_reverse : @color/text_color}"
+                        android:textColor="@color/white"
                         android:textSize="10dp"
                         android:textStyle="bold"
                         tools:text="@string/followed"
-                        tools:textColor="@color/text_color_reverse" />
+                        tools:textColor="@color/white" />
 
                 </androidx.cardview.widget.CardView>
             </LinearLayout>
@@ -170,7 +170,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
-                    android:onClick="@{() -> mainViewModel.onClickLikeList(postingDetailViewModel.postingItem)}"
+                    android:onClick="@{() -> postingDetailViewModel.onClickLikeList(postingDetailViewModel.postingItem)}"
                     android:paddingHorizontal="15dp"
                     app:layout_constraintStart_toStartOf="parent">
 
@@ -251,7 +251,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:onClick="@{() -> mainViewModel.onClickLike(postingDetailViewModel.postingItem)}"
+                    android:onClick="@{() -> postingDetailViewModel.onClickLike(postingDetailViewModel.postingItem)}"
                     android:orientation="horizontal">
 
                     <ImageView

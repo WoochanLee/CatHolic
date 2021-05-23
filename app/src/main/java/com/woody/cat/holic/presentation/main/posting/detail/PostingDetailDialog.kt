@@ -10,6 +10,8 @@ import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.play.core.review.ReviewManagerFactory
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.woody.cat.holic.R
 import com.woody.cat.holic.databinding.DialogPostingDetailBinding
 import com.woody.cat.holic.framework.base.ViewModelFactory
@@ -19,6 +21,8 @@ import com.woody.cat.holic.framework.paging.item.PostingItem
 import com.woody.cat.holic.presentation.main.MainViewModel
 import com.woody.cat.holic.presentation.main.posting.PostingItemAdapter
 import com.woody.cat.holic.presentation.main.posting.comment.CommentDialog
+import com.woody.cat.holic.presentation.main.posting.likelist.LikeListDialog
+import com.woody.cat.holic.presentation.main.user.profile.ProfileActivity
 import dagger.android.support.DaggerDialogFragment
 import javax.inject.Inject
 
@@ -81,11 +85,15 @@ class PostingDetailDialog @Inject constructor() : DaggerDialogFragment() {
 
         mainViewModel = ViewModelProvider(activity, viewModelFactory).get(MainViewModel::class.java).apply {
             binding.mainViewModel = this
+
+            eventStartProfileActivity.observeEvent(viewLifecycleOwner, { userId ->
+                startActivity(ProfileActivity.getIntent(requireContext(), userId))
+            })
         }
 
         postingDetailViewModel = ViewModelProvider(viewModelStore, viewModelFactory).get(PostingDetailViewModel::class.java).apply {
             binding.postingDetailViewModel = this
-            this.postingItem = postingItem
+            setPostingItem(postingItem)
 
             addSourceToIsUserFollowed()
 
@@ -101,6 +109,18 @@ class PostingDetailDialog @Inject constructor() : DaggerDialogFragment() {
                 context?.let { context ->
                     Toast.makeText(context, stringRes, Toast.LENGTH_SHORT).show()
                 }
+            })
+
+            eventShowInAppReview.observeEvent(viewLifecycleOwner, {
+                showInAppReview()
+            })
+
+            eventShowLikeListDialog.observeEvent(viewLifecycleOwner, { postingItem ->
+                LikeListDialog.newInstance(parentFragmentManager, postingItem)
+            })
+
+            eventStartProfileActivity.observeEvent(viewLifecycleOwner, { userId ->
+                startActivity(ProfileActivity.getIntent(requireContext(), userId))
             })
         }
 
@@ -118,6 +138,21 @@ class PostingDetailDialog @Inject constructor() : DaggerDialogFragment() {
 
     fun setPostingItem(postingItem: PostingItem) {
         this.postingItem = postingItem
+    }
+
+    private fun showInAppReview() {
+        activity?.let { activity ->
+            val manager = ReviewManagerFactory.create(activity)
+
+            manager.requestReviewFlow().addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val reviewInfo = task.result
+                    manager.launchReviewFlow(activity, reviewInfo)
+                } else {
+                    FirebaseCrashlytics.getInstance().recordException(task.exception!!)
+                }
+            }
+        }
     }
 
     private class Builder {

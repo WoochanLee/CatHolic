@@ -30,7 +30,7 @@ class PostingViewModel @Inject constructor(
     private val updateLikedPosting: UpdateLikedPosting,
     private val getSinglePosting: GetSinglePosting,
     private val getUserProfile: GetUserProfile,
-    private val getDynamicLink: GetDynamicLink,
+    private val getDynamicLink: GetDynamicLink
 ) : BaseViewModel() {
 
     private val _eventMoveToSignInTabWithToast = MutableLiveData<Event<Unit>>()

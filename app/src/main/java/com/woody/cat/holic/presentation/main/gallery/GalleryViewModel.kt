@@ -65,7 +65,8 @@ class GalleryViewModel @Inject constructor(
         viewModelScope.launch {
             refreshEventBus.subscribeEvent(
                 GlobalRefreshEvent.UPLOAD_POSTING_EVENT,
-                GlobalRefreshEvent.DELETE_POSTING_EVENT
+                GlobalRefreshEvent.DELETE_POSTING_EVENT,
+                GlobalRefreshEvent.SIGN_IN_STATUS_CHANGE_EVENT
             ) {
                 initData()
             }

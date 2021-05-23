@@ -19,7 +19,6 @@ import com.woody.cat.holic.presentation.main.notification.NotificationListDialog
 import com.woody.cat.holic.presentation.main.posting.PostingViewModel
 import com.woody.cat.holic.presentation.main.posting.comment.CommentDialog
 import com.woody.cat.holic.presentation.main.posting.detail.PostingDetailDialog
-import com.woody.cat.holic.presentation.main.posting.likelist.LikeListDialog
 import com.woody.cat.holic.presentation.main.user.UserFragment
 import com.woody.cat.holic.presentation.main.user.UserViewModel
 import com.woody.cat.holic.presentation.main.user.profile.ProfileActivity
@@ -65,14 +64,6 @@ class MainActivity : BaseActivity() {
             eventMoveToSignInTabWithToast.observeEvent(this@MainActivity, {
                 binding.tlMain.getTabAt(MainTab.TAB_USER.position)?.select()
                 Toast.makeText(applicationContext, R.string.need_to_sign_in, Toast.LENGTH_LONG).show()
-            })
-
-            eventStartProfileActivity.observeEvent(this@MainActivity, { userId ->
-                startActivity(ProfileActivity.getIntent(this@MainActivity, userId))
-            })
-
-            eventShowLikeListDialog.observeEvent(this@MainActivity, { postingItem ->
-                LikeListDialog.newInstance(supportFragmentManager, postingItem)
             })
 
             eventShowNotificationDialog.observeEvent(this@MainActivity, {

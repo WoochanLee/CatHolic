@@ -11,7 +11,13 @@ import com.woody.cat.holic.framework.manager.AndroidStringResourceManager
 import com.woody.cat.holic.framework.manager.FirebaseDynamicLinkManager
 import com.woody.cat.holic.framework.paging.item.PostingItem
 import com.woody.cat.holic.framework.paging.item.UserItem
+import com.woody.cat.holic.framework.paging.item.mapToPostingItem
 import com.woody.cat.holic.framework.paging.item.updateUserItem
+import com.woody.cat.holic.usecase.posting.GetSinglePosting
+import com.woody.cat.holic.usecase.posting.UpdateLikedPosting
+import com.woody.cat.holic.usecase.review.AddLikedCountForInAppReview
+import com.woody.cat.holic.usecase.review.GetHaveToShowInAppReview
+import com.woody.cat.holic.usecase.review.SetHaveToShowInAppReview
 import com.woody.cat.holic.usecase.share.GetDynamicLink
 import com.woody.cat.holic.usecase.user.GetCurrentUserId
 import com.woody.cat.holic.usecase.user.GetUserProfile
@@ -27,10 +33,16 @@ class PostingDetailViewModel @Inject constructor(
     private val getCurrentUserId: GetCurrentUserId,
     private val updateFollowUser: UpdateFollowUser,
     private val refreshEventBus: RefreshEventBus,
-    private val getUserProfile: GetUserProfile
+    private val getUserProfile: GetUserProfile,
+    private val updateLikedPosting: UpdateLikedPosting,
+    private val addLikedCountForInAppReview: AddLikedCountForInAppReview,
+    private val getHaveToShowInAppReview: GetHaveToShowInAppReview,
+    private val setHaveToShowInAppReview: SetHaveToShowInAppReview,
+    private val getSinglePosting: GetSinglePosting
 ) : BaseViewModel() {
 
-    lateinit var postingItem: PostingItem
+    private val _postingItem = MutableLiveData<PostingItem>()
+    val postingItem: LiveData<PostingItem> get() = _postingItem
 
     private val _eventShowCommentDialog = MutableLiveData<Event<Unit>>()
     val eventShowCommentDialog: LiveData<Event<Unit>> get() = _eventShowCommentDialog
@@ -40,6 +52,15 @@ class PostingDetailViewModel @Inject constructor(
 
     private val _eventShowToast = MutableLiveData<Event<@StringRes Int>>()
     val eventShowToast: LiveData<Event<Int>> get() = _eventShowToast
+
+    private val _eventShowInAppReview = MutableLiveData<Event<Unit>>()
+    val eventShowInAppReview: LiveData<Event<Unit>> get() = _eventShowInAppReview
+
+    private val _eventShowLikeListDialog = MutableLiveData<Event<PostingItem>>()
+    val eventShowLikeListDialog: LiveData<Event<PostingItem>> get() = _eventShowLikeListDialog
+
+    private val _eventStartProfileActivity = MutableLiveData<Event<String>>()
+    val eventStartProfileActivity: LiveData<Event<String>> get() = _eventStartProfileActivity
 
     private val _isMenuVisible = MutableLiveData(true)
     val isMenuVisible: LiveData<Boolean> get() = _isMenuVisible
@@ -58,10 +79,42 @@ class PostingDetailViewModel @Inject constructor(
     }
 
     fun addSourceToIsUserFollowed() {
-        _isUserFollowed.addSource(postingItem.user.followerUserIds) {
-            checkIsMyProfile(postingItem.user.userId)
-            refreshIsUserFollowed(postingItem.user)
+        postingItem.value?.let { postingItem ->
+            _isUserFollowed.addSource(postingItem.user.followerUserIds) {
+                checkIsMyProfile(postingItem.user.userId)
+                refreshIsUserFollowed(postingItem.user)
+            }
         }
+    }
+
+    private fun refreshPostingItem() {
+        postingItem.value?.postingId?.let { postingId ->
+            viewModelScope.launch {
+                withContext(Dispatchers.IO) {
+                    handleResourceResult(getSinglePosting(postingId), onSuccess = { posting ->
+                        val postingItem = posting.mapToPostingItem(getCurrentUserId())
+                        _postingItem.postValue(postingItem)
+                        getProfile(postingItem.user.userId)
+                    })
+                }
+            }
+        }
+    }
+
+    private fun getProfile(targetUserId: String) {
+        postingItem.value?.user?.let { userItem ->
+            viewModelScope.launch {
+                withContext(Dispatchers.IO) {
+                    handleResourceResult(getUserProfile(targetUserId), onSuccess = { targetUser ->
+                        targetUser.updateUserItem(userItem)
+                    })
+                }
+            }
+        }
+    }
+
+    fun setPostingItem(postingItem: PostingItem) {
+        _postingItem.value = postingItem
     }
 
     fun onClickPostingDetailImage() {
@@ -92,8 +145,8 @@ class PostingDetailViewModel @Inject constructor(
 
     fun onClickFollowButton() {
         val myUserId = getCurrentUserId()
-        val targetUserId = postingItem.user.userId
-        if (myUserId == null) {
+        val targetUserId = postingItem.value?.user?.userId
+        if (myUserId == null || targetUserId == null) {
             _eventShowToast.emit(R.string.need_to_sign_in)
             return
         }
@@ -101,15 +154,38 @@ class PostingDetailViewModel @Inject constructor(
         followUser(myUserId, targetUserId)
     }
 
-    fun getProfile(targetUserId: String) {
+    fun onClickLike(postingItem: PostingItem) {
+        val userId = getCurrentUserId()
+        if (userId == null) {
+            _eventShowToast.emit(R.string.need_to_sign_in)
+            return
+        }
+
+        val currentUserLiked = postingItem.currentUserLiked.value == true
+
+        postingItem.currentUserLiked.postValue(!currentUserLiked)
+        postingItem.likeCount.postValue((postingItem.likeCount.value ?: 0) + if (currentUserLiked) -1 else 1)
+
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                handleResourceResult(getUserProfile(targetUserId), onSuccess = { targetUser ->
-                    targetUser.updateUserItem(postingItem.user)
-                    //refreshIsUserFollowed(postingItem.user)
-                })
+                if (currentUserLiked) {
+                    updateLikedPosting.unlikePosting(userId, postingItem.postingId)
+                } else {
+                    updateLikedPosting.likePosting(userId, postingItem.postingId)
+                    addLikedCountForInAppReview()
+                    checkInAppReviewStatus()
+                }
+                refreshEventBus.emitEvent(GlobalRefreshEvent.POSTING_LIKED_CHANGE_EVENT)
             }
         }
+    }
+
+    fun onClickLikeList(postingItem: PostingItem) {
+        _eventShowLikeListDialog.emit(postingItem)
+    }
+
+    fun onClickProfile(userId: String) {
+        _eventStartProfileActivity.emit(userId)
     }
 
     private fun refreshIsUserFollowed(targetUser: UserItem) {
@@ -140,11 +216,21 @@ class PostingDetailViewModel @Inject constructor(
         _isVisibleFollowButton.postValue(currentUserId != userId)
     }
 
+    private fun checkInAppReviewStatus() {
+        if (getHaveToShowInAppReview()) {
+            setHaveToShowInAppReview(false)
+            _eventShowInAppReview.emit()
+        }
+    }
+
     private fun initEventBusSubscribe() {
         viewModelScope.launch {
-            refreshEventBus.subscribeEvent(GlobalRefreshEvent.FOLLOW_USER_EVENT) {
+            refreshEventBus.subscribeEvent(
+                GlobalRefreshEvent.FOLLOW_USER_EVENT,
+                GlobalRefreshEvent.POSTING_LIKED_CHANGE_EVENT
+            ) {
                 _isVisibleFollowButton.postValue(false)
-                getProfile(postingItem.user.userId)
+                refreshPostingItem()
             }
         }
     }

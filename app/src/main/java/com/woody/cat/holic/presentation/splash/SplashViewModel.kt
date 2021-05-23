@@ -36,6 +36,9 @@ class SplashViewModel @Inject constructor(
     private val _eventFinishActivity = MutableLiveData<Event<Unit>>()
     val eventFinishActivity: LiveData<Event<Unit>> get() = _eventFinishActivity
 
+    private val _eventForceUpdate = MutableLiveData<Event<Unit>>()
+    val eventForceUpdate: LiveData<Event<Unit>> get() = _eventForceUpdate
+
     init {
         checkRemoteConfig()
     }
@@ -65,7 +68,7 @@ class SplashViewModel @Inject constructor(
 
     private fun checkForceUpdateVersion() {
         if (getForceUpdateVersion() > BuildConfig.VERSION_CODE) {
-
+            _eventForceUpdate.emit()
         } else {
             _eventStartMainActivity.emit()
         }

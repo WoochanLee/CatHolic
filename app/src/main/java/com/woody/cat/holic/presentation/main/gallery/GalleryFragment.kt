@@ -65,15 +65,7 @@ class GalleryFragment : BaseFragment() {
             })
         }
 
-        signViewModel = ViewModelProvider(requireActivity(), viewModelFactory).get(SignViewModel::class.java).apply {
-            eventSignInSuccess.observeEvent(viewLifecycleOwner, { //TODO: change to global refresh
-                galleryViewModel.initPagingFlow()
-            })
-
-            eventSignOutSuccess.observeEvent(viewLifecycleOwner, {
-                galleryViewModel.initPagingFlow()
-            })
-        }
+        signViewModel = ViewModelProvider(requireActivity(), viewModelFactory).get(SignViewModel::class.java)
 
         postingViewModel = ViewModelProvider(this, viewModelFactory).get(PostingViewModel::class.java).apply {
             postingAdapter = PostingAdapter(viewLifecycleOwner, this)

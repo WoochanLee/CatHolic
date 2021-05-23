@@ -99,8 +99,8 @@ class MyPhotoActivity : BaseActivity() {
 
             eventShowDeleteWarningDialog.observeEvent(this@MyPhotoActivity, { (userId, postingId) ->
                 AlertDialog.Builder(this@MyPhotoActivity)
-                    .setTitle(getString(R.string.delete_photo))
-                    .setMessage(getString(R.string.do_you_really_want_to_delete_this_photo))
+                    .setTitle(getString(R.string.delete_posting))
+                    .setMessage(getString(R.string.do_you_really_want_to_delete_this_posting))
                     .setPositiveButton(getString(R.string.delete_2)) { _, _ ->
                         myPhotoViewModel.deletePosting(userId, postingId)
                     }.setNegativeButton(R.string.cancel, null)
@@ -124,7 +124,7 @@ class MyPhotoActivity : BaseActivity() {
     }
 
     private fun checkPermissionAndStartPhotoDownloadService(imageUrls: List<String>) {
-        val isPermissionGranted = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) { //TODO: check is it right >= Q (or P?)
+        val isPermissionGranted = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             true
         } else {
             ContextCompat.checkSelfPermission(this, WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED

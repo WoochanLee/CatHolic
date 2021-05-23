@@ -42,12 +42,6 @@ class SignViewModel @Inject constructor(
     private val _eventSignOut = MutableLiveData<Event<Unit>>()
     val eventSignOut: LiveData<Event<Unit>> get() = _eventSignOut
 
-    private val _eventSignInSuccess = MutableLiveData<Event<Unit>>()
-    val eventSignInSuccess: LiveData<Event<Unit>> get() = _eventSignInSuccess
-
-    private val _eventSignOutSuccess = MutableLiveData<Event<Unit>>()
-    val eventSignOutSuccess: LiveData<Event<Unit>> get() = _eventSignOutSuccess
-
     private val _eventSignInFail = MutableLiveData<Event<Unit>>()
     val eventSignInFail: LiveData<Event<Unit>> get() = _eventSignInFail
 
@@ -111,7 +105,7 @@ class SignViewModel @Inject constructor(
             if (it != null) {
                 _isSignedIn.postValue(getIsSignedIn())
                 _userData.postValue(it)
-                _eventSignInSuccess.emit()
+                refreshEventBus.emitEvent(GlobalRefreshEvent.SIGN_IN_STATUS_CHANGE_EVENT)
                 addUserPushToken(user.userId)
             } else {
                 makeProfile(user)
@@ -212,15 +206,11 @@ class SignViewModel @Inject constructor(
         _eventSignOut.emit()
     }
 
-    private fun onSignOutSuccess() {
-        _eventSignOutSuccess.emit()
-    }
-
     fun signOutFirebase() {
         removeUserPushToken(userData.value?.userId ?: return, onComplete = {
             firebaseAuth.signOut()
             refreshSignInStatus()
-            onSignOutSuccess()
+            refreshEventBus.emitEvent(GlobalRefreshEvent.SIGN_IN_STATUS_CHANGE_EVENT)
         })
     }
 
@@ -238,7 +228,8 @@ class SignViewModel @Inject constructor(
                 GlobalRefreshEvent.UPLOAD_POSTING_EVENT,
                 GlobalRefreshEvent.DELETE_POSTING_EVENT,
                 GlobalRefreshEvent.FOLLOW_USER_EVENT,
-                GlobalRefreshEvent.UPDATE_USER_PROFILE_EVENT
+                GlobalRefreshEvent.UPDATE_USER_PROFILE_EVENT,
+                GlobalRefreshEvent.SIGN_IN_STATUS_CHANGE_EVENT
             ) {
                 refreshSignInStatus()
             }

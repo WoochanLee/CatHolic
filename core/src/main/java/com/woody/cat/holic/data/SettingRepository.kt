@@ -13,4 +13,10 @@ interface SettingRepository {
     fun setUploadGuideStatus(isVisible: Boolean)
 
     fun getUploadGuideStatus(): Boolean
+
+    fun addLikedCountAndCheckInAppReviewCondition()
+
+    fun setHaveToShowInAppReview(haveToShowInAppReview: Boolean)
+
+    fun getHaveToShowInAppReview(): Boolean
 }

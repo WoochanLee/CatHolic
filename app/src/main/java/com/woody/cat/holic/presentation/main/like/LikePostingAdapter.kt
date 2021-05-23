@@ -1,5 +1,6 @@
 package com.woody.cat.holic.presentation.main.like
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
@@ -21,7 +22,9 @@ class LikePostingAdapter(
     private val postingViewModel: PostingViewModel
 ) : PagingDataAdapter<RecyclerViewItem, BaseViewHolder<RecyclerViewItem, PostingViewModel>>(object : DiffUtil.ItemCallback<RecyclerViewItem>() {
     override fun areItemsTheSame(oldItem: RecyclerViewItem, newItem: RecyclerViewItem) = oldItem.postingId == newItem.postingId
-    override fun areContentsTheSame(oldItem: RecyclerViewItem, newItem: RecyclerViewItem) = oldItem.postingId == newItem.postingId
+
+    @SuppressLint("DiffUtilEquals")
+    override fun areContentsTheSame(oldItem: RecyclerViewItem, newItem: RecyclerViewItem) = oldItem == newItem
 }) {
 
     companion object {
