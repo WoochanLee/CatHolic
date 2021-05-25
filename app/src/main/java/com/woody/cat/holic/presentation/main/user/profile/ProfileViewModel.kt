@@ -176,8 +176,10 @@ class ProfileViewModel @Inject constructor(
         }
     }
 
-    fun onClickProfilePhoto(imageUrl: String) {
-        _eventShowPhotoZoomDialog.emit(imageUrl)
+    fun onClickProfilePhoto(imageUrl: String?) {
+        imageUrl?.let {
+            _eventShowPhotoZoomDialog.emit(imageUrl)
+        }
     }
 
     private fun followUser(myUserId: String, targetUserId: String) {
