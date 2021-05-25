@@ -122,4 +122,8 @@ class RepositoryModule {
     @Provides
     @Singleton
     fun provideRemoteConfigRepository(firebaseRemoteConfig: FirebaseRemoteConfig): RemoteConfigRepository = FirebaseRemoteConfigRepository(firebaseRemoteConfig)
+
+    @Provides
+    @Singleton
+    fun provideReportPostingRepository(db: FirebaseFirestore): ReportPostingRepository = FirebaseReportPostingRepository(db)
 }

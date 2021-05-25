@@ -37,4 +37,10 @@
 -keep class com.woody.cat.holic.framework.net.dto.** { *; }
 -keepclassmembers class com.woody.cat.holic.framework.net.dto.** { *; }
 
+-keep class com.woody.cat.holic.domain.** { *; }
+-keepclassmembers class com.woody.cat.holic.domain.** { *; }
+
+-keep class com.woody.cat.holic.data.common.** { *; }
+-keepclassmembers class com.woody.cat.holic.data.common.** { *; }
+
 -keepclassmembers enum * { *; }

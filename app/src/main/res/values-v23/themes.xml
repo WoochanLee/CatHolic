@@ -42,4 +42,12 @@
         <item name="android:windowEnterAnimation">@anim/zoom_in_from_center</item>
         <item name="android:windowExitAnimation">@anim/zoom_out_to_center</item>
     </style>
+
+    <style name="RoundBottomSheetDialog" parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/RoundBottomSheetStyle</item>
+    </style>
+
+    <style name="RoundBottomSheetStyle" parent="@style/Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@drawable/bg_rounded_bottom_sheet</item>
+    </style>
 </resources>

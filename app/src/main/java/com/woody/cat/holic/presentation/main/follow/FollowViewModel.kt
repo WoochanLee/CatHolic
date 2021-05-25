@@ -89,6 +89,7 @@ class FollowViewModel @Inject constructor(
     private fun initEventBusSubscribe() {
         viewModelScope.launch {
             getRefreshEventBus.subscribeEvent(
+                GlobalRefreshEvent.SIGN_IN_STATUS_CHANGE_EVENT,
                 GlobalRefreshEvent.FOLLOW_USER_EVENT
             ) {
                 initData()

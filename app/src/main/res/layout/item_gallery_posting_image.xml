@@ -7,10 +7,6 @@
         <variable
             name="model"
             type="String" />
-
-        <import type="kotlin.jvm.functions.Function1" />
-
-        <import type="kotlin.Unit" />
     </data>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"

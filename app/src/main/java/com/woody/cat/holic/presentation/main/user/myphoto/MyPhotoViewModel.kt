@@ -50,9 +50,6 @@ class MyPhotoViewModel @Inject constructor(
     private val _eventStartUploadActivity = MutableLiveData<Event<Unit>>()
     val eventStartUploadActivity: LiveData<Event<Unit>> get() = _eventStartUploadActivity
 
-    private val _eventStartPhotoDownload = MutableLiveData<Event<List<String>>>()
-    val eventStartPhotoDownload: LiveData<Event<List<String>>> get() = _eventStartPhotoDownload
-
     private val _eventChangeUserPostingOrder = MutableLiveData<Event<Unit>>()
     val eventChangeUserPostingOrder: LiveData<Event<Unit>> get() = _eventChangeUserPostingOrder
 
@@ -68,17 +65,11 @@ class MyPhotoViewModel @Inject constructor(
     private val _isListEmpty = MutableLiveData<Boolean>()
     val isListEmpty: LiveData<Boolean> get() = _isListEmpty
 
-    var imageUrlWaitingForPermission: List<String>? = null
-
     val myPhotoItemMenuListener = object: MyPhotoItemMenuListener {
         override fun onClickDelete(postingId: String) {
             val userId = getCurrentUserId() ?: return
 
             _eventShowDeleteWarningDialog.emit(Pair(userId, postingId))
-        }
-
-        override fun onClickDownload(imageUrls: List<String>) {
-            _eventStartPhotoDownload.emit(imageUrls)
         }
     }
 
@@ -155,6 +146,5 @@ class MyPhotoViewModel @Inject constructor(
 
     interface MyPhotoItemMenuListener {
         fun onClickDelete(postingId: String)
-        fun onClickDownload(imageUrls: List<String>)
     }
 }

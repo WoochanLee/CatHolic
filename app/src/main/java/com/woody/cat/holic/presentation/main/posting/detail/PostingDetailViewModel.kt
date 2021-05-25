@@ -14,6 +14,7 @@ import com.woody.cat.holic.framework.paging.item.UserItem
 import com.woody.cat.holic.framework.paging.item.mapToPostingItem
 import com.woody.cat.holic.framework.paging.item.updateUserItem
 import com.woody.cat.holic.usecase.posting.GetSinglePosting
+import com.woody.cat.holic.usecase.posting.ReportPosting
 import com.woody.cat.holic.usecase.posting.UpdateLikedPosting
 import com.woody.cat.holic.usecase.review.AddLikedCountForInAppReview
 import com.woody.cat.holic.usecase.review.GetHaveToShowInAppReview
@@ -38,7 +39,8 @@ class PostingDetailViewModel @Inject constructor(
     private val addLikedCountForInAppReview: AddLikedCountForInAppReview,
     private val getHaveToShowInAppReview: GetHaveToShowInAppReview,
     private val setHaveToShowInAppReview: SetHaveToShowInAppReview,
-    private val getSinglePosting: GetSinglePosting
+    private val getSinglePosting: GetSinglePosting,
+    private val reportPosting: ReportPosting
 ) : BaseViewModel() {
 
     private val _postingItem = MutableLiveData<PostingItem>()
@@ -59,8 +61,17 @@ class PostingDetailViewModel @Inject constructor(
     private val _eventShowLikeListDialog = MutableLiveData<Event<PostingItem>>()
     val eventShowLikeListDialog: LiveData<Event<PostingItem>> get() = _eventShowLikeListDialog
 
+    private val _eventShowPostingDetailBottomSheet = MutableLiveData<Event<Unit>>()
+    val eventShowPostingDetailBottomSheet: LiveData<Event<Unit>> get() = _eventShowPostingDetailBottomSheet
+
     private val _eventStartProfileActivity = MutableLiveData<Event<String>>()
     val eventStartProfileActivity: LiveData<Event<String>> get() = _eventStartProfileActivity
+
+    private val _eventStartDownloadPhoto = MutableLiveData<Event<String>>()
+    val eventStartDownloadPhoto: LiveData<Event<String>> get() = _eventStartDownloadPhoto
+
+    private val _eventDismissBottomSheet = MutableLiveData<Event<Unit>>()
+    val eventDismissBottomSheet: LiveData<Event<Unit>> get() = _eventDismissBottomSheet
 
     private val _isMenuVisible = MutableLiveData(true)
     val isMenuVisible: LiveData<Boolean> get() = _isMenuVisible
@@ -73,6 +84,9 @@ class PostingDetailViewModel @Inject constructor(
 
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> get() = _isLoading
+
+    private val _currentSelectedImageUrl = MutableLiveData<String>()
+    val currentSelectedImageUrl: LiveData<String> get() = _currentSelectedImageUrl
 
     init {
         initEventBusSubscribe()
@@ -117,6 +131,10 @@ class PostingDetailViewModel @Inject constructor(
         _postingItem.value = postingItem
     }
 
+    fun setCurrentSelectedImageUrl(imageUrl: String) {
+        _currentSelectedImageUrl.postValue(imageUrl)
+    }
+
     fun onClickPostingDetailImage() {
         _isMenuVisible.postValue(isMenuVisible.value != true)
     }
@@ -141,6 +159,33 @@ class PostingDetailViewModel @Inject constructor(
                     })
             }
         }
+        _eventDismissBottomSheet.emit()
+    }
+
+    fun onClickDownload(imageUrl: String) {
+        _eventStartDownloadPhoto.emit(imageUrl)
+        _eventDismissBottomSheet.emit()
+    }
+
+    fun onClickReportPosting(postingId: String) {
+        val currentUserId = getCurrentUserId()
+
+        if(currentUserId == null) {
+            _eventShowToast.emit(R.string.need_to_sign_in)
+            return
+        }
+
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                handleResourceResult(reportPosting(currentUserId, postingId))
+            }
+        }
+        _eventShowToast.emit(R.string.thank_you_for_reporting)
+        _eventDismissBottomSheet.emit()
+    }
+
+    fun onClickHideBottomSheet() {
+        _eventDismissBottomSheet.emit()
     }
 
     fun onClickFollowButton() {
@@ -186,6 +231,10 @@ class PostingDetailViewModel @Inject constructor(
 
     fun onClickProfile(userId: String) {
         _eventStartProfileActivity.emit(userId)
+    }
+
+    fun onLongClickPostingImage() {
+        _eventShowPostingDetailBottomSheet.emit()
     }
 
     private fun refreshIsUserFollowed(targetUser: UserItem) {

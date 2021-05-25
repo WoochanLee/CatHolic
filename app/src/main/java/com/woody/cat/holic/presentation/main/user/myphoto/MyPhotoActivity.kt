@@ -1,14 +1,9 @@
 package com.woody.cat.holic.presentation.main.user.myphoto
 
-import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
-import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -19,7 +14,6 @@ import com.woody.cat.holic.framework.base.BaseActivity
 import com.woody.cat.holic.framework.base.ViewModelFactory
 import com.woody.cat.holic.framework.base.observeEvent
 import com.woody.cat.holic.presentation.main.posting.detail.PostingDetailDialog
-import com.woody.cat.holic.presentation.service.download.PhotoDownloadService
 import com.woody.cat.holic.presentation.upload.UploadActivity
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
@@ -37,18 +31,6 @@ class MyPhotoActivity : BaseActivity() {
     private lateinit var myPhotoViewModel: MyPhotoViewModel
 
     private lateinit var postingAdapter: MyPhotoPostingAdapter
-
-    private val requestPermissionLauncher = registerForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) { isGranted: Boolean ->
-        if (isGranted) {
-            myPhotoViewModel.imageUrlWaitingForPermission?.let { imageUrls ->
-                startService(PhotoDownloadService.getIntent(this@MyPhotoActivity, imageDownloadUrls = ArrayList(imageUrls)))
-            }
-        } else {
-            Toast.makeText(this, R.string.need_permission_to_download_photos, Toast.LENGTH_LONG).show()
-        }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -93,10 +75,6 @@ class MyPhotoActivity : BaseActivity() {
                 startActivity(Intent(this@MyPhotoActivity, UploadActivity::class.java))
             })
 
-            eventStartPhotoDownload.observeEvent(this@MyPhotoActivity, { imageUrls ->
-                checkPermissionAndStartPhotoDownloadService(imageUrls)
-            })
-
             eventShowDeleteWarningDialog.observeEvent(this@MyPhotoActivity, { (userId, postingId) ->
                 AlertDialog.Builder(this@MyPhotoActivity)
                     .setTitle(getString(R.string.delete_posting))
@@ -121,20 +99,6 @@ class MyPhotoActivity : BaseActivity() {
         binding.rvMyPhoto.adapter = postingAdapter
 
         initToolbar()
-    }
-
-    private fun checkPermissionAndStartPhotoDownloadService(imageUrls: List<String>) {
-        val isPermissionGranted = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            true
-        } else {
-            ContextCompat.checkSelfPermission(this, WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
-        }
-        if (isPermissionGranted) {
-            startService(PhotoDownloadService.getIntent(this@MyPhotoActivity, imageDownloadUrls = ArrayList(imageUrls)))
-        } else {
-            myPhotoViewModel.imageUrlWaitingForPermission = imageUrls
-            requestPermissionLauncher.launch(WRITE_EXTERNAL_STORAGE)
-        }
     }
 
     private var pagingJob: Job? = null

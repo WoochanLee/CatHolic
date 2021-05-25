@@ -18,7 +18,8 @@ class PostingItemAdapter(
     private val lifecycleOwner: LifecycleOwner,
     pageIndicatorView: PageIndicatorView2,
     private val scaleType: ImageView.ScaleType = ImageView.ScaleType.CENTER_CROP,
-    private val onClickPosting: (PostingItem) -> Unit = { }
+    private val onClickPostingImage: (PostingItem) -> Unit = { },
+    private val onLongClickPostingImage: () -> Unit = { },
 ) : RecyclerView.Adapter<BaseViewHolder<String, PostingViewModel>>() {
 
     var postingItem: PostingItem? = null
@@ -35,8 +36,13 @@ class PostingItemAdapter(
 
     private val onClickPostingListener = View.OnClickListener {
         postingItem?.let { postingItem ->
-            onClickPosting(postingItem)
+            onClickPostingImage(postingItem)
         }
+    }
+
+    private val onLongClickPostingListener = View.OnLongClickListener {
+        onLongClickPostingImage()
+        true
     }
 
     fun refreshItem(item: PostingItem) {
@@ -53,6 +59,7 @@ class PostingItemAdapter(
         ).apply {
             ivItemGalleryPostingImage.scaleType = scaleType
             ivItemGalleryPostingImage.setOnClickListener(onClickPostingListener)
+            ivItemGalleryPostingImage.setOnLongClickListener(onLongClickPostingListener)
         }
         return BaseViewHolder(binding, lifecycleOwner)
     }

@@ -3,7 +3,7 @@
     <string name="success_to_posting">업로드 성공!</string>
     <string name="fail_to_posting">업로드 실패! 다시 시도해 주세요</string>
     <string name="need_to_sign_in">먼저 로그인 해주세요!</string>
-    <string name="order_by">정렬방식</string>
+    <string name="order_by">정렬기준</string>
     <string name="privacy_policy">개인정보 처리방침</string>
     <string name="sign_out">로그아웃</string>
     <string name="notification_setting">알림 설정</string>
@@ -104,7 +104,10 @@
     <string name="this_post_is_blocked_by_many_reports">이 포스팅은 많은 신고로 블라인드 처리되었습니다.</string>
     <string name="your_account_has_been_blocked">계정이 차단되었습니다.</string>
     <string name="service_maintenance">서비스 점검중</string>
-    <string name="service_is_currently_in_maintenance">현재 서비스 점검중입니다.\n잠시후 다시 시도해주세요..</string>
+    <string name="service_is_currently_in_maintenance">현재 서비스 점검중입니다.\n잠시후 다시 시도해주세요.</string>
     <string name="do_you_really_want_to_stop_uploading">정말로 업로드를 취소하시겠습니까?</string>
     <string name="stop_uploading">업로드 취소</string>
+    <string name="report_this_posting">포스팅 신고</string>
+    <string name="hide">닫기</string>
+    <string name="thank_you_for_reporting">신고해주셔서 감사합니다. 검토 후 조치하도록 하겠습니다.</string>
 </resources>

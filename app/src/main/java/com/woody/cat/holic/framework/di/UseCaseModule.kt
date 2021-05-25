@@ -212,4 +212,9 @@ class UseCaseModule {
     fun provideSetHaveToShowInAppReview(settingRepository: SettingRepository): SetHaveToShowInAppReview {
         return SetHaveToShowInAppReview(settingRepository)
     }
+
+    @Provides
+    fun provideReportPosting(reportPostingRepository: ReportPostingRepository): ReportPosting {
+        return ReportPosting(reportPostingRepository)
+    }
 }

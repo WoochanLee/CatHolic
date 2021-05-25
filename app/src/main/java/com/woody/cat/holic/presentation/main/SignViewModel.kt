@@ -168,11 +168,7 @@ class SignViewModel @Inject constructor(
     private fun removeUserPushToken(userId: String, onComplete: () -> Unit) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                handleResourceResult(removePushToken(userId), onSuccess = {
-                    onComplete()
-                }, onError = {
-                    onComplete()
-                })
+                handleResourceResult(removePushToken(userId), onComplete = onComplete)
             }
         }
     }

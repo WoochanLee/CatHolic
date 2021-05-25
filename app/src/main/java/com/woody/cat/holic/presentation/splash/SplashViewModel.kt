@@ -59,7 +59,7 @@ class SplashViewModel @Inject constructor(
     }
 
     private fun checkIsServiceAvailable(): Boolean {
-        return getIsServiceAvailable().also { isServiceAvailable ->
+        return (getIsServiceAvailable() || BuildConfig.DEBUG).also { isServiceAvailable ->
             if (!isServiceAvailable) {
                 _eventServiceNotAvailableDialog.emit()
             }

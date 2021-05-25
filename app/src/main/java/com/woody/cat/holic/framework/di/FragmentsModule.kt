@@ -5,6 +5,7 @@ import com.woody.cat.holic.presentation.main.gallery.GalleryFragment
 import com.woody.cat.holic.presentation.main.like.LikeFragment
 import com.woody.cat.holic.presentation.main.notification.NotificationListDialog
 import com.woody.cat.holic.presentation.main.posting.comment.CommentDialog
+import com.woody.cat.holic.presentation.main.posting.detail.PostingDetailBottomSheetDialog
 import com.woody.cat.holic.presentation.main.posting.detail.PostingDetailDialog
 import com.woody.cat.holic.presentation.main.posting.likelist.LikeListDialog
 import com.woody.cat.holic.presentation.main.user.UserFragment
@@ -49,4 +50,7 @@ abstract class FragmentsModule {
 
     @ContributesAndroidInjector
     abstract fun contributeNotificationListDialog(): NotificationListDialog
+
+    @ContributesAndroidInjector
+    abstract fun contributePostingDetailBottomSheetDialog(): PostingDetailBottomSheetDialog
 }

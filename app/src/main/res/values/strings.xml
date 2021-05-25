@@ -3,7 +3,7 @@
     <string name="success_to_posting">Upload Success!</string>
     <string name="fail_to_posting">Upload Fail! Please try again</string>
     <string name="need_to_sign_in">Please Sign In First</string>
-    <string name="order_by">Order By</string>
+    <string name="order_by">Sort By</string>
     <string name="privacy_policy">Privacy Policy</string>
     <string name="sign_out">Sign Out</string>
     <string name="notification_setting">Notification Setting</string>
@@ -107,4 +107,7 @@
     <string name="service_is_currently_in_maintenance">Service is currently in maintenance.\nPlease try again after a while.</string>
     <string name="do_you_really_want_to_stop_uploading">Do you really want to stop uploading?</string>
     <string name="stop_uploading">Stop Uploading</string>
+    <string name="report_this_posting">REPORT THIS POSTING</string>
+    <string name="hide">HIDE</string>
+    <string name="thank_you_for_reporting">Thank you for reporting. We will take action after review.</string>
 </resources>

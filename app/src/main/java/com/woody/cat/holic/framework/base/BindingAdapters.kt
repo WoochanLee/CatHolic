@@ -40,11 +40,6 @@ fun ImageButton.setMyPhotoItemMenuListener(postingItem: PostingItem, myPhotoItem
                     myPhotoItemMenuListener.onClickDelete(postingItem.postingId)
                     return@setOnMenuItemClickListener true
                 }
-
-                R.id.menu_download -> {
-                    myPhotoItemMenuListener.onClickDownload(postingItem.imageUrls)
-                    return@setOnMenuItemClickListener true
-                }
             }
             false
         }
