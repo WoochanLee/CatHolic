@@ -53,7 +53,7 @@
     <string name="something_went_wrong">알수없는 오류가 발생했어요 !\n잠시후 다시 시도해 주세요</string>
     <string name="photos">사진</string>
     <string name="select_photo">사진 선택</string>
-    <string name="s_posting">의 포스팅</string>
+    <string name="s_posting">님의 포스팅</string>
     <string name="new_follower">새로운 팔로워</string>
     <string name="new_posting_from_you_follow">새로운 포스팅</string>
     <string name="new_comment">새로운 댓글</string>
@@ -84,7 +84,7 @@
     <string name="fail_to_get_photo">사진을 가져오는데 실패하였습니다</string>
     <string name="need_permission_to_download_photos">사진을 다운로드하기 위해 권한이 필요합니다</string>
     <string name="photo_list_is_empty">사진 목록이 비어있습니다 !</string>
-    <string name="s_cat_photo">%s의 고양이 사진</string>
+    <string name="s_cat_photo">%s님의 고양이 사진</string>
     <string name="choose_an_app_to_share">공유할 앱을 선택해주세요</string>
     <string name="I_really_want_to_show_you_this_cat">귀여운 고양이 사진을 공유합니다!\n%s</string>
     <string name="cat_photo_sharing_sns">고양이 사진 공유 SNS</string>

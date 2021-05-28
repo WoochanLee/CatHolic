@@ -96,4 +96,24 @@ class SplashActivity : BaseActivity() {
             .setCancelable(false)
             .show()
     }
+
+    override fun onResume() {
+        super.onResume()
+
+        val appUpdateManager = AppUpdateManagerFactory.create(this)
+        appUpdateManager
+            .appUpdateInfo
+            .addOnSuccessListener { appUpdateInfo ->
+                if (appUpdateInfo.updateAvailability()
+                    == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS
+                ) {
+                    appUpdateManager.startUpdateFlowForResult(
+                        appUpdateInfo,
+                        AppUpdateType.IMMEDIATE,
+                        this,
+                        CODE_FORCE_UPDATE
+                    )
+                }
+            }
+    }
 }
