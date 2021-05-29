@@ -98,17 +98,19 @@ class PostingDetailViewModel @Inject constructor(
                 checkIsMyProfile(postingItem.user.userId)
                 refreshIsUserFollowed(postingItem.user)
             }
+
         }
     }
 
     private fun refreshPostingItem() {
-        postingItem.value?.postingId?.let { postingId ->
+        postingItem.value?.let { postingItem ->
+            _isUserFollowed.removeSource(postingItem.user.followerUserIds)
             viewModelScope.launch {
                 withContext(Dispatchers.IO) {
-                    handleResourceResult(getSinglePosting(postingId), onSuccess = { posting ->
-                        val postingItem = posting.mapToPostingItem(getCurrentUserId())
-                        _postingItem.postValue(postingItem)
-                        getProfile(postingItem.user.userId)
+                    handleResourceResult(getSinglePosting(postingItem.postingId), onSuccess = { posting ->
+                        val tmpPostingItem = posting.mapToPostingItem(getCurrentUserId(), postingItem.user.displayName.value)
+                        _postingItem.postValue(tmpPostingItem)
+                        getProfile(tmpPostingItem.user.userId)
                     })
                 }
             }
@@ -116,13 +118,16 @@ class PostingDetailViewModel @Inject constructor(
     }
 
     private fun getProfile(targetUserId: String) {
-        postingItem.value?.user?.let { userItem ->
-            viewModelScope.launch {
-                withContext(Dispatchers.IO) {
-                    handleResourceResult(getUserProfile(targetUserId), onSuccess = { targetUser ->
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                handleResourceResult(getUserProfile(targetUserId), onSuccess = { targetUser ->
+                    withContext(Dispatchers.Main) {
+                        addSourceToIsUserFollowed()
+                    }
+                    postingItem.value?.user?.let { userItem ->
                         targetUser.updateUserItem(userItem)
-                    })
-                }
+                    }
+                })
             }
         }
     }
@@ -170,7 +175,7 @@ class PostingDetailViewModel @Inject constructor(
     fun onClickReportPosting(postingId: String) {
         val currentUserId = getCurrentUserId()
 
-        if(currentUserId == null) {
+        if (currentUserId == null) {
             _eventShowToast.emit(R.string.need_to_sign_in)
             return
         }
@@ -278,7 +283,6 @@ class PostingDetailViewModel @Inject constructor(
                 GlobalRefreshEvent.FOLLOW_USER_EVENT,
                 GlobalRefreshEvent.POSTING_LIKED_CHANGE_EVENT
             ) {
-                _isVisibleFollowButton.postValue(false)
                 refreshPostingItem()
             }
         }

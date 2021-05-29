@@ -20,13 +20,16 @@ data class PostingItem(
     val updated: String,
     val deleted: Boolean,
     val imagePositionText: MutableLiveData<String>
-): RecyclerViewItem(postingId)
+) : RecyclerViewItem(postingId)
 
-class AdItem(postingId: String): RecyclerViewItem(postingId)
+class AdItem(postingId: String) : RecyclerViewItem(postingId)
 
-fun Posting.mapToPostingItem(currentUserId: String?): PostingItem {
+fun Posting.mapToPostingItem(currentUserId: String?, displayName: String? = null): PostingItem {
     return PostingItem(
-        user = UserItem(userId = userId),
+        user = UserItem(
+            userId = userId,
+            displayName = if (displayName != null) MutableLiveData(displayName) else MutableLiveData("...")
+        ),
         imageUrls = imageUrls,
         likedUserIds = likedUserIds,
         likeCount = MutableLiveData(likeCount),
