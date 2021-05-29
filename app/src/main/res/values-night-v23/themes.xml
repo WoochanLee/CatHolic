@@ -47,8 +47,4 @@
     <style name="RoundBottomSheetStyle" parent="@style/Widget.Design.BottomSheet.Modal">
         <item name="android:background">@drawable/bg_rounded_bottom_sheet</item>
     </style>
-
-    <style name="ToolbarTheme" parent="@style/ThemeOverlay.AppCompat.ActionBar">
-        <item name="colorControlNormal">@color/white</item>
-    </style>
 </resources>
